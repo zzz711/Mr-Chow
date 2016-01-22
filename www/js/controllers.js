@@ -26,7 +26,20 @@ angular.module('app.controllers', [])
         AuthService.login($scope.formData.email, $scope.formData.password);
     }
 
-
+  $scope.reset = function(){
+    Parse.User.logOut();
+    Parse.User.requestPasswordReset($scope.formData.email, {
+      success: function() {
+        $ionicPopup.alert({
+          title: "Passowrd Reset has been Emailed"
+        })
+      },
+      error: function(error) {
+      // Show the error message somewhere
+      console.log(error);
+    }
+  });
+  }
 })
 
 .controller('signupCtrl', function($scope, $state, $ionicPopup, AuthService) {
@@ -42,12 +55,8 @@ angular.module('app.controllers', [])
 
     if(form.$valid){
       //console.log("uncomment parse code");
+      Parse.User.logOut();
       AuthService.signup($scope.formData.name, $scope.formData.email, $scope.formData.password);
-      $ionicPopup.alert({
-        title:"Account Created",
-        subtitle:"Your account has been successfully created."
-      });
-      $state.go("login");
     }
 
     else{
