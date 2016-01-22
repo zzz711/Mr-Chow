@@ -1,24 +1,54 @@
 <ion-view title="Add a Recipe">
+    
     <ion-content overflow-scroll="true" padding="true" class="has-header">
-        <form class="list">
-            <h3>Recipe Name</h3>
-            <label class="item item-input">
-                <input type="text" placeholder="Fried Chicked">
-            </label>
-        </form>
-        <h3>Ingredient Name</h3>
-        <form class="list">
-            <label class="item item-input">
-                <input type="text" placeholder=" Chicken">
-            </label>
-            <h3>Amount</h3>
-        </form>
-        <form class="list">
-            <label class="item item-input">
-                <input type="text" placeholder="2 lbs">
-            </label>
-        </form>
-        <button class="button button-stable button-clear  icon-right ion-android-add-circle">Add More Ingredients</button>
-        <button class="button button-stable button-block ">Submit Recipe</button>
+        <form name="addRecipeForm"
+              novalidate="novalidate"
+              ng-submit="trackMeal(addRecipeForm)"
+              class="create-form">
+            <ion-list>
+                <h3>Recipe Name</h3>
+                <div class="form-errors" 
+                     ng-messages="addRecipeForm.recipeName.$error" 
+                     ng-show="addRecipeForm.myName.$touched || addRecipeForm.$submitted"
+                     ng-messages-include="templates/form-errors.html"></div>
+                    <label class="item item-input item-floating-label"
+                           ng-class="{'has-error':addRecipeForm.recipeName.$invalid}">
+                        <input type="text"
+                               ng-model="formData.recipeName"
+                               ng-required="true"
+                               name="recipeName"
+                               placeholder="Fried Chicked">
+                    </label>
+
+                    <h3>Ingredient Name</h3>
+                    <div class="form-errors"
+                         ng-messages="addRecipeForm.ingredientName.$error"
+                         ng-show="addRecipeForm.myName.$touched || addRecipeForm.$submitted"
+                         ng-messages-include="templates/form-errors.html"></div>
+                    <label class="item item-input item-floating-label"
+                           ng-class="{'has-error':addRecipeForm.ingredientName.$invalid}">
+
+                        <input type="text" ,
+                               ng-model="formData.ingredientName"
+                               ng-required="true"
+                               name="ingredientName"
+                               placeholder="Chicken">
+                    </label>
+                    <h3>Amount</h3>
+                     <div class="form-errors"
+                         ng-messages="addRecipeForm.portionSize.$error"
+                         ng-show="addRecipeForm.myName.$touched || addRecipeForm.$submitted"
+                         ng-messages-include="templates/form-errors.html"></div>
+                    <label class="item item-input item-floating-label"
+                           ng-class="{'has-error':addRecipeForm.portionSize.$invalid}">
+                        <input type="text"
+                               ng-model="formData.portionSize"
+                               ng-required="true"
+                               name="portionSize"
+                               placeholder="2 lbs">
+                    </label>
+                    <button class="button button-stable button-clear  icon-right ion-android-add-circle">Add More Ingredients</button>
+                    <button class="button button-stable button-block" type="submit">Submit Recipe</button>
+</form>
     </ion-content>
 </ion-view>
