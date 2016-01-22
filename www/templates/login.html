@@ -1,19 +1,39 @@
 <ion-view title="Login">
     <ion-content overflow-scroll="true" padding="true" class="has-header">
-        <form class="list">
+        <form ng-submit="login(loginForm)"
+        name = "loginForm">
             <ion-list>
-                <label class="item item-input">
-                    <span class="input-label">Username</span>
-                    <input type="text" placeholder="">
+                <label class="item item-input"
+                       ng-class="{'has-error':loginForm.email.$invalid}">
+                    <span class="input-label">Email</span>
+                    <input type="email"
+                           placeholder=""
+                           name = "email"
+                           ng-model="formData.email"
+                    >
                 </label>
-                <label class="item item-input">
+
+              </div>
+                <label class="item item-input"
+                       ng-class="{'has-error':loginForm.password.$invalid}">
                     <span class="input-label">Password</span>
-                    <input type="password" placeholder="">
+                    <input type="password"
+                           placeholder=""
+                           name = "password"
+                           ng-model="formData.password"
+                    >
                 </label>
+
+
+              <button class="button button-clear button-positive" ng-click="reset()"> Reset Password </button>
+
+
             </ion-list>
             <div class="spacer" style="height: 40px;"></div>
-            <a href="#/page5/page10" class="button button-stable button-block ">Log in</a>
-            <a href="#/page4" class="button button-positive button-clear button-block ">Or create an account</a>
+            <!--<a href="#/page5/page10" class="button button-stable button-block ">Log in</a>-->
+          <button class="button  button-block" type="submit"  ng-click="login(loginForm)"> Log in</button >
+          <a href="#/page4" class="button button-positive button-clear button-block ">Or create an account</a>
+
         </form>
     </ion-content>
 </ion-view>
