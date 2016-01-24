@@ -5,13 +5,62 @@ app.controller('recipeCardHolderCtrl', function($scope) {
 
 })
    
-app.controller('loginCtrl', function($scope) {
-    //handles all calls to the login page. 
+.controller('loginCtrl', function ($scope, AuthService, $state) {
+    console.log("loginCtrl::log");
+
+    $scope.formData = {
+        "email": "",
+        "password": ""
+    };
+
+    $scope.login = function (form) {
+        console.log("loginCtrl::login");
+
+        //console.log("uncomment parse code");
+        AuthService.login($scope.formData.email, $scope.formData.password);
+    }
+
+    $scope.reset = function () {
+        Parse.User.logOut();
+        Parse.User.requestPasswordReset($scope.formData.email, {
+            success: function () {
+                $ionicPopup.alert({
+                    title: "Passowrd Reset has been Emailed"
+                })
+            },
+            error: function (error) {
+                // Show the error message somewhere
+                console.log(error);
+            }
+        });
+    }
 })
-   
-app.controller('signupCtrl', function($scope) {
+
+.controller('signupCtrl', function ($scope, $state, $ionicPopup, AuthService) {
+
+    $scope.formData = {
+        "name": "",
+        "email": "",
+        "password": ""
+    };
+
+    $scope.signUp = function (form) {
+        console.log("loginCtrl::signUp");
+
+        if (form.$valid) {
+            //console.log("uncomment parse code");
+            Parse.User.logOut();
+            AuthService.signup($scope.formData.name, $scope.formData.email, $scope.formData.password);
+        }
+
+        else {
+            console.log("Invalid form");
+        }
+    }
+
 
 })
+
       
 app.controller('recipeBookCtrl', function($scope) {
 
@@ -25,7 +74,7 @@ app.controller('spaghettiCtrl', function($scope) {
 
 })
    
-app.controller('addARecipeCtrl', function ($scope, $q, $state, $cordovaCamera, MealService) {
+app.controller('addARecipeCtrl', function ($scope, $q, $state,  MealService) {
     $scope.resetFormData = function () {
         $scope.formData = {
             'recipeName': '',
