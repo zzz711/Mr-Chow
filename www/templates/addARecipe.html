@@ -1,54 +1,101 @@
-<ion-view title="Add a Recipe">
-    
+<ion-view title="Recipe Book">
     <ion-content overflow-scroll="true" padding="true" class="has-header">
         <form name="addRecipeForm"
               novalidate="novalidate"
               ng-submit="trackMeal(addRecipeForm)"
               class="create-form">
-            <ion-list>
-                <h3>Recipe Name</h3>
-                <div class="form-errors" 
-                     ng-messages="addRecipeForm.recipeName.$error" 
+            <section>
+                <h2>Add a recipe</h2>
+                <div class="form-errors"
+                     ng-messages="addRecipeForm.recipeName.$error"
                      ng-show="addRecipeForm.myName.$touched || addRecipeForm.$submitted"
                      ng-messages-include="templates/form-errors.html"></div>
-                    <label class="item item-input item-floating-label"
-                           ng-class="{'has-error':addRecipeForm.recipeName.$invalid}">
-                        <input type="text"
-                               ng-model="formData.recipeName"
-                               ng-required="true"
-                               name="recipeName"
-                               placeholder="Fried Chicked">
-                    </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Recipe Title</span>
+                    <input type="text"
+                           ng-model="formData.recipeName"
+                           name="recipeName"
+                           placeholder="Recipe Title">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Prep Time</span>
+                    <input type="text"
+                           ng-model="formData.prepTime"
+                           name="prepTime"
+                           placeholder="Prep Time">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Cooking Time</span>
+                    <input type="text"
+                           ng-model="formData.cookingTime"
+                           name="cookingTime"
+                           placeholder="Cooking Time">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Serves how many?</span>
+                    <input type="text"
+                           ng-model="formData.servesNMany"
+                           name="servesNMany"
+                           placeholder="Serves how many?">
+                </label>
+            </section>
+            <br />
+            <section>
+                <h2>Description</h2>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Describe Your Recipe</span>
+                    <input type="text"
+                           ng-model="formData.recipeDesc"
+                           name="recipeDesc"
+                           placeholder="Describe Your Recipe">
+                </label>
+            </section>
 
-                    <h3>Ingredient Name</h3>
-                    <div class="form-errors"
-                         ng-messages="addRecipeForm.ingredientName.$error"
-                         ng-show="addRecipeForm.myName.$touched || addRecipeForm.$submitted"
-                         ng-messages-include="templates/form-errors.html"></div>
-                    <label class="item item-input item-floating-label"
-                           ng-class="{'has-error':addRecipeForm.ingredientName.$invalid}">
-
-                        <input type="text" ,
-                               ng-model="formData.ingredientName"
-                               ng-required="true"
-                               name="ingredientName"
-                               placeholder="Chicken">
-                    </label>
-                    <h3>Amount</h3>
-                     <div class="form-errors"
-                         ng-messages="addRecipeForm.portionSize.$error"
-                         ng-show="addRecipeForm.myName.$touched || addRecipeForm.$submitted"
-                         ng-messages-include="templates/form-errors.html"></div>
-                    <label class="item item-input item-floating-label"
-                           ng-class="{'has-error':addRecipeForm.portionSize.$invalid}">
-                        <input type="text"
-                               ng-model="formData.portionSize"
-                               ng-required="true"
-                               name="portionSize"
-                               placeholder="2 lbs">
-                    </label>
-                    <button class="button button-stable button-clear  icon-right ion-android-add-circle">Add More Ingredients</button>
-                    <button class="button button-stable button-block" type="submit">Submit Recipe</button>
-</form>
+            <h2>Ingredients</h2>
+            <section>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Ingredient Name</span>
+                    <input type="text"
+                           ng-model="formData.ingName"
+                           name="ingName"
+                           placeholder="Ingredient Name">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Ingredient Instructions</span>
+                    <input type="text"
+                           ng-model="formData.ingInstructions"
+                           name="ingInstructions"
+                           placeholder="Instructions">
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Quantity</span>
+                    <input type="text"
+                           ng-model="formData.quantity"
+                           name="quantity"
+                           placeholder="Quantity">
+                </label>
+                <label class="item item-input item-select">
+                    <div class="input-label">
+                        Measurement
+                    </div>
+                    <select ng-model="formData.measurement"
+                            name="measurement">
+                        <option selected>cup</option>
+                        <option>gallon</option>
+                        <option>ounces</option>
+                        <option>pint</option>
+                        <option>quart</option>
+                        <option>tablespoon</option>
+                        <option>teaspoon</option>
+                    </select>
+                </label>
+            </section>
+            <br />
+            <br />
+            <button class="button button-balanced">
+                Add Ingredient
+            </button>
+            <button class="button button-stable button-block" type="submit">Submit Recipe</button>
+        </form>
     </ion-content>
 </ion-view>

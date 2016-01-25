@@ -78,8 +78,15 @@ app.controller('addARecipeCtrl', function ($scope, $q, $state,  MealService) {
     $scope.resetFormData = function () {
         $scope.formData = {
             'recipeName': '',
-            'ingredientName': '',
-            'portionSize': ''
+            'prepTime': '',
+            'cookingTime' : '',
+            'servesNMany' : '',
+            'recipeDesc'  : '',
+            'ingName' : '',
+            'ingInstructions' :'',
+            'quantity' :'',
+            'measurement' :''
+
         };
     };
     $scope.resetFormData();
@@ -87,13 +94,12 @@ app.controller('addARecipeCtrl', function ($scope, $q, $state,  MealService) {
 
     $scope.trackMeal = function (form) {
         if (form.$valid) {
-            console.log($scope);
             // $ionicLoading.show();
             MealService.track($scope.formData).then(function () {
                 //$scope.resetFormData();
                 // $ionicLoading.hide();
                 form.$setPristine(true);
-                $state.go('addMedicine');
+                $state.go('main.recipeBook');
             });
         }
     };
