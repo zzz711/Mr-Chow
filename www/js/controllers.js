@@ -1,10 +1,10 @@
 var app = angular.module('app.controllers', [])
 
-  
+
 app.controller('recipeCardHolderCtrl', function($scope) {
 
 })
-   
+
 .controller('loginCtrl', function ($scope, AuthService, $state) {
     console.log("loginCtrl::log");
 
@@ -55,25 +55,29 @@ app.controller('recipeCardHolderCtrl', function($scope) {
 
         else {
             console.log("Invalid form");
+            $ionicPopup.alert({
+              title: "Form Error",
+              template: "An error has occurred. Please make sure all fields are filled out, your email is formatted correctly and your password is at least 6 characters in length."
+            })
         }
     }
 
 
 })
 
-      
+
 app.controller('recipeBookCtrl', function($scope) {
 
 })
-   
+
 app.controller('friedChickenCtrl', function($scope) {
 
 })
-   
+
 app.controller('spaghettiCtrl', function($scope) {
 
 })
-   
+
 app.controller('addARecipeCtrl', function ($scope, $q, $state,  MealService) {
     $scope.resetFormData = function () {
         $scope.formData = {
@@ -105,45 +109,44 @@ app.controller('addARecipeCtrl', function ($scope, $q, $state,  MealService) {
     };
     //todo
 })
-   
+
 
 app.controller('dailyNutritionCtrl', function($scope) {
 
 })
-   
+
 .controller('myMedsCtrl', function($scope) {
 
 })
-   
+
 app.controller('addMedicineCtrl', function($scope) {
 
 })
-   
+
 .controller('addNutritionCtrl', function($scope) {
 
 })
-   
+
 app.controller('11/1/2015Ctrl', function($scope) {
 
 })
-   
+
 .controller('11/2/2015Ctrl', function($scope) {
 
 })
-   
+
 app.controller('11/3/2015Ctrl', function($scope) {
 
 })
-   
+
 app.controller('settingsCtrl', function($scope) {
 
 })
-   
+
 app.controller('myAccountCtrl', function($scope) {
 
 })
-   
+
 app.controller('shareMyDataCtrl', function($scope) {
 
 })
- 
