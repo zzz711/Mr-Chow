@@ -66,7 +66,27 @@ app.controller('recipeCardHolderCtrl', function($scope) {
 })
 
 
-app.controller('recipeBookCtrl', function($scope) {
+app.controller('recipeBookCtrl', function($scope, RecipeService) {
+    $scope.Recipe = RecipeService;
+    
+    $scope.LoadMore = function()
+    {
+        console.log("LoadMore::Test");
+        if(!$scope.Recipe.isLoading && $scope.Recipe.hasMore){
+            $scope.Recipe.next().then(function{
+                $scope.$broadcast('scroll.infiniteScrollComplete');
+            });
+        }
+    }
+    
+    $scope.Refresh = function()
+    {
+        if(!$scope.Recipe.isLoading){
+            $scope.Recipe.refresh().then(function{
+                $scope.$broadcast('scroll.refreshComplete');
+            });
+        }
+    }
 
 })
 
