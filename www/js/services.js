@@ -112,8 +112,8 @@ app.service("MealService", function ($q,$ionicPopup) {
             recipe.set("owner", "");
             recipe.set('picture', file);
             recipe.set('recipeName', data.recipeName);
-            recipe.set('ingredientName', data.recipeIngredient);
-            recipe.set('portionSize', parseInt(data.portionSize));
+            recipe.set('ingredientName', "");
+            recipe.set('portionSize', "");
             recipe.set('created', new Date());
 
             recipe.save(null, {
@@ -138,3 +138,34 @@ app.service("MealService", function ($q,$ionicPopup) {
     return self;
 });
 
+app.service('addIngredientService', function ($q) {
+    var x = [ ];
+
+    var passedPage = {
+        ingName: '',
+        ingInstructions: '',
+        quantity: '',
+        measurement: ''
+    }
+    return {
+        setIngredient: function (data) {
+            x.push(
+                        {
+                            ingName : data.ingName,
+                            ingInstructions: data.ingInstructions,
+                            quantity : data.quantity,
+                            measurement : data.measurement
+                        }
+
+                );
+       },
+        getIngredient: function () {
+            return (x);
+        },
+        getPageVals: function(){
+            return passedPage;
+        },
+
+
+    }
+})

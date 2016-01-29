@@ -91,10 +91,16 @@ angular.module('app.routes', [])
         }
       }
     })
+
+
+
+    .state('addAnIngredient', {
+        url: '/page23',
+        templateUrl: 'templates/addIngredient.html',
+        controller: 'addIngredientCtrl'
+    })
         
-      
-    
-      
+
         
     .state('main.dailyNutrition', {
       url: '/page14',

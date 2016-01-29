@@ -4,6 +4,8 @@ var app = angular.module('app.controllers', [])
 app.controller('recipeCardHolderCtrl', function($scope) {
 
 })
+
+
    
 .controller('loginCtrl', function ($scope, AuthService, $state) {
     console.log("loginCtrl::log");
@@ -74,27 +76,53 @@ app.controller('spaghettiCtrl', function($scope) {
 
 })
    
-app.controller('addARecipeCtrl', function ($scope, $q, $state,  MealService) {
+
+app.controller('addIngredientCtrl', function ($scope, $state, addIngredientService) {
+    $scope.resetFormData = function () {
+        $scope.formData = {
+            'ingName' : '',
+            'ingInstructions': '',
+            'quantity' : '',
+            'measurement' : ''
+        };
+    };
+
+
+    $scope.resetFormData();
+    $scope.doStuff = function (form) {
+        if (form.$valid) {
+            // $ionicLoading.show();
+            console.log($scope.formData);
+            addIngredientService.setIngredient($scope.formData);
+            $state.go('main.addARecipe');
+        }
+    };
+
+})
+
+app.controller('addARecipeCtrl', function ($scope, $q, $state, MealService, addIngredientService) {
     $scope.resetFormData = function () {
         $scope.formData = {
             'recipeName': '',
             'prepTime': '',
             'cookingTime' : '',
             'servesNMany' : '',
-            'recipeDesc'  : '',
-            'ingName' : '',
-            'ingInstructions' :'',
-            'quantity' :'',
-            'measurement' :''
-
+            'recipeDesc': '',
+            'ingPassed':''
         };
     };
     $scope.resetFormData();
 
-
+    $scope.ingredient = function () {
+        $scope.retVals = addIngredientService.getIngredient();
+        return addIngredientService.getIngredient();
+    };
+    
     $scope.trackMeal = function (form) {
+     
         if (form.$valid) {
             // $ionicLoading.show();
+            console.log("hit trackmeal")
             MealService.track($scope.formData).then(function () {
                 //$scope.resetFormData();
                 // $ionicLoading.hide();
@@ -103,7 +131,9 @@ app.controller('addARecipeCtrl', function ($scope, $q, $state,  MealService) {
             });
         }
     };
-    //todo
+    
+
+
 })
    
 

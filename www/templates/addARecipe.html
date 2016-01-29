@@ -43,7 +43,7 @@
             <section>
                 <h2>Description</h2>
                 <label class="item item-input item-floating-label">
-                    <span class="input-label">Describe Your Recipe</span>
+                    <span class="input-label  item-text-wrap">Describe Your Recipe</span>
                     <input type="text"
                            ng-model="formData.recipeDesc"
                            name="recipeDesc"
@@ -51,50 +51,23 @@
                 </label>
             </section>
 
-            <h2>Ingredients</h2>
-            <section>
-                <label class="item item-input item-floating-label">
-                    <span class="input-label">Ingredient Name</span>
-                    <input type="text"
-                           ng-model="formData.ingName"
-                           name="ingName"
-                           placeholder="Ingredient Name">
-                </label>
-                <label class="item item-input item-floating-label">
-                    <span class="input-label">Ingredient Instructions</span>
-                    <input type="text"
-                           ng-model="formData.ingInstructions"
-                           name="ingInstructions"
-                           placeholder="Instructions">
-                </label>
-                <label class="item item-input item-floating-label">
-                    <span class="input-label">Quantity</span>
-                    <input type="text"
-                           ng-model="formData.quantity"
-                           name="quantity"
-                           placeholder="Quantity">
-                </label>
-                <label class="item item-input item-select">
-                    <div class="input-label">
-                        Measurement
-                    </div>
-                    <select ng-model="formData.measurement"
-                            name="measurement">
-                        <option selected>cup</option>
-                        <option>gallon</option>
-                        <option>ounces</option>
-                        <option>pint</option>
-                        <option>quart</option>
-                        <option>tablespoon</option>
-                        <option>teaspoon</option>
-                    </select>
-                </label>
-            </section>
+
             <br />
             <br />
-            <button class="button button-balanced">
-                Add Ingredient
-            </button>
+            <ion-list class="item-icon-right" ng-controller="addARecipeCtrl" ng-init="ingredient()">
+                <ion-item ng-repeat="i in retVals">
+                    <p>{{i.ingName}}</p>
+                    <p>{{i. ingInstructions}}</p>
+                    <p> Quantity:  {{i.quantity}}    Measurement: {{i.measurement}}</p>
+
+                    <ion-option-button class="button-positive"><i class="icon ion-edit"></i></ion-option-button>
+                    <ion-option-button class="button-assertive"><i class="icon ion-ios-trash"></i></ion-option-button>
+                    
+                    
+
+                </ion-item>
+            </ion-list>
+            <a href="#/page23" class="button button-stable button-block">Add Ingredient</a>
             <button class="button button-stable button-block" type="submit">Submit Recipe</button>
         </form>
     </ion-content>
