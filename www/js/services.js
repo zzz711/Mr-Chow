@@ -15,16 +15,16 @@ var app = angular.module('app.services', [])
             "email": email,
             "password": password
           }).then (function(authData) {
-            console.log("login successful");
-            $state.go("main.recipeBook");
+                    console.log("login successful");
+                    $state.go("main.recipeBook");
           }).catch(function(error){
-            $ionicPopup.alert({
-              title: "Login Error"
-              //subtitle: error.message
+                    $ionicPopup.alert({
+                        title: "Login Error"
+                        //subtitle: error.message
+                    });
+                    console.log(error);
+                    d.reject(error);
             });
-            console.log(error);
-            d.reject(error);
-          });
 
 
             return d.promise;
@@ -45,10 +45,10 @@ var app = angular.module('app.services', [])
               password: password
             }).then( function(userData) {
               console.log("User " + userData.uid + " created successfully!");
-              $state.go("login");
+                    $state.go("login");
               return d.promise;
             }).catch(function(error){
-                console.log(error);
+                    console.log(error);
             });
 
         }
@@ -103,7 +103,7 @@ app.service("MealService", function ($q,$ionicPopup) {
             recipe.set('created', new Date());
 
             recipe.save(null, {
-                success: function (meal) {
+                success: function (meal) { 
                     console.log("meal tracked")
                     self.results.unshift(recipe);
                     d.resolve(recipe);
@@ -170,7 +170,7 @@ app.service("MealService", function ($q,$ionicPopup) {
             recipe.set('created', new Date());
 
             recipe.save(null, {
-                success: function (meal) {
+                success: function (meal) { 
                     console.log("meal tracked")
                     self.results.unshift(recipe);
                     d.resolve(recipe);
@@ -193,32 +193,72 @@ app.service("MealService", function ($q,$ionicPopup) {
 
     app.service('addIngredientService', function ($q) {
         var x = [];
+        var i = 1;
 
         var passedPage = {
+            id: '',
             ingName: '',
             ingInstructions: '',
             quantity: '',
             measurement: ''
-        }
+        };
+
+
         return {
-            setIngredient: function (data) {
+            setIngredient: function (data, $http) {
                 x.push(
                             {
-                                ingName: data.ingName,
-                                ingInstructions: data.ingInstructions,
-                                quantity: data.quantity,
-                                measurement: data.measurement
+                                id: i,
+                                ingName: data.ingName.$viewValue,
+                                ingInstructions: data.ingInstructions.$viewValue,
+                                quantity: data.quantity.$viewValue,
+                                measurement: data.measurement.$viewValue    
                             }
 
                     );
+                i = i + 1;
             },
-            getIngredient: function () {
+
+            getAllIngredient: function () {
                 return (x);
             },
+        
+            getSpecificIngredient: function () {
+                return (passedPage);
+            },
+
             getPageVals: function () {
                 return passedPage;
             },
 
+            deleteSpecificIngredient: function (val) {
+                var index = x.indexOf(val);
+                x.splice(index, 1);
+                console.log(x);
+                return x;
+            },
 
+            setSpecificIngredient: function (val) {
+                passedPage.id = val.id;
+                passedPage.ingName = val.ingName;
+                passedPage.ingInstructions = val.ingInstructions;
+                passedPage.quantity = val.quantity;
+                passedPage.measurement = val.measurement;
+                console.log(passedPage);
+
+
+                var index = x.indexOf(val);
+                x.splice(index, 1);
+                console.log(x);
+            },
+            setEmpty: function () {
+                passedPage.id = "";
+                passedPage.ingName = "";
+                passedPage.ingInstructions = "";
+                passedPage.quantity = "";
+                passedPage.measurement = "";
+                return passedPage;
         }
+
+        };
     });
