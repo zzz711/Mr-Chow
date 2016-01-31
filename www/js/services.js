@@ -5,67 +5,53 @@ var app = angular.module('app.services', [])
         user: null,
         login: function (email, password) {
             var d = $q.defer();
+            var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
 
-            Parse.User.logIn(email, password, {
-                success: function (user) {
-                    console.log("login successful");
-                    $state.go("main.recipeBook");
-                },
-                error: function (user, error) {
-                    $ionicPopup.alert({
-                        title: "Login Error"
-                        //subtitle: error.message
-                    });
-                    console.log(error);
-                    d.reject(error);
-                }
+          if (fbUser.getAuth()) {
+            fbUser.unauth();
+          }
+
+          fbUser.authWithPassword({
+            "email": email,
+            "password": password
+          }).then (function(authData) {
+            console.log("login successful");
+            $state.go("main.recipeBook");
+          }).catch(function(error){
+            $ionicPopup.alert({
+              title: "Login Error"
+              //subtitle: error.message
             });
+            console.log(error);
+            d.reject(error);
+          });
+
+
             return d.promise;
         },
 
         signup: function (name, email, password) {
             var d = $q.defer();
-            var user = new Parse.User();
+            var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
 
-            var currentUser = Parse.User.current();
-            if (currentUser) {
-                Parse.User.logOut();
+            if (fbUser.getAuth()) {
+              fbUser.unauth();
             }
-            var uname = email;
 
             console.log(email);
-            user.set('username', uname);
-            user.set('email', email);
-            user.set('name', name);
-            user.set('password', password);
 
-
-            user.signUp(null, {
-                success: function (user) {
-                    console.log("Account created");
-                    self.user = user;
-                    d.resolve(self.user);
-                    $ionicPopup.alert({
-                        title: "Account Created",
-                        subtitle: "Your account has been successfully created."
-                    });
-                    $state.go("login");
-                },
-                error: function (user, error) {
-                    $ionicPopup.alert({
-                        title: 'Signup error',
-                        //subtitle: error.message
-                    });
-                    console.log(error);
-                    d.reject(error);
-                }
+            fbUser.createUser({
+              email: email,
+              password: password
+            }).then( function(userData) {
+              console.log("User " + userData.uid + " created successfully!");
+              $state.go("login");
+              return d.promise;
+            }).catch(function(error){
+                console.log(error);
             });
 
-
-            return d.promise;
-        },
-
-
+        }
     };
 
     return self;
@@ -117,7 +103,7 @@ app.service("MealService", function ($q,$ionicPopup) {
             recipe.set('created', new Date());
 
             recipe.save(null, {
-                success: function (meal) { 
+                success: function (meal) {
                     console.log("meal tracked")
                     self.results.unshift(recipe);
                     d.resolve(recipe);
@@ -184,7 +170,7 @@ app.service("MealService", function ($q,$ionicPopup) {
             recipe.set('created', new Date());
 
             recipe.save(null, {
-                success: function (meal) { 
+                success: function (meal) {
                     console.log("meal tracked")
                     self.results.unshift(recipe);
                     d.resolve(recipe);
