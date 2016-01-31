@@ -13,26 +13,24 @@ app.controller('recipeCardHolderCtrl', function($scope) {
         "password": ""
     };
 
-  $scope.reset = function () {
-    var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
-    fbUser.resetPassword({
-      email: $scope.formData.email
-    }).then(function(){
-      $ionicPopup.alert({
-        title: "Passowrd Reset has been Emailed"
-      })
-    }).catch(function(error){
-      console.log(error);
-    });
+  $scope.login = function (form) {
+    console.log("loginCtrl::login");
 
-    $scope.login = function (form) {
-        console.log("loginCtrl::login");
+    //console.log("uncomment parse code");
+    AuthService.login($scope.formData.email, $scope.formData.password);
+  }
 
-        //console.log("uncomment parse code");
-        AuthService.login($scope.formData.email, $scope.formData.password);
-    }
-
-
+    $scope.reset = function () {
+      var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
+      fbUser.resetPassword({
+        email: $scope.formData.email
+      }).then(function(){
+        $ionicPopup.alert({
+          title: "Passowrd Reset has been Emailed"
+       })
+      }).catch(function(error){
+        console.log(error);
+      });
 
     }
 })
