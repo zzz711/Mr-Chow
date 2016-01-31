@@ -77,24 +77,20 @@ app.controller('spaghettiCtrl', function($scope) {
 })
    
 
-app.controller('addIngredientCtrl', function ($scope, $state, addIngredientService) {
-    $scope.resetFormData = function () {
-        $scope.formData = {
-            'ingName' : '',
-            'ingInstructions': '',
-            'quantity' : '',
-            'measurement' : ''
-        };
-    };
+app.controller('addIngredientCtrl', function ($scope, $state,  addIngredientService) {
+    $scope.$on('$ionicView.enter', function () {
+        var i = addIngredientService.getSpecificIngredient();
+        $scope.measurement = i.measurement;
+    });
+    $scope.initialize = addIngredientService.getSpecificIngredient();
 
-
-    $scope.resetFormData();
     $scope.doStuff = function (form) {
         if (form.$valid) {
             // $ionicLoading.show();
-            console.log($scope.formData);
-            addIngredientService.setIngredient($scope.formData);
+            addIngredientService.setIngredient(form);
+            $scope.initialize = addIngredientService.setEmpty();
             $state.go('main.addARecipe');
+  
         }
     };
 
@@ -114,21 +110,34 @@ app.controller('addARecipeCtrl', function ($scope, $q, $state, MealService, addI
     $scope.resetFormData();
 
     $scope.ingredient = function () {
-        $scope.retVals = addIngredientService.getIngredient();
-        return addIngredientService.getIngredient();
+        $scope.retVals = addIngredientService.getAllIngredient();
     };
     
+    $scope.remove = function (value) {
+        $scope.retVals = addIngredientService.deleteSpecificIngredient(value);
+    }
+
+    $scope.setFill = function (value) {
+        addIngredientService.setSpecificIngredient(value);
+        $state.go('addAnIngredient', {}, { reload: true });
+    };
+    $scope.setNew = function () {
+        addIngredientService.setEmpty();
+        $state.go('addAnIngredient', {}, { reload: true });
+    }
     $scope.trackMeal = function (form) {
      
         if (form.$valid) {
             // $ionicLoading.show();
-            console.log("hit trackmeal")
+           
             MealService.track($scope.formData).then(function () {
                 //$scope.resetFormData();
                 // $ionicLoading.hide();
                 form.$setPristine(true);
+            
                 $state.go('main.recipeBook');
             });
+            
         }
     };
     
