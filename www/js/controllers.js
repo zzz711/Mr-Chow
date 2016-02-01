@@ -162,6 +162,10 @@ app.controller('addARecipeCtrl',  function ($scope, $q, $state, $cordovaCamera, 
         });
        }
 
+
+})
+
+app.controller('dailyNutritionCtrl', function($scope){
   $scope.addNewDailyNutrition = function(){
     //console.log("Function");
 
@@ -175,8 +179,8 @@ app.controller('addARecipeCtrl',  function ($scope, $q, $state, $cordovaCamera, 
 
     $state.go("addNutrition");
   };
-
 })
+
 
 .controller('myMedsCtrl', function($scope) {
 
