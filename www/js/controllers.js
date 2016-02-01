@@ -217,7 +217,10 @@ app.controller('11/3/2015Ctrl', function($scope) {
 
 })
 
-app.controller('settingsCtrl', function($scope) {
+app.controller('settingsCtrl', function($scope, $state) {
+  $scope.changePW = function (){
+    $state.go("changePW");
+  }
 
 })
 
@@ -226,5 +229,52 @@ app.controller('myAccountCtrl', function($scope) {
 })
 
 app.controller('shareMyDataCtrl', function($scope) {
+
+})
+
+app.controller('changePWCtrl', function($scope, $ionicPopup, $state){
+  $scope.formData = {
+    password: "",
+    newPassword: "",
+    confirmNewPassword: ""
+  };
+
+  $scope.changePW = function(form) {
+    if (form.$valid) {
+      if ($scope.formData.newPassword === $scope.formData.confirmNewPassword) {
+        var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
+        var user = fbUser.getAuth();
+
+        fbUser.changePassword({
+          email: user.password.email,
+          oldPassword: $scope.formData.password,
+          newPassword: $scope.formData.newPassword
+        }).then(function () {
+          $ionicPopup.alert({
+            title: "Password Changed"
+          });
+          $state.go("main.recipeBook");
+          form.$setPristine();
+        }).catch(function (error) {
+          console.log(error);
+
+          if (user.password != $scope.formData.password) {
+            $ionicPopup.alert({
+              title: "Password is not correct",
+              template: "The password you have entered is incorrect. Please try again"
+            });
+          }
+
+        })
+      }
+
+      else {
+        $ionicPopup.alert({
+          title: "An Error has Occurred",
+          template: "Please make sure all fields are filled out and are at least six characters in length"
+        });
+      }
+    }
+  }
 
 })
