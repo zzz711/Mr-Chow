@@ -5,7 +5,9 @@ app.controller('recipeCardHolderCtrl', function($scope) {
 
 })
 
-.controller('loginCtrl', function ($scope, AuthService, $state) {
+
+
+app.controller('loginCtrl', function ($scope, AuthService, $state) {
     console.log("loginCtrl::log");
 
     $scope.formData = {
@@ -13,29 +15,29 @@ app.controller('recipeCardHolderCtrl', function($scope) {
         "password": ""
     };
 
-  $scope.login = function (form) {
-    console.log("loginCtrl::login");
+    $scope.login = function (form) {
+        console.log("loginCtrl::login");
 
-    //console.log("uncomment parse code");
-    AuthService.login($scope.formData.email, $scope.formData.password);
-  }
+        //console.log("uncomment parse code");
+        AuthService.login($scope.formData.email, $scope.formData.password);
+    }
 
     $scope.reset = function () {
       var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
       fbUser.resetPassword({
         email: $scope.formData.email
       }).then(function(){
-        $ionicPopup.alert({
-          title: "Passowrd Reset has been Emailed"
-       })
+                $ionicPopup.alert({
+                    title: "Passowrd Reset has been Emailed"
+                })
       }).catch(function(error){
-        console.log(error);
-      });
+                console.log(error);
+        });
 
     }
 })
 
-.controller('signupCtrl', function ($scope, $state, $ionicPopup, AuthService) {
+app.controller('signupCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 
     $scope.formData = {
         "name": "",
@@ -79,7 +81,7 @@ app.controller('spaghettiCtrl', function($scope) {
 
 app.controller('addIngredientCtrl', function ($scope, $state,$http,  addIngredientService) {
     $scope.$on('$ionicView.enter', function () {
-        $scope.initialize = addIngredientService.getSpecificIngredient();
+    $scope.initialize = addIngredientService.getSpecificIngredient();
         console.log("INITIALIZE IS ", $scope.initialize);
         $scope.measurement =  $scope.initialize.measurement;
     });
@@ -138,12 +140,6 @@ app.controller('addARecipeCtrl',  function ($scope, $q, $state, $cordovaCamera, 
 
         }
     };
-    //todo
-})
-
-
-app.controller('dailyNutritionCtrl', function($scope, $state) {
-  console.log("Daily nutrition");
 
    $scope.addPicture = function () {
         var options = {
@@ -165,7 +161,6 @@ app.controller('dailyNutritionCtrl', function($scope, $state) {
             console.error(err);
         });
        }
-
 
   $scope.addNewDailyNutrition = function(){
     //console.log("Function");

@@ -15,16 +15,16 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
             "email": email,
             "password": password
           }).then (function(authData) {
-            console.log("login successful");
-            $state.go("main.recipeBook");
+                    console.log("login successful");
+                    $state.go("main.recipeBook");
           }).catch(function(error){
-            $ionicPopup.alert({
-              title: "Login Error"
-              //subtitle: error.message
+                    $ionicPopup.alert({
+                        title: "Login Error"
+                        //subtitle: error.message
+                    });
+                    console.log(error);
+                    d.reject(error);
             });
-            console.log(error);
-            d.reject(error);
-          });
 
 
             return d.promise;
@@ -45,10 +45,10 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
               password: password
             }).then( function(userData) {
               console.log("User " + userData.uid + " created successfully!");
-              $state.go("login");
+                    $state.go("login");
               return d.promise;
             }).catch(function(error){
-                console.log(error);
+                    console.log(error);
             });
 
         }
@@ -259,7 +259,7 @@ app.service("MealService", function ($q,$ionicPopup) {
                 passedPage.quantity = "";
                 passedPage.measurement = "";
                 return passedPage;
-            }
+        }
 
         };
     });
