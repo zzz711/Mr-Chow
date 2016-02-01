@@ -1,6 +1,6 @@
-var app = angular.module('app.services', [])
+var app = angular.module('app.services', []);
 
-.service('AuthService', function ($q, $ionicPopup, $state) {
+app.service('AuthService', function ($q, $ionicPopup, $state) {
     var self = {
         user: null,
         login: function (email, password) {
@@ -223,14 +223,15 @@ app.service("MealService", function ($q,$ionicPopup) {
                 x.push(
                             {
                                 id: i,
-                                ingName: data.ingName.$viewValue,
-                                ingInstructions: data.ingInstructions.$viewValue,
-                                quantity: data.quantity.$viewValue,
-                                measurement: data.measurement.$viewValue    
+                                ingName: data.ingName,
+                                ingInstructions: data.ingInstructions,
+                                quantity: data.quantity,
+                                measurement: data.measurement  
                             }
 
                     );
                 i = i + 1;
+                console.log("YELLKAFHLKSHLDKJAHSJKDH", x);
             },
 
             getAllIngredient: function () {
