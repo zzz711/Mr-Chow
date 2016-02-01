@@ -50,25 +50,26 @@
                            placeholder="Describe Your Recipe">
                 </label>
             </section>
-
+            <br />
+           <!-- <button class="button button-icon ion-camera" ng-click="addPicture()"></button>-->
 
             <br />
             <br />
             <ion-list class="item-icon-right" ng-controller="addARecipeCtrl" ng-init="ingredient()">
                 <ion-item ng-repeat="i in retVals">
                     <p>{{i.ingName}}</p>
-                    <p>{{i. ingInstructions}}</p>
+                    <p>{{i.ingInstructions}}</p>
                     <p> Quantity:  {{i.quantity}}    Measurement: {{i.measurement}}</p>
 
-                    <ion-option-button class="button-positive"><i class="icon ion-edit"></i></ion-option-button>
-                    <ion-option-button class="button-assertive"><i class="icon ion-ios-trash"></i></ion-option-button>
-                    
+                    <ion-option-button class="button-positive" ng-click="setFill(i)" ><i class="icon ion-edit"></i></ion-option-button>
+                    <ion-option-button class="button-assertive" ng-click="setRemove(i)"><i class="icon ion-ios-trash"></i></ion-option-button>
                     
 
                 </ion-item>
             </ion-list>
-            <a href="#/page23" class="button button-stable button-block">Add Ingredient</a>
-            <button class="button button-stable button-block" type="submit">Submit Recipe</button>
+
+            <a href="#/page23" class="button button-stable button-block" ng-click="setNew()">Add Ingredient</a>
+            <button class="button button-balanced button-block" type="submit">Submit Recipe</button>
         </form>
     </ion-content>
 </ion-view>

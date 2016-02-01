@@ -1,6 +1,6 @@
-var app = angular.module('app.services', [])
+var app = angular.module('app.services', []);
 
-.service('AuthService', function ($q, $ionicPopup, $state) {
+app.service('AuthService', function ($q, $ionicPopup, $state) {
     var self = {
         user: null,
         login: function (email, password) {
@@ -193,17 +193,22 @@ app.service("MealService", function ($q,$ionicPopup) {
 
     app.service('addIngredientService', function ($q) {
         var x = [];
+        var i = 1;
 
         var passedPage = {
+            id: '',
             ingName: '',
             ingInstructions: '',
             quantity: '',
             measurement: ''
-        }
+        };
+
+
         return {
-            setIngredient: function (data) {
+            setIngredient: function (data, $http) {
                 x.push(
                             {
+                                id: i,
                                 ingName: data.ingName,
                                 ingInstructions: data.ingInstructions,
                                 quantity: data.quantity,
@@ -211,14 +216,50 @@ app.service("MealService", function ($q,$ionicPopup) {
                             }
 
                     );
+                i = i + 1;
+                console.log("YELLKAFHLKSHLDKJAHSJKDH", x);
             },
-            getIngredient: function () {
+
+            getAllIngredient: function () {
                 return (x);
             },
+
+            getSpecificIngredient: function () {
+                return (passedPage);
+            },
+
             getPageVals: function () {
                 return passedPage;
             },
 
+            deleteSpecificIngredient: function (val) {
+                var index = x.indexOf(val);
+                x.splice(index, 1);
+                console.log(x);
+                return x;
+            },
 
-        }
+            setSpecificIngredient: function (val) {
+                passedPage.id = val.id;
+                passedPage.ingName = val.ingName;
+                passedPage.ingInstructions = val.ingInstructions;
+                passedPage.quantity = val.quantity;
+                passedPage.measurement = val.measurement;
+                console.log(passedPage);
+
+
+                var index = x.indexOf(val);
+                x.splice(index, 1);
+                console.log(x);
+            },
+            setEmpty: function () {
+                passedPage.id = "";
+                passedPage.ingName = "";
+                passedPage.ingInstructions = "";
+                passedPage.quantity = "";
+                passedPage.measurement = "";
+                return passedPage;
+            }
+
+        };
     });
