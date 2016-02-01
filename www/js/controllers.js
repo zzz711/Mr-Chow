@@ -1,11 +1,13 @@
-var app = angular.module('app.controllers', [])
+var app = angular.module('app.controllers', ['ngCordova'])
 
   
 app.controller('recipeCardHolderCtrl', function($scope) {
 
 })
 
-.controller('loginCtrl', function ($scope, AuthService, $state) {
+
+   
+app.controller('loginCtrl', function ($scope, AuthService, $state) {
     console.log("loginCtrl::log");
 
     $scope.formData = {
@@ -35,7 +37,7 @@ app.controller('recipeCardHolderCtrl', function($scope) {
     }
 })
 
-.controller('signupCtrl', function ($scope, $state, $ionicPopup, AuthService) {
+app.controller('signupCtrl', function ($scope, $state, $ionicPopup, AuthService) {
 
     $scope.formData = {
         "name": "",
@@ -77,26 +79,23 @@ app.controller('spaghettiCtrl', function($scope) {
 })
    
 
-app.controller('addIngredientCtrl', function ($scope, $state,  addIngredientService) {
+app.controller('addIngredientCtrl', function ($scope, $state,$http,  addIngredientService) {
     $scope.$on('$ionicView.enter', function () {
-        var i = addIngredientService.getSpecificIngredient();
-        $scope.measurement = i.measurement;
-    });
     $scope.initialize = addIngredientService.getSpecificIngredient();
+        console.log("INITIALIZE IS ", $scope.initialize);
+        $scope.measurement =  $scope.initialize.measurement;
+    });
 
-    $scope.doStuff = function (form) {
-        if (form.$valid) {
+    $scope.doStuff = function () {
             // $ionicLoading.show();
-            addIngredientService.setIngredient(form);
+            addIngredientService.setIngredient($scope.initialize, $http);
             $scope.initialize = addIngredientService.setEmpty();
             $state.go('main.addARecipe');
-  
-        }
     };
 
 })
 
-app.controller('addARecipeCtrl', function ($scope, $q, $state, MealService, addIngredientService) {
+app.controller('addARecipeCtrl',  function ($scope, $q, $state, $cordovaCamera, addIngredientService, MealService) {
     $scope.resetFormData = function () {
         $scope.formData = {
             'recipeName': '',
@@ -113,7 +112,7 @@ app.controller('addARecipeCtrl', function ($scope, $q, $state, MealService, addI
         $scope.retVals = addIngredientService.getAllIngredient();
     };
     
-    $scope.remove = function (value) {
+    $scope.setRemove = function (value) {
         $scope.retVals = addIngredientService.deleteSpecificIngredient(value);
     }
 
@@ -125,6 +124,7 @@ app.controller('addARecipeCtrl', function ($scope, $q, $state, MealService, addI
         addIngredientService.setEmpty();
         $state.go('addAnIngredient', {}, { reload: true });
     }
+
     $scope.trackMeal = function (form) {
      
         if (form.$valid) {
@@ -140,12 +140,27 @@ app.controller('addARecipeCtrl', function ($scope, $q, $state, MealService, addI
             
         }
     };
-    //todo
-})
-
     
-app.controller('dailyNutritionCtrl', function($scope, $state) {
-  console.log("Daily nutrition");
+   $scope.addPicture = function () {
+        var options = {
+        	quality: 50,
+        	destinationType: Camera.DestinationType.DATA_URL,
+        	sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+            //IN PROD -sourceType: Camera.PictureSourceType.CAMERA
+        	allowEdit: true,
+        	encodingType: Camera.EncodingType.JPEG,
+        	targetWidth: 480,
+        	popoverOptions: CameraPopoverOptions,
+        	saveToPhotoAlbum: false
+       };
+    
+
+        $cordovaCamera.getPicture(options).then(function (imageData) {
+            $scope.formData.picture = imageData;
+        }, function (err) {
+            console.error(err);
+        });
+       }
 
   $scope.addNewDailyNutrition = function(){
     //console.log("Function");
