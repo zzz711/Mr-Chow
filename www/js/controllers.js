@@ -1,4 +1,4 @@
-var app = angular.module('app.controllers', ['ngCordova'])
+var app = angular.module('app.controllers', ['ngCordova', 'firebase'])
 
   
 app.controller('recipeCardHolderCtrl', function($scope) {
@@ -95,7 +95,7 @@ app.controller('addIngredientCtrl', function ($scope, $state,$http,  addIngredie
 
 })
 
-app.controller('addARecipeCtrl',  function ($scope, $q, $state, $cordovaCamera, addIngredientService, MealService) {
+app.controller('addARecipeCtrl',  function ($scope, $q, $state, $cordovaCamera, $firebaseArray, addIngredientService, MealService, addRecipeFirebaseService) {
     $scope.resetFormData = function () {
         $scope.formData = {
             'recipeName': '',
@@ -130,13 +130,8 @@ app.controller('addARecipeCtrl',  function ($scope, $q, $state, $cordovaCamera, 
         if (form.$valid) {
             // $ionicLoading.show();
            
-            MealService.track($scope.formData).then(function () {
-                //$scope.resetFormData();
-                // $ionicLoading.hide();
-                form.$setPristine(true);
-            
+            addRecipeFirebaseService.saveRecipe(form, $scope.ingredient);
                 $state.go('main.recipeBook');
-            });
             
         }
     };
@@ -162,23 +157,10 @@ app.controller('addARecipeCtrl',  function ($scope, $q, $state, $cordovaCamera, 
         });
        }
 
-  $scope.addNewDailyNutrition = function(){
-    //console.log("Function");
-
-    var today = new Date();
-    var year = today.getFullYear();
-    var month = today.getMonth() + 1; //month starts at 0
-    var day = today.getDate();
-   
-    today = month + "/" + day + "/" + year;
-    console.log(today);
-
-    $state.go("addNutrition");
-  };
 
 })
    
-.controller('myMedsCtrl', function($scope) {
+app.controller('myMedsCtrl', function($scope) {
 
 })
    
@@ -186,7 +168,20 @@ app.controller('addMedicineCtrl', function($scope) {
 
 })
    
-.controller('addNutritionCtrl', function($scope) {
+app.controller('addNutritionCtrl', function ($scope) {
+        $scope.addNewDailyNutrition = function () {
+        //console.log("Function");
+
+        var today = new Date();
+        var year = today.getFullYear();
+        var month = today.getMonth() + 1; //month starts at 0
+        var day = today.getDate();
+
+        today = month + "/" + day + "/" + year;
+        console.log(today);
+
+        $state.go("addNutrition");
+    };
   console.log("Add Nutrition");
 
   $scope.formData = {

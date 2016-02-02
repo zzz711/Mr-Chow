@@ -1,4 +1,4 @@
-var app = angular.module('app.services', []);
+var app = angular.module('app.services', ['firebase']);
 
 app.service('AuthService', function ($q, $ionicPopup, $state) {
     var self = {
@@ -56,6 +56,33 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
 
     return self;
 });
+
+
+app.service("addRecipeFirebaseService", function ($firebaseArray) {
+    var firebaseObj = new Firebase("https://boiling-fire-9023.firebaseio.com/");
+    var fb = $firebaseArray(firebaseObj);
+
+    return{
+        saveRecipe: function (data, ingredients) {
+            console.log(data)
+            fb.$add({
+                recipeName: data.recipeName,
+                prepTime: data.prepTime,
+                cookingTime: data.cookingTime,
+                servesNMany: data.servesNMany, 
+                recipeDesc: data.recipeDesc, 
+             }).then(function (ref) {
+                console.log(ref);
+            }, function (error) {
+                console.log("Error:", error);
+            });
+        }
+
+    };  
+
+
+})
+
 
 app.service("MealService", function ($q,$ionicPopup) {
     var self = {
