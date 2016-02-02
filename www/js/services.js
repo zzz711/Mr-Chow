@@ -130,7 +130,7 @@ app.service("MealService", function ($q,$ionicPopup) {
             recipe.set('created', new Date());
 
             recipe.save(null, {
-                success: function (meal) { 
+                success: function (meal) {
                     console.log("meal tracked")
                     self.results.unshift(recipe);
                     d.resolve(recipe);
@@ -197,7 +197,7 @@ app.service("MealService", function ($q,$ionicPopup) {
             recipe.set('created', new Date());
 
             recipe.save(null, {
-                success: function (meal) { 
+                success: function (meal) {
                     console.log("meal tracked")
                     self.results.unshift(recipe);
                     d.resolve(recipe);
@@ -239,7 +239,7 @@ app.service("MealService", function ($q,$ionicPopup) {
                                 ingName: data.ingName,
                                 ingInstructions: data.ingInstructions,
                                 quantity: data.quantity,
-                                measurement: data.measurement  
+                                measurement: data.measurement
                             }
 
                     );
@@ -250,7 +250,7 @@ app.service("MealService", function ($q,$ionicPopup) {
             getAllIngredient: function () {
                 return (x);
             },
-        
+
             getSpecificIngredient: function () {
                 return (passedPage);
             },
