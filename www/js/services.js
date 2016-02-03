@@ -69,8 +69,8 @@ app.service("addRecipeFirebaseService", function ($firebaseArray) {
                 recipeName: data.recipeName,
                 prepTime: data.prepTime,
                 cookingTime: data.cookingTime,
-                servesNMany: data.servesNMany, 
-                recipeDesc: data.recipeDesc, 
+                servesNMany: data.servesNMany,
+                recipeDesc: data.recipeDesc,
              }).then(function (ref) {
                 console.log(ref);
             }, function (error) {
@@ -78,7 +78,7 @@ app.service("addRecipeFirebaseService", function ($firebaseArray) {
             });
         }
 
-    };  
+    };
 
 
 })

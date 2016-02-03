@@ -1,12 +1,12 @@
 var app = angular.module('app.controllers', ['ngCordova', 'firebase'])
 
-  
+
 app.controller('recipeCardHolderCtrl', function($scope) {
 
 })
 
 
-   
+
 app.controller('loginCtrl', function ($scope, AuthService, $state) {
     console.log("loginCtrl::log");
 
@@ -65,19 +65,19 @@ app.controller('signupCtrl', function ($scope, $state, $ionicPopup, AuthService)
 
 })
 
-      
+
 app.controller('recipeBookCtrl', function($scope) {
 
 })
-   
+
 app.controller('friedChickenCtrl', function($scope) {
 
 })
-   
+
 app.controller('spaghettiCtrl', function($scope) {
 
 })
-   
+
 
 app.controller('addIngredientCtrl', function ($scope, $state,$http,  addIngredientService) {
     $scope.$on('$ionicView.enter', function () {
@@ -111,7 +111,7 @@ app.controller('addARecipeCtrl',  function ($scope, $q, $state, $cordovaCamera, 
     $scope.ingredient = function () {
         $scope.retVals = addIngredientService.getAllIngredient();
     };
-    
+
     $scope.setRemove = function (value) {
         $scope.retVals = addIngredientService.deleteSpecificIngredient(value);
     }
@@ -126,16 +126,16 @@ app.controller('addARecipeCtrl',  function ($scope, $q, $state, $cordovaCamera, 
     }
 
     $scope.trackMeal = function (form) {
-     
+
         if (form.$valid) {
             // $ionicLoading.show();
-           
+
             addRecipeFirebaseService.saveRecipe(form, $scope.ingredient);
                 $state.go('main.recipeBook');
-            
+
         }
     };
-    
+
    $scope.addPicture = function () {
         var options = {
         	quality: 50,
@@ -148,7 +148,7 @@ app.controller('addARecipeCtrl',  function ($scope, $q, $state, $cordovaCamera, 
         	popoverOptions: CameraPopoverOptions,
         	saveToPhotoAlbum: false
        };
-    
+
 
         $cordovaCamera.getPicture(options).then(function (imageData) {
             $scope.formData.picture = imageData;
@@ -161,14 +161,23 @@ app.controller('addARecipeCtrl',  function ($scope, $q, $state, $cordovaCamera, 
 })
 
 app.controller('dailyNutritionCtrl', function($scope){
+  $scope.formData ={
+    mealName: "",
+    mealContents: "",
+    foodType: "",
+    date: "",
+    comments: ""
+  };
+
   $scope.addNewDailyNutrition = function(){
     //console.log("Function");
+
 
     var today = new Date();
     var year = today.getFullYear();
     var month = today.getMonth() + 1; //month starts at 0
     var day = today.getDate();
-   
+
     today = month + "/" + day + "/" + year;
     console.log(today);
 
@@ -203,30 +212,30 @@ app.controller('addMedicineCtrl', function($scope) {
     nutritionService
   }
 })
-   
+
 app.controller('11/1/2015Ctrl', function($scope) {
 
 })
-   
+
 .controller('11/2/2015Ctrl', function($scope) {
 
 })
-   
+
 app.controller('11/3/2015Ctrl', function($scope) {
 
 })
-   
+
 app.controller('settingsCtrl', function($scope, $state) {
   $scope.changePW = function (){
     $state.go("changePW");
   }
 
 })
-   
+
 app.controller('myAccountCtrl', function($scope) {
 
 })
-   
+
 app.controller('shareMyDataCtrl', function($scope) {
 
 })
