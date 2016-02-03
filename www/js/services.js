@@ -1,4 +1,4 @@
-var app = angular.module('app.services', ['firebase']);
+var app = angular.module('app.services', ['ngCordova', 'firebase']);
 
 app.service('AuthService', function ($q, $ionicPopup, $state) {
     var self = {
@@ -59,29 +59,58 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
 
 
 app.service("addRecipeFirebaseService", function ($firebaseArray) {
-    var firebaseObj = new Firebase("https://boiling-fire-9023.firebaseio.com/");
-    var fb = $firebaseArray(firebaseObj);
+    var recipeTable = new Firebase("https://boiling-fire-9023.firebaseio.com/recipe/recipe");
+
+    recipeTable = $firebaseArray(recipeTable);
+    function guid() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+              .toString(16)
+              .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+          s4() + '-' + s4() + s4() + s4();
+    }
 
     return{
         saveRecipe: function (data, ingredients) {
-            console.log(data)
-            fb.$add({
-                recipeName: data.recipeName,
-                prepTime: data.prepTime,
-                cookingTime: data.cookingTime,
-                servesNMany: data.servesNMany,
-                recipeDesc: data.recipeDesc,
-             }).then(function (ref) {
-                console.log(ref);
-            }, function (error) {
-                console.log("Error:", error);
+            var recipeGuid = guid();
+
+
+            data.recipe = recipeTable.$add({
+             "recipe": {
+                 recipeGuid: recipeGuid,
+                 recipeName: data.recipeName.$viewValue,
+                 prepTime: data.prepTime.$viewValue,
+                 cookingTime: data.cookingTime.$viewValue,
+                 servesNMany: data.servesNMany.$viewValue,
+                 recipeDesc: data.recipeDesc.$viewValue,
+             }
             });
+            var x = 1;
+            angular.forEach(ingredients, function (ing, index) {
+                var ingredientTable = new Firebase("https://boiling-fire-9023.firebaseio.com/recipe/ingredient/"+recipeGuid+x);
+                ingredientTable = $firebaseArray(ingredientTable);
+
+                var ingredientGuid = guid();
+                x = x + 1;
+                ingredientTable.$add({
+                            recipeGuid: recipeGuid,
+                            ingredientGuid: ingredientGuid,
+                            ingName: ing.ingName,
+                            ingInstructions: ing.ingInstructions,
+                            quantity: ing.quantity,
+                            measurement: ing.measurement
+                        });
+
+            });
+
+
+
+
         }
-
     };
-
-
-})
+ })
 
 
 app.service("MealService", function ($q,$ionicPopup) {
@@ -233,21 +262,18 @@ app.service("MealService", function ($q,$ionicPopup) {
 
         return {
             setIngredient: function (data, $http) {
-                x.push(
-                            {
+                x.push({
                                 id: i,
                                 ingName: data.ingName,
                                 ingInstructions: data.ingInstructions,
                                 quantity: data.quantity,
                                 measurement: data.measurement
-                            }
-
-                    );
+                            });
                 i = i + 1;
-                console.log("YELLKAFHLKSHLDKJAHSJKDH", x);
             },
 
             getAllIngredient: function () {
+                console.log(x)
                 return (x);
             },
 
@@ -258,6 +284,7 @@ app.service("MealService", function ($q,$ionicPopup) {
             getPageVals: function () {
                 return passedPage;
             },
+
 
             deleteSpecificIngredient: function (val) {
                 var index = x.indexOf(val);
@@ -286,7 +313,10 @@ app.service("MealService", function ($q,$ionicPopup) {
                 passedPage.quantity = "";
                 passedPage.measurement = "";
                 return passedPage;
-        }
+            },
+            resetArray: function () {
+                x = [];
+            }
 
         };
     });

@@ -6,7 +6,6 @@ app.controller('recipeCardHolderCtrl', function($scope) {
 })
 
 
-
 app.controller('loginCtrl', function ($scope, AuthService, $state) {
     console.log("loginCtrl::log");
 
@@ -126,12 +125,15 @@ app.controller('addARecipeCtrl',  function ($scope, $q, $state, $cordovaCamera, 
     }
 
     $scope.trackMeal = function (form) {
-
         if (form.$valid) {
             // $ionicLoading.show();
-
-            addRecipeFirebaseService.saveRecipe(form, $scope.ingredient);
+            $scope.retVals = addIngredientService.getAllIngredient();
+            console.log($scope.retVals);
+            addRecipeFirebaseService.saveRecipe(form, $scope.retVals);
                 $state.go('main.recipeBook');
+                $scope.retVals = "";
+                addIngredientService.resetArray();
+                console.log($scope.retVals);
 
         }
     };
