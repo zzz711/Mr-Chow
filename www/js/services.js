@@ -1,24 +1,5 @@
 var app = angular.module('app.services', ['ngCordova', 'firebase']);
 
-function checkIfDefined(x) {
-    if (angular.isUndefined(x)) {
-        return ("");
-    }
-    return x;
-}
-
-function guid() {
-    function s4() {
-        return Math.floor((1 + Math.random()) * 0x10000)
-          .toString(16)
-          .substring(1);
-    }
-    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
-      s4() + '-' + s4() + s4() + s4();
-}
-
-
-
 app.service('AuthService', function ($q, $ionicPopup, $state) {
     var self = {
         user: null,
@@ -77,42 +58,33 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
 });
 
 
-
-app.service("addMedicineFirebaseService", function ($firebaseArray) {
-    var medTable = new Firebase("https://boiling-fire-9023.firebaseio.com/medications");
-    medTable = $firebaseArray(medTable);
-
-    return {
-        saveMeds: function (data) {
-            var medGuid = guid();
-            data.recipe = medTable.$add({
-                "medicines": {
-                    medGuid: medGuid,
-                    mediName: checkIfDefined(data.mediName),
-                    mediAmount: checkIfDefined(data.mediAmount),
-                    mediTimes: checkIfDefined(data.mediTimes),
-                    mediInstructions: checkIfDefined(data.mediInstructions)
-                }
-            });
-            console.log("Med Save Success");
-        }};
-})
-
 app.service("addRecipeFirebaseService", function ($firebaseArray) {
     var recipeTable = new Firebase("https://boiling-fire-9023.firebaseio.com/recipe/recipe");
+
+    recipeTable = $firebaseArray(recipeTable);
+    function guid() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+              .toString(16)
+              .substring(1);
+        }
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+          s4() + '-' + s4() + s4() + s4();
+    }
 
     return{
         saveRecipe: function (data, ingredients) {
             var recipeGuid = guid();
-            console.log(recipeGuid());
-            recipeTable.$add({
+          
+
+            data.recipe = recipeTable.$add({
              "recipe": {
                  recipeGuid: recipeGuid,
-                 recipeName: checkIfDefined(data.recipeName.$viewValue),
-                 prepTime: checkIfDefined(data.prepTime.$viewValue),
-                 cookingTime: checkIfDefined(data.cookingTime.$viewValue),
-                 servesNMany: checkIfDefined(data.servesNMany.$viewValue),
-                 recipeDesc: checkIfDefined(data.recipeDesc.$viewValue),
+                 recipeName: data.recipeName.$viewValue,
+                 prepTime: data.prepTime.$viewValue,
+                 cookingTime: data.cookingTime.$viewValue,
+                 servesNMany: data.servesNMany.$viewValue,
+                 recipeDesc: data.recipeDesc.$viewValue,
              }
             });
             var x = 1;
@@ -125,15 +97,19 @@ app.service("addRecipeFirebaseService", function ($firebaseArray) {
                 ingredientTable.$add({
                             recipeGuid: recipeGuid,
                             ingredientGuid: ingredientGuid,
-                            ingName: checkIfDefined(ing.ingName),
-                            ingInstructions: checkIfDefined(ing.ingInstructions),
-                            quantity: checkIfDefined(ing.quantity),
-                            measurement: checkIfDefined(ing.measurement)
+                            ingName: ing.ingName,
+                            ingInstructions: ing.ingInstructions,
+                            quantity: ing.quantity,
+                            measurement: ing.measurement
                         });
 
             });
 
-        }};  
+
+         
+
+        }
+    };  
  })
 
 
