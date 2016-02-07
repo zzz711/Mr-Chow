@@ -1,27 +1,43 @@
 <ion-view title="Add Medicine">
     <ion-content overflow-scroll="true" padding="true" class="has-header">
-        <h4>Medicine Name</h4>
-        <form class="list">
-            <label class="item item-input">
-                <input type="text" placeholder="Aspirin">
-            </label>
+        <form name="addMedicineForm"
+                novalidate="novalidate"
+              ng-submit="addMedicine()"
+              class="create-form">
+            <section>
+                <label class="item item-input">
+                    <span class="input-label">Medicine Name</span>
+                    <input type="text"
+                           ng-model="formData.mediName"
+                           ng-init="formData.mediName"
+                           placeholder="Aspirin, Ibuprofin, etc.">
+                </label>
+
+                <label class="item item-input">
+                    <span class="input-label">Amount Per Serving</span>
+                    <input type="text"
+                           ng-model="formData.mediAmount"
+                           ng-init="formData.mediAmount"
+                           placeholder="2, 3, 4">
+                </label>
+
+                <label class="item item-input">
+                    <span class="input-label">Taken</span>
+                    <input type="text"
+                           ng-model="formData.mediTimes"
+                           ng-init="formData.mediTimes"
+                           placeholder="Daily, Monthly, etc">
+                </label>
+
+                <label class="item item-input">
+                    <span class="input-label">Extra Info</span>
+                    <input type="text"
+                           ng-model="formData.mediInstructions"
+                           ng-init="formData.mediInstructions"
+                          placeholder="Take one at night with food.">
+                </label>
+            </section>
+            <button class="button button-balanced button-block" type="submit">Add Medication</button>
         </form>
-        <h4>Amount Per Serving</h4>
-        <form class="list">
-            <label class="item item-input">
-                <input type="number" placeholder="2, 3, 4">
-            </label>
-            <h4>Taken</h4>
-            <label class="item item-input">
-                <input type="text" placeholder="Daily, Monthly, etc">
-            </label>
-        </form>
-        <h4>Extra</h4>
-        <form class="list">
-            <label class="item item-input">
-                <input type="text" placeholder="Take one at night with food.">
-            </label>
-        </form>
-        <a href="#/page5/page15" class="button button-stable button-block ">Add New</a>
     </ion-content>
 </ion-view>

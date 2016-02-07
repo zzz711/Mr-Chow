@@ -4,7 +4,7 @@ var app = angular.module('app.controllers', ['ngCordova', 'firebase'])
 app.controller('recipeCardHolderCtrl', function($scope) {
 
 })
-
+      
    
 app.controller('loginCtrl', function ($scope, AuthService, $state) {
     console.log("loginCtrl::log");
@@ -80,9 +80,7 @@ app.controller('spaghettiCtrl', function($scope) {
 
 app.controller('addIngredientCtrl', function ($scope, $state,$http,  addIngredientService) {
     $scope.$on('$ionicView.enter', function () {
-    $scope.initialize = addIngredientService.getSpecificIngredient();
-        console.log("INITIALIZE IS ", $scope.initialize);
-        $scope.measurement =  $scope.initialize.measurement;
+        $scope.initialize = addIngredientService.getSpecificIngredient();
     });
 
     $scope.doStuff = function () {
@@ -130,10 +128,11 @@ app.controller('addARecipeCtrl',  function ($scope, $q, $state, $cordovaCamera, 
             $scope.retVals = addIngredientService.getAllIngredient();
             console.log($scope.retVals);
             addRecipeFirebaseService.saveRecipe(form, $scope.retVals);
-                $state.go('main.recipeBook');
-                $scope.retVals = "";
-                addIngredientService.resetArray();
-                console.log($scope.retVals);
+            $scope.formData = angular.copy({});
+            $state.go('main.recipeBook');
+            $scope.retVals = "";
+            addIngredientService.resetArray();
+            console.log($scope.retVals);
  
         }
     };
@@ -183,7 +182,22 @@ app.controller('dailyNutritionCtrl', function($scope){
 
 })
 
-app.controller('addMedicineCtrl', function($scope) {
+app.controller('addMedicineCtrl', function ($scope, $state, addMedicineFirebaseService) {
+    $scope.formData = {
+        "mediName": "",
+        "mediAmount": "",
+        "mediTimes": "",
+        "mediInstructions":""
+    };
+
+
+    $scope.addMedicine = function () {
+        console.log($scope);
+        addMedicineFirebaseService.saveMeds($scope.formData);
+        $scope.formData = angular.copy({});
+        $state.go('main.myMeds');
+    }
+
 
 })
 
@@ -202,7 +216,6 @@ app.controller('addMedicineCtrl', function($scope) {
     console.log($scope.formData.servings);
     console.log($scope.formData.calories);
 
-    nutritionService
   }
 })
    
