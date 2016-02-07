@@ -5,25 +5,57 @@
                 <i class="icon ion-search placeholder-icon"></i>
                 <input type="search" placeholder="Food Item Eaten">
             </label>
-            <h4>Meal</h4>
+
         </form>
-        <form class="list">
-            <label class="item item-select" name="Meal Dropdown">
-                <span class="input-label"></span>
-                <select></select>
+        <form class="list"
+              name="addNutritonForm"
+              ng-submit="addNewDailyNutrition(addNutritonForm)"
+              novalidate
+              class="create-form">
+          <section>
+
+            <div class="form-errors"
+                 ng-messages="addNutritonForm.recipeName.$error"
+                 ng-show="addNutritonForm.myName.$touched || addNutritonForm.$submitted"
+                 ng-messages-include="templates/form-errors.html"></div>
+            <label class="item item-input item-floating-label">
+              <span class="input-label">Meal Name</span>
+              <input type="text"
+                     ng-model="formData.mealName"
+                     name="MealName"
+                     placeholder="Meal Name">
             </label>
+            <label class="item item-input item-floating-label">
+              <span class="input-label">Meal Contents</span>
+              <input type="text"
+                     ng-model="formData.mealContents"
+                     name="mealContents"
+                     placeholder="Meal Contents">
+            </label>
+            <label class="item item-input item-floating-label">
+              <span class="input-label">Type of Food</span>
+              <input type="text"
+                     ng-model="formData.foodType"
+                     name="foodType"
+                     placeholder="Type of Food">
+            </label>
+
+            <h4> Date and Time</h4>
+            <label class="item item-input item-floating-label">
+              <input datetime-picker
+                     ng-model="formData.date"
+                     date-format="yyyy-MM-dd HH:mm">
+            </label>
+
+            <label class="item item-input item-floating-label">
+              <span class="input-label  item-text-wrap">Additional Comments</span>
+              <input type="text"
+                     ng-model="formData.comments"
+                     name="comments"
+                     placeholder="Additional Comments">
+            </label>
+          </section>
         </form>
-        <h4>Servings Eaten</h4>
-        <form class="list">
-            <label class="item item-input">
-                <input type="number" placeholder="2, 3, 4">
-            </label>
-            <h4>Calories</h4>
-            <label class="item item-input">
-                <input type="text" placeholder="Daily, Monthly, etc">
-            </label>
-        </form>
-        <form class="list"></form>
-        <a href="#/page5/page14" class="button button-stable button-block ">Add New</a>
+      <button class="button button-balanced button-block" type="submit">Submit</button>
     </ion-content>
 </ion-view>

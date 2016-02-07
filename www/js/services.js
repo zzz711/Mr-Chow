@@ -75,7 +75,7 @@ app.service("addRecipeFirebaseService", function ($firebaseArray) {
     return{
         saveRecipe: function (data, ingredients) {
             var recipeGuid = guid();
-          
+
 
             data.recipe = recipeTable.$add({
              "recipe": {
@@ -106,10 +106,10 @@ app.service("addRecipeFirebaseService", function ($firebaseArray) {
             });
 
 
-         
+
 
         }
-    };  
+    };
  })
 
 
@@ -159,7 +159,7 @@ app.service("MealService", function ($q,$ionicPopup) {
             recipe.set('created', new Date());
 
             recipe.save(null, {
-                success: function (meal) { 
+                success: function (meal) {
                     console.log("meal tracked")
                     self.results.unshift(recipe);
                     d.resolve(recipe);
@@ -226,7 +226,7 @@ app.service("MealService", function ($q,$ionicPopup) {
             recipe.set('created', new Date());
 
             recipe.save(null, {
-                success: function (meal) { 
+                success: function (meal) {
                     console.log("meal tracked")
                     self.results.unshift(recipe);
                     d.resolve(recipe);
@@ -259,6 +259,7 @@ app.service("MealService", function ($q,$ionicPopup) {
             measurement: ''
         };
 
+
         return {
             setIngredient: function (data, $http) {
                 x.push({
@@ -266,7 +267,7 @@ app.service("MealService", function ($q,$ionicPopup) {
                                 ingName: data.ingName,
                                 ingInstructions: data.ingInstructions,
                                 quantity: data.quantity,
-                                measurement: data.measurement  
+                                measurement: data.measurement
                             });
                 i = i + 1;
             },
@@ -275,7 +276,7 @@ app.service("MealService", function ($q,$ionicPopup) {
                 console.log(x)
                 return (x);
             },
-        
+
             getSpecificIngredient: function () {
                 return (passedPage);
             },
