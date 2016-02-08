@@ -219,6 +219,17 @@ app.controller('addMedicineCtrl', function($scope) {
 
   };
 
+  $scope.addIngredient = function(form){
+    console.log("Add new ingredient");
+    if(form.$valid) {
+      // MealService.add($scope.formData);
+      $state.go("addIngredient");
+    }
+    else {
+      console.log("Form is not valid");
+    }
+  };
+
   $scope.scanBarcode = function () {
       $cordovaBarcodeScanner.scan().then(function (imageData) {
           alert(imageData.text);
@@ -230,17 +241,6 @@ app.controller('addMedicineCtrl', function($scope) {
   };
 })
 
-  $scope.addIngredient = function(form){
-    console.log("Add new ingredient");
-    if(form.$valid) {
-     // MealService.add($scope.formData);
-      $state.go("addIngredient");
-    }
-    else {
-      console.log("Form is not valid");
-    }
-  };
-})
 
 app.controller('11/1/2015Ctrl', function($scope) {
 
