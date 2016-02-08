@@ -79,11 +79,31 @@ app.controller('spaghettiCtrl', function($scope) {
 
 
 app.controller('addIngredientCtrl', function ($scope, $state,$http,  addIngredientService) {
-    $scope.$on('$ionicView.enter', function () {
-    $scope.initialize = addIngredientService.getSpecificIngredient();
-        console.log("INITIALIZE IS ", $scope.initialize);
-        $scope.measurement =  $scope.initialize.measurement;
-    });
+    $scope.formData = {
+      foodName: "",
+      foodColor: "",
+      foodType: "",
+      fatContent: "",
+      freshness: "",
+      comments: ""
+    };
+
+    $scope.submit = function(form){
+      addIngredientService.add($scope.formData, 1);
+      $state.go("main.dailyNutrition");
+    };
+
+    $scope.addIngredient = function(form){
+      addIngredientService.add($scope.formData);
+      form.$setUntouched();
+      form.$setPristine(); //don't need both, just need to see which one works
+    };
+
+    //$scope.$on('$ionicView.enter', function () {
+    //$scope.initialize = addIngredientService.getSpecificIngredient();
+    //    console.log("INITIALIZE IS ", $scope.initialize);
+    //    $scope.measurement =  $scope.initialize.measurement;
+    //});
 
     $scope.doStuff = function () {
             // $ionicLoading.show();
@@ -163,28 +183,7 @@ app.controller('addARecipeCtrl',  function ($scope, $q, $state, $cordovaCamera, 
 })
 
 app.controller('dailyNutritionCtrl', function($scope){
-  $scope.formData ={
-    mealName: "",
-    mealContents: "",
-    foodType: "",
-    date: "",
-    comments: ""
-  };
 
-  $scope.addNewDailyNutrition = function(){
-    //console.log("Function");
-
-
-    var today = new Date();
-    var year = today.getFullYear();
-    var month = today.getMonth() + 1; //month starts at 0
-    var day = today.getDate();
-
-    today = month + "/" + day + "/" + year;
-    console.log(today);
-
-    $state.go("addNutrition");
-  };
 })
 
 
@@ -196,23 +195,40 @@ app.controller('addMedicineCtrl', function($scope) {
 
 })
 
-.controller('addNutritionCtrl', function($scope) {
+.controller('addNutritionCtrl', function($scope, $state, MealService) {
   console.log("Add Nutrition");
 
-  $scope.formData = {
-    "searchResults": "",
-    "meal": "",
-    "servings" : "",
-    "calories": ""
+  $scope.formData ={
+    mealName: "",
+    mealContents: "",
+    foodType: "",
+    date: "",
+    time: "",
+    comments: ""
   };
 
-  $scope.logNutrition = function(form){
-    console.log($scope.formData.meal);
-    console.log($scope.formData.servings);
-    console.log($scope.formData.calories);
+  $scope.addNewDailyNutrition = function(form){
+    console.log($scope.formData);
+    if(form.$valid) {
+      MealService.add($scope.formData);
+      $state.go("main.dailyNutrition");
+    }
+    else{
+      console.log("Form is not valid")
+    }
 
-    nutritionService
-  }
+  };
+
+  $scope.addIngredient = function(form){
+    console.log("Add new ingredient");
+    if(form.$valid) {
+     // MealService.add($scope.formData);
+      $state.go("addIngredient");
+    }
+    else {
+      console.log("Form is not valid");
+    }
+  };
 })
 
 app.controller('11/1/2015Ctrl', function($scope) {
@@ -263,6 +279,7 @@ app.controller('changePWCtrl', function($scope, $ionicPopup, $state){
           $ionicPopup.alert({
             title: "Password Changed"
           });
+          fbUser.unauth(); //will this cause an error?
           $state.go("main.recipeBook");
           form.$setPristine();
         }).catch(function (error) {

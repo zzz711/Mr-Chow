@@ -42,11 +42,22 @@
 
             <h4> Date and Time</h4>
             <label class="item item-input item-floating-label">
-              <input datetime-picker
+              <input type="text"
                      ng-model="formData.date"
-                     date-format="yyyy-MM-dd HH:mm">
+                     name="date"
+                     placeholder="mm/dd/yyyy">
             </label>
 
+            <label class="item item-input item-floating-label">
+              <input
+                type = "text"
+                ng-model="formData.time"
+                name = "time"
+                placeholder="hh:mm">
+              </label>
+
+
+            <h4></h4>
             <label class="item item-input item-floating-label">
               <span class="input-label  item-text-wrap">Additional Comments</span>
               <input type="text"
@@ -56,6 +67,7 @@
             </label>
           </section>
         </form>
-      <button class="button button-balanced button-block" type="submit">Submit</button>
+      <button class="button button-balanced button-block" type="submit" ng-click="addNewDailyNutrition(addNutritonForm)">Submit</button>
+      <button class="button button-balanced button-block" type="submit" ng-click="addIngredient(addNutritonForm)">Add Ingredient</button>
     </ion-content>
 </ion-view>

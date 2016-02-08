@@ -1,0 +1,65 @@
+<ion-view title="Add Ingredient">
+  <ion-content overflow-scroll="true" padding="true" class="has-header">
+    <form class="list"
+          name="addIngredientForm"
+          ng-submit="addNewIngredient(addIngredientForm)"
+          novalidate
+          class="create-form">
+
+        <div class="form-errors"
+             ng-messages="addIngredientForm.recipeName.$error"
+             ng-show="addIngredientForm.myName.$touched || addIngredientForm.$submitted"
+             ng-messages-include="templates/form-errors.html"></div>
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Meal Name</span>
+          <input type="text"
+                 ng-model="formData.foodName"
+                 name="foodName"
+                 placeholder="Food Name">
+        </label>
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Meal Contents</span>
+          <input type="text"
+                 ng-model="formData.foodColor"
+                 name="foodColor"
+                 placeholder="Color">
+        </label>
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Type of Food</span>
+          <input type="text"
+                 ng-model="formData.foodType"
+                 name="foodType"
+                 placeholder="Type of Food">
+        </label>
+
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Fat Content</span>
+          <input type="text"
+                 ng-model="formData.fatContent"
+                 name="fatContent"
+                 placeholder="Fat Content">
+        </label>
+
+        <label class="item item-input item-floating-label">
+          <span class="input-label"></span>
+          <select ng-model="formData.freshness" name="freshness">
+            <option value="fresh">Fresh</option>
+            <option value="frozen">Frozen</option>
+            <option value="canned">Canned</option>
+            <option value="dried">Dried</option>
+            <option value="other">Other</option>
+          </select>
+        </label>
+
+        <label class="item item-input item-floating-label">
+          <span class="input-label  item-text-wrap">Additional Comments</span>
+          <input type="text"
+                 ng-model="formData.comments"
+                 name="comments"
+                 placeholder="Additional Comments">
+        </label>
+    </form>
+    <button class="button button-balanced button-block" type="submit" ng-click="addIngredient">Add Another Ingredient</button>
+    <button class="button button-balanced button-block" type="submit" ng-click="submit">Submit</button>
+  </ion-content>
+</ion-view>

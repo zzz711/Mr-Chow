@@ -113,7 +113,17 @@ app.service("addRecipeFirebaseService", function ($firebaseArray) {
  })
 
 
-app.service("MealService", function ($q,$ionicPopup) {
+app.service("MealService", function ($q,$ionicPopup, $firebaseObject) {
+  function guid() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+      s4() + '-' + s4() + s4() + s4();
+  }
+
     var self = {
         'page': 0,
         'page_size': '20',
@@ -173,7 +183,34 @@ app.service("MealService", function ($q,$ionicPopup) {
             }
         });
             return d.promise;
+        },
+
+      'add': function(data){
+        var mealGuid = guid();
+        console.log("got data");
+        var fbMeal = new Firebase("https://boiling-fire-9023.firebaseio.com/Meal");
+        var mealObj = $firebaseObject(fbMeal);
+        var user = fbMeal.getAuth(); //Can I do this?
+        var userEmail = user.password.email;
+
+        mealObj.guid = mealGuid;
+        mealObj.user = userEmail;
+        mealObj.mealName = data.mealName;
+        mealObj.mealContents = data.mealContents;
+        mealObj.foodType = data.foodType;
+        mealObj.date = data.date;
+        mealObj.time = data.time;
+        mealObj.comment = data.comments;
+
+        console.log(userEmail);
+
+        mealObj.$save().then(function(fbMeal){
+          fbMeal.key() === mealObj.$id;
+        }), function(error){
+          console.log(error);
         }
+
+      }
 
     };
 
@@ -259,6 +296,12 @@ app.service("MealService", function ($q,$ionicPopup) {
             measurement: ''
         };
 
+      var self = {
+        'add': function (data) {
+          var fbIng = new Firebase("https://boiling-fire-9023.firebaseio.com/Ingredients");
+
+        }
+      };
 
         return {
             setIngredient: function (data, $http) {

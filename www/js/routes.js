@@ -189,15 +189,11 @@ angular.module('app.routes', [])
 
 
 
-
-
     .state('myAccount', {
       url: '/page18',
       templateUrl: 'templates/myAccount.html',
       controller: 'myAccountCtrl'
     })
-
-
 
 
 
@@ -213,6 +209,11 @@ angular.module('app.routes', [])
       controller: 'changePWCtrl'
     })
 
+    .state('addIngredient',{
+      url: '/page21',
+      templateYrl: "templates/addIngredient.html",
+      controller: "addIngredientCtrl"
+    })
 
     ;
 
