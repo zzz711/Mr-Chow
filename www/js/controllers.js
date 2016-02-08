@@ -162,7 +162,7 @@ app.controller('addARecipeCtrl',  function ($scope, $q, $state, $cordovaCamera, 
 
 })
 
-app.controller('dailyNutritionCtrl', function($scope){
+app.controller('dailyNutritionCtrl', function($scope, $cordovaBarcodeScanner){
   $scope.formData ={
     mealName: "",
     mealContents: "",
@@ -184,6 +184,16 @@ app.controller('dailyNutritionCtrl', function($scope){
     console.log(today);
 
     $state.go("addNutrition");
+  };
+
+  $scope.scanBarcode = function () {
+      $cordovaBarcodeScanner.scan().then(function (imageData) {
+          alert(imageData.text);
+          console.log("Barcode Format " + imageData.format);
+          //console.log("Cancelled " + imageData.cancelled);
+      }, function (error) {
+          console.log("An error happened -> " + error);
+      });
   };
 })
 
