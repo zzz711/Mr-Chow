@@ -26,6 +26,6 @@ app.controller('addNutritionCtrl', function($scope, $state) {
   $scope.addIngredient = function(){
     console.log("Add new ingredient");
     MealService.add($scope.formData);
-    $state.go("addIngredient");
+    $state.go("addAnIngredient");
   };
 })

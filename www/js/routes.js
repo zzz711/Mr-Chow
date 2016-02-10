@@ -211,7 +211,7 @@ angular.module('app.routes', [])
 
     .state('addIngredient',{
       url: '/page21',
-      templateYrl: "templates/addIngredient.html",
+      templateUrl: "templates/addIngredient.html",
       controller: "addIngredientCtrl"
     })
 
