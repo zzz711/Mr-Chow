@@ -1,4 +1,4 @@
-var app = angular.module('app.controllers', ['ngCordova', 'firebase'])
+var app = angular.module('app.controllers', ['ngCordova', 'firebase', 'nix.api'])
 
 
 app.controller('recipeCardHolderCtrl', function($scope) {
@@ -114,7 +114,12 @@ app.controller('addIngredientCtrl', function ($scope, $state,$http,  addIngredie
 
 })
 
-app.controller('addARecipeCtrl',  function ($scope, $q, $state, $cordovaCamera, $firebaseArray, addIngredientService, MealService, addRecipeFirebaseService) {
+app.config(function (nixApiProvider) {
+    // change to your credentials
+    nixApiProvider.setApiCredentials('b62a1056', '0096e00788eb1a17cfe1c4c6d2008612');
+});
+
+app.controller('addARecipeCtrl', function ($scope, nixApi, $q, $state, $cordovaCamera, $firebaseArray, addIngredientService, MealService, addRecipeFirebaseService) {
     $scope.resetFormData = function () {
         $scope.formData = {
             'recipeName': '',
@@ -127,9 +132,15 @@ app.controller('addARecipeCtrl',  function ($scope, $q, $state, $cordovaCamera, 
     };
     $scope.resetFormData();
 
+   nixApi.autocomplete('apple')
+    .success(function (suggestions) {
+        $scope.autocomplete = suggestions;
+        console.log($scope.autocomplete);
+    });
     $scope.ingredient = function () {
+
         $scope.retVals = addIngredientService.getAllIngredient();
-    };
+    }
 
     $scope.setRemove = function (value) {
         $scope.retVals = addIngredientService.deleteSpecificIngredient(value);
