@@ -79,6 +79,8 @@ app.controller('spaghettiCtrl', function($scope) {
 
 
 app.controller('addIngredientCtrl', function ($scope, $state,$http,  addIngredientService) {
+  console.log("add ingredient");
+
     $scope.formData = {
       foodName: "",
       foodColor: "",
@@ -89,14 +91,26 @@ app.controller('addIngredientCtrl', function ($scope, $state,$http,  addIngredie
     };
 
     $scope.submit = function(form){
-      addIngredientService.add($scope.formData, 1);
+      console.log($scope.formData);
+      //addIngredientService.add($scope.formData, 1);
       $state.go("main.dailyNutrition");
     };
 
     $scope.addIngredient = function(form){
-      addIngredientService.add($scope.formData);
-      form.$setUntouched();
-      form.$setPristine(); //don't need both, just need to see which one works
+      console.log("addIng");
+      //addIngredientService.add($scope.formData);
+      console.log($scope.formData);
+      clearForm(form)
+    };
+
+    var clearForm =function(form){
+      console.log("clear");
+      $scope.form.foodName = "";
+      $scope.form.foodColor = "";
+      $scope.form.foodType = "";
+      $scope.form.fatContent = "";
+      $scope.form.freshness = "";
+      $scope.form.comments = "";
     };
 
     //$scope.$on('$ionicView.enter', function () {
@@ -105,12 +119,12 @@ app.controller('addIngredientCtrl', function ($scope, $state,$http,  addIngredie
     //    $scope.measurement =  $scope.initialize.measurement;
     //});
 
-    $scope.doStuff = function () {
-            // $ionicLoading.show();
-            addIngredientService.setIngredient($scope.initialize, $http);
-            $scope.initialize = addIngredientService.setEmpty();
-            $state.go('main.addARecipe');
-    };
+    //$scope.doStuff = function () {
+    //        // $ionicLoading.show();
+    //        addIngredientService.setIngredient($scope.initialize, $http);
+    //        $scope.initialize = addIngredientService.setEmpty();
+    //        $state.go('main.addARecipe');
+    //};
 
 })
 
@@ -231,10 +245,9 @@ app.controller('addMedicineCtrl', function($scope) {
   };
 
   $scope.addIngredient = function(form){
-    console.log("Add new ingredient");
     if(form.$valid) {
       // MealService.add($scope.formData);
-      $state.go("addIngredient");
+      $state.go("addAnIngredient");
     }
     else {
       console.log("Form is not valid");
