@@ -41,15 +41,22 @@ app.controller('signupCtrl', function ($scope, $state, $ionicPopup, AuthService)
     $scope.formData = {
         "name": "",
         "email": "",
-        "password": ""
+        "password": "",
+        "confirmPassword": ""
     };
 
     $scope.signUp = function (form) {
         console.log("loginCtrl::signUp");
 
-        if (form.$valid) {
+        if (form.$valid && $scope.formData.password === $scope.formData.confirmPassword) {
             //console.log("uncomment parse code");
             AuthService.signup($scope.formData.name, $scope.formData.email, $scope.formData.password);
+        }
+
+        else if($scope.formData.password != $scope.formData.confirmPassword){
+          $ionicPopup.alert({
+            title:"Passwords Do Not Match",
+          })
         }
 
         else {
@@ -201,11 +208,27 @@ app.controller('dailyNutritionCtrl', function($scope){
 })
 
 
-.controller('myMedsCtrl', function($scope) {
-
+.controller('myMedsCtrl', function($scope, $state) {
+  $scope.addMeds = function(){
+    $state.go("addMedicine")
+  }
 })
 
-app.controller('addMedicineCtrl', function($scope) {
+app.controller('addMedicineCtrl', function($scope, medicineService, $state) {
+  console.log("add meds");
+  $scope.formData = {
+    medicineName: "",
+    amount: "",
+    taken: "",
+    extra: ""
+  }
+
+
+  $scope.logMedication = function(){
+    console.log($scope.formData);
+    medicineService.add($scope.formData);
+    $state.go("main.myMeds");
+  }
 
 })
 

@@ -188,7 +188,9 @@ app.service("MealService", function ($q,$ionicPopup, $firebaseObject) {
       'add': function(data){
         var mealGuid = guid();
         console.log("got data");
-        var fbMeal = new Firebase("https://boiling-fire-9023.firebaseio.com/Meal");
+        var url = "https://boiling-fire-9023.firebaseio.com/Meal/";
+        var fullURL = url.concat(mealGuid.toString());
+        var fbMeal = new Firebase(fullURL);
         var mealObj = $firebaseObject(fbMeal);
         var user = fbMeal.getAuth(); //Can I do this?
         var userEmail = user.password.email;
@@ -363,3 +365,38 @@ app.service("MealService", function ($q,$ionicPopup, $firebaseObject) {
 
         };
     });
+
+app.service("medicineService", function($q, $firebaseObject){
+  function guid() {
+    function s4() {
+      return Math.floor((1 + Math.random()) * 0x10000)
+        .toString(16)
+        .substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+      s4() + '-' + s4() + s4() + s4();
+  }
+
+  function add(data){
+    var medGUID = guid();
+    var url =  "https://boiling-fire-9023.firebaseio.com/Medicine/";
+    var fullUrl = url.concat(medGUID.toString());
+    var fbMed = new Firebase(fullUrl);
+    var medObj = $firebaseObject(fbMed);
+    var user = fbMed.getAuth();
+    var userEmail = user.password.email;
+
+    medObj.guid = medGUID;
+    medObj.user = userEmail;
+    medObj.name = data.medicineName;
+    medObj.amount = data.amount;
+    medObj.taken = data.taken;
+    medObj.extra = data.extra;
+
+    medObj.$save().then(function(fbMed){
+      fbMed.key() === medObj.$id;
+    }), function(error){
+     console.log(error);
+    }
+  }
+});

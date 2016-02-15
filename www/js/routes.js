@@ -209,11 +209,11 @@ angular.module('app.routes', [])
       controller: 'changePWCtrl'
     })
 
-    .state('addIngredient',{
-      url: '/page21',
-      templateUrl: "templates/addIngredient.html",
-      controller: "addIngredientCtrl"
-    })
+    //.state('addIngredient',{
+    //  url: '/page21',
+    //  templateUrl: "templates/addIngredient.html",
+    //  controller: "addIngredientCtrl"
+    //})
 
     ;
 

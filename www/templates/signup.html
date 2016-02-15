@@ -66,6 +66,18 @@
 
               </div>
 
+              <label  class="item item-input"
+                  ng-class="{'has-error':createForm.password.$invalid}">
+                  <span class="input-label">Password</span>
+                <input type="password"
+                       placeholder=""
+                       ng-model="formData.confirmPassword"
+                       name="confirmPassword"
+                       ng-minlength="6"
+                       ng-required="true"
+                >
+                </label>
+
 
             </ion-list>
 
