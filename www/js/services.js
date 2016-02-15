@@ -1,4 +1,4 @@
-var app = angular.module('app.services', ['ngCordova', 'firebase']);
+var app = angular.module('app.services', ['ngCordova', 'firebase', 'ngRoute', 'jsonFormatter']);
 
 app.service('AuthService', function ($q, $ionicPopup, $state) {
     var self = {
