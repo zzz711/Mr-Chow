@@ -19,7 +19,7 @@ app.controller('loginCtrl', function ($scope, AuthService, $state) {
 
         //console.log("uncomment parse code");
         AuthService.login($scope.formData.email, $scope.formData.password);
-    }
+    };
 
     $scope.reset = function () {
       var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
@@ -55,7 +55,7 @@ app.controller('signupCtrl', function ($scope, $state, $ionicPopup, AuthService)
 
         else if($scope.formData.password != $scope.formData.confirmPassword){
           $ionicPopup.alert({
-            title:"Passwords Do Not Match",
+            title:"Passwords Do Not Match"
           })
         }
 
@@ -221,22 +221,29 @@ app.controller('dailyNutritionCtrl', function($scope){
 
 .controller('myMedsCtrl', function($scope, $state) {
   $scope.addMeds = function(){
-    $state.go("addMedicine")
+    $state.go("addMedicine");
   }
 })
 
 app.controller('addMedicineCtrl', function($scope, medicineService, $state) {
-  console.log("add meds");
+  console.log("add medication");
   $scope.formData = {
     medicineName: "",
     amount: "",
     taken: "",
     extra: ""
+  };
+
+
+  $scope.addMedication = function(form){ //wasn't getting called so I made a new function do the same thing
+    console.log("addMedication");
+    if(form.$valid) {
+      // medicineService.add($scope.formData);
+      $state.go("main.myMeds");
+    }
   }
 
-
-  $scope.logMedication = function(){
-    console.log($scope.formData);
+  $scope.addMed = function(){
     medicineService.add($scope.formData);
     $state.go("main.myMeds");
   }

@@ -377,26 +377,43 @@ app.service("medicineService", function($q, $firebaseObject){
       s4() + '-' + s4() + s4() + s4();
   }
 
-  function add(data){
-    var medGUID = guid();
-    var url =  "https://boiling-fire-9023.firebaseio.com/Medicine/";
-    var fullUrl = url.concat(medGUID.toString());
-    var fbMed = new Firebase(fullUrl);
-    var medObj = $firebaseObject(fbMed);
-    var user = fbMed.getAuth();
-    var userEmail = user.password.email;
+  function logDate(){
+    var date = new Date();
+    var day = date.getDate();
+    var month = date.getMonth() + 1;
+    var year = date.getFullYear();
 
-    medObj.guid = medGUID;
-    medObj.user = userEmail;
-    medObj.name = data.medicineName;
-    medObj.amount = data.amount;
-    medObj.taken = data.taken;
-    medObj.extra = data.extra;
+    var fullDate = month + "/" + day + "/" + year;
+    return fullDate;
 
-    medObj.$save().then(function(fbMed){
-      fbMed.key() === medObj.$id;
-    }), function(error){
-     console.log(error);
-    }
   }
+
+  var self = {
+     "add" : function(data)
+      {
+        var medGUID = guid();
+        var url = "https://boiling-fire-9023.firebaseio.com/Medicine/";
+        var fullUrl = url.concat(medGUID.toString());
+        var fbMed = new Firebase(fullUrl);
+        var medObj = $firebaseObject(fbMed);
+        var user = fbMed.getAuth();
+        var userEmail = user.password.email;
+
+        medObj.guid = medGUID;
+        medObj.user = userEmail;
+        medObj.name = data.medicineName;
+        medObj.amount = data.amount;
+        medObj.taken = data.taken;
+        medObj.extra = data.extra;
+        medObj.date = logDate();
+
+        medObj.$save().then(function (fbMed) {
+          fbMed.key() === medObj.$id;
+        }), function (error) {
+          console.log(error);
+        }
+      }
+  };
+
+  return self;
 });
