@@ -1,4 +1,4 @@
-var app = angular.module('app.controllers', ['ngCordova', 'firebase', 'nix.api'])
+var app = angular.module('app.controllers', ['ngCordova', 'firebase', 'nix.api', 'ion-autocomplete'])
 
 
 app.controller('recipeCardHolderCtrl', function($scope) {
@@ -113,18 +113,6 @@ app.controller('addIngredientCtrl', function ($scope, $state,$http,  addIngredie
       $scope.form.comments = "";
     };
 
-    //$scope.$on('$ionicView.enter', function () {
-    //$scope.initialize = addIngredientService.getSpecificIngredient();
-    //    console.log("INITIALIZE IS ", $scope.initialize);
-    //    $scope.measurement =  $scope.initialize.measurement;
-    //});
-
-    //$scope.doStuff = function () {
-    //        // $ionicLoading.show();
-    //        addIngredientService.setIngredient($scope.initialize, $http);
-    //        $scope.initialize = addIngredientService.setEmpty();
-    //        $state.go('main.addARecipe');
-    //};
 
 })
 
@@ -133,77 +121,90 @@ app.config(function (nixApiProvider) {
     nixApiProvider.setApiCredentials('b62a1056', '0096e00788eb1a17cfe1c4c6d2008612');
 });
 
-app.controller('addARecipeCtrl', function ($scope, nixApi, $q, $state, $cordovaCamera, $firebaseArray, addIngredientService, MealService, addRecipeFirebaseService) {
-    $scope.resetFormData = function () {
-        $scope.formData = {
-            'recipeName': '',
-            'prepTime': '',
-            'cookingTime' : '',
-            'servesNMany' : '',
-            'recipeDesc': '',
-            'ingPassed':''
-        };
-    };
-    $scope.resetFormData();
 
-   nixApi.autocomplete('apple')
+
+
+app.controller('addIngredientRecipeCtrl', function ($scope, $state, $http, addIngredientService) {
+
+
+
+    $scope.$on('$ionicView.enter', function () {
+        $scope.initialize = addIngredientService.getSpecificIngredient();
+        $scope.measurement = $scope.initialize.measurement;
+    });
+
+    $scope.doStuff = function () {
+        // $ionicLoading.show();
+        addIngredientService.setIngredient($scope.initialize, $http);
+        $scope.initialize = addIngredientService.setEmpty();
+        $state.go('main.addARecipe');
+    };
+
+})
+
+
+
+app.controller('addARecipeCtrl', function ($scope, nixApi, $q, $state,  $ionicPopover, $cordovaCamera,  addIngredientService, addRecipeFirebaseService) {
+  
+   /*nixApi.autocomplete('apple')
     .success(function (suggestions) {
         $scope.autocomplete = suggestions;
         console.log($scope.autocomplete);
-    });
-    $scope.ingredient = function () {
-
+    });*/
+    
+     $scope.ingredient = function () {
         $scope.retVals = addIngredientService.getAllIngredient();
-    }
+    };
 
     $scope.setRemove = function (value) {
         $scope.retVals = addIngredientService.deleteSpecificIngredient(value);
-    }
+    };
 
     $scope.setFill = function (value) {
         addIngredientService.setSpecificIngredient(value);
-        $state.go('addAnIngredient', {}, { reload: true });
+        $state.go('addAnIngredientRecipe', {}, { reload: true });
     };
+
     $scope.setNew = function () {
         addIngredientService.setEmpty();
-        $state.go('addAnIngredient', {}, { reload: true });
-    }
+        $state.go('addAnIngredientRecipe', {}, { reload: true });
+    };
 
     $scope.trackMeal = function (form) {
         if (form.$valid) {
-            // $ionicLoading.show();
-            $scope.retVals = addIngredientService.getAllIngredient();
-            console.log($scope.retVals);
-            addRecipeFirebaseService.saveRecipe(form, $scope.retVals);
-                $state.go('main.recipeBook');
-                $scope.retVals = "";
-                addIngredientService.resetArray();
-                console.log($scope.retVals);
+           $scope.retVals = addIngredientService.getAllIngredient();
+           addRecipeFirebaseService.saveRecipe(form, $scope.retVals);
+           form.recipeName = "";
+           form.recipeDesc = "";
+           form.servesNMany = "";
+           form.prepTime = "";
+           form.cookingTime = "";
 
+           $state.go('main.recipeBook', {}, { reload: true });
         }
     };
 
-   $scope.addPicture = function () {
+    $scope.addPicture = function () {
         var options = {
-        	quality: 50,
-        	destinationType: Camera.DestinationType.DATA_URL,
-        	sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+            quality: 50,
+            destinationType: Camera.DestinationType.DATA_URL,
+            sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
             //IN PROD -sourceType: Camera.PictureSourceType.CAMERA
-        	allowEdit: true,
-        	encodingType: Camera.EncodingType.JPEG,
-        	targetWidth: 480,
-        	popoverOptions: CameraPopoverOptions,
-        	saveToPhotoAlbum: false
-       };
+            allowEdit: true,
+            encodingType: Camera.EncodingType.JPEG,
+            targetWidth: 480,
+            popoverOptions: CameraPopoverOptions,
+            saveToPhotoAlbum: false
+        };
 
 
         $cordovaCamera.getPicture(options).then(function (imageData) {
             $scope.formData.picture = imageData;
         }, function (err) {
-            console.error(err);
+            console.error("yolo ", err);
         });
-       }
-
+    };
+    
 
 })
 
@@ -246,7 +247,6 @@ app.controller('addMedicineCtrl', function($scope) {
 
   $scope.addIngredient = function(form){
     if(form.$valid) {
-      // MealService.add($scope.formData);
       $state.go("addAnIngredient");
     }
     else {

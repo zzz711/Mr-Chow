@@ -4,6 +4,7 @@
               novalidate="novalidate"
               ng-submit="trackMeal(addRecipeForm)"
               class="create-form">
+
             <section>
                 <h2>Add a recipe</h2>
                 <div class="form-errors"
@@ -13,29 +14,25 @@
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Recipe Title</span>
                     <input type="text"
-                           ng-model="formData.recipeName"
-                           name="recipeName"
+                           ng-model="addRecipeForm.recipeName"
                            placeholder="Recipe Title">
                 </label>
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Prep Time</span>
                     <input type="text"
-                           ng-model="formData.prepTime"
-                           name="prepTime"
+                           ng-model="addRecipeForm.prepTime"
                            placeholder="Prep Time">
                 </label>
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Cooking Time</span>
                     <input type="text"
-                           ng-model="formData.cookingTime"
-                           name="cookingTime"
+                           ng-model="addRecipeForm.cookingTime"
                            placeholder="Cooking Time">
                 </label>
                 <label class="item item-input item-floating-label">
                     <span class="input-label">Serves how many?</span>
                     <input type="text"
-                           ng-model="formData.servesNMany"
-                           name="servesNMany"
+                           ng-model="addRecipeForm.servesNMany"
                            placeholder="Serves how many?">
                 </label>
             </section>
@@ -45,31 +42,33 @@
                 <label class="item item-input item-floating-label">
                     <span class="input-label  item-text-wrap">Describe Your Recipe</span>
                     <input type="text"
-                           ng-model="formData.recipeDesc"
-                           name="recipeDesc"
+                           ng-model="addRecipeForm.recipeDesc"
                            placeholder="Describe Your Recipe">
                 </label>
             </section>
             <br />
-           <!-- <button class="button button-icon ion-camera" ng-click="addPicture()"></button>-->
+            <!-- <button class="button button-icon ion-camera" ng-click="addPicture()"></button>-->
 
             <br />
-            <json-formatter json="autocomplete" open="2"></json-formatter>
+           <!-- <json-formatter json="autocomplete" open="2"></json-formatter>--->
             <br />
             <ion-list class="item-icon-right" ng-controller="addARecipeCtrl" ng-init="ingredient()">
                 <ion-item ng-repeat="i in retVals">
                     <p>{{i.ingName}}</p>
                     <p>{{i.ingInstructions}}</p>
-                    <p> Quantity:  {{i.quantity}}    Measurement: {{i.measurement}}</p>
+                    <p>Fat Content:  {{i.fatContent}}</p>
+                    <p>Freshness:  {{i.freshness}}</p>
+                    <p>Quantity:  {{i.quantity}}</p>
+                    <p>Measurement: {{i.measurement}}</p>
+                    <p>Comments:  {{i.comments}}</p>
 
-                    <ion-option-button class="button-positive" ng-click="setFill(i)" ><i class="icon ion-edit"></i></ion-option-button>
+                    <ion-option-button class="button-positive" ng-click="setFill(i)"><i class="icon ion-edit"></i></ion-option-button>
                     <ion-option-button class="button-assertive" ng-click="setRemove(i)"><i class="icon ion-ios-trash"></i></ion-option-button>
-                    
 
                 </ion-item>
             </ion-list>
 
-            <a href="#/page23" class="button button-stable button-block" ng-click="setNew()">Add Ingredient</a>
+            <a href="#/page24" class="button button-stable button-block" ng-click="setNew()">Add Ingredient</a>
             <button class="button button-balanced button-block" type="submit">Submit Recipe</button>
         </form>
     </ion-content>
