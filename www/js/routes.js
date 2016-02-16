@@ -97,6 +97,12 @@ angular.module('app.routes', [])
         controller: 'addIngredientCtrl'
     })
 
+    .state('addAnIngredientRecipe', {
+            url: '/page24',
+            templateUrl: 'templates/addIngredientRecipe.html',
+            controller: 'addIngredientRecipeCtrl'
+     })
+
 
 
     .state('main.dailyNutrition', {

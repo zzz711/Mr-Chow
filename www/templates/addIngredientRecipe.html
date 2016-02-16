@@ -1,0 +1,67 @@
+﻿<ion-view title="Add Ingredient">
+    <ion-content overflow-scroll="true" padding="true" class="has-header">
+            <div class="form-errors"
+                 ng-messages="addIngredientForm.recipeName.$error"
+                 ng-show="addIngredientForm.myName.$touched || addIngredientForm.$submitted"
+                 ng-messages-include="templates/form-errors.html"></div>
+            <label class="item item-input">
+                <span class="input-label">Meal Name</span>
+                <input type="text"
+                       ng-model="initialize.ingName"
+                       name="foodName"
+                       placeholder="Food Name">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Instructions</span>
+                <input type="text"
+                       ng-model="initialize.ingInstructions"
+                       name="foodColor"
+                       placeholder="Food Instructions">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Fat Content</span>
+                <input type="text"
+                       ng-model="initialize.fatContent"
+                       name="fatContent"
+                       placeholder="Fat Content">
+            </label>
+
+            <label class="item item-input">
+                <span class="input-label">Freshness of Food</span>
+                <select ng-model="initialize.freshness" name="freshness">
+                    <option value="fresh">Fresh</option>
+                    <option value="frozen">Frozen</option>
+                    <option value="canned">Canned</option>
+                    <option value="dried">Dried</option>
+                    <option value="other">Other</option>
+                </select>
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Quantity</span>
+                <input type="text"
+                       ng-model="initialize.quantity"
+                       name="foodType"
+                       placeholder="Quanity of food?">
+            </label>
+            <label class="item item-input">
+                <span class="input-label  item-text-wrap">Type of Measurement</span>
+                <select ng-model="initialize.measurement" name="freshness">
+                    <option value="Teaspoon">Teaspoon</option>
+                    <option value="Tablespoon">Tablespoon</option>
+                    <option value="Ounces">Ounces</option>
+                    <option value="Cups">Cups</option>
+                    <option value="Pints">Pints</option>
+                    <option value="Gallons">Gallons</option>
+                    <option value="Other">Other</option>
+                </select>
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label  item-text-wrap">Additional Comments</span>
+                <input type="text"
+                       ng-model="initialize.comments"
+                       name="comments"
+                       placeholder="Additional Comments">
+            </label>
+        <button class="button button-balanced button-block"  ng-click="doStuff()">Submit</button>
+    </ion-content>
+</ion-view>

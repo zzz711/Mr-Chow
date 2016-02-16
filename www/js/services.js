@@ -62,6 +62,14 @@ app.service("addRecipeFirebaseService", function ($firebaseArray) {
     var recipeTable = new Firebase("https://boiling-fire-9023.firebaseio.com/recipe/recipe");
 
     recipeTable = $firebaseArray(recipeTable);
+    function isUndefined(val) {
+        if (angular.isUndefined(val)) {
+            return null
+        }
+        else
+            return val
+    }
+
     function guid() {
         function s4() {
             return Math.floor((1 + Math.random()) * 0x10000)
@@ -75,19 +83,18 @@ app.service("addRecipeFirebaseService", function ($firebaseArray) {
     return{
         saveRecipe: function (data, ingredients) {
             var recipeGuid = guid();
-
-
             data.recipe = recipeTable.$add({
              "recipe": {
                  recipeGuid: recipeGuid,
-                 recipeName: data.recipeName.$viewValue,
-                 prepTime: data.prepTime.$viewValue,
-                 cookingTime: data.cookingTime.$viewValue,
-                 servesNMany: data.servesNMany.$viewValue,
-                 recipeDesc: data.recipeDesc.$viewValue,
+                 recipeName:  isUndefined(data.recipeName),
+                 prepTime:  isUndefined(data.prepTime),
+                 cookingTime:  isUndefined(data.cookingTime),
+                 servesNMany:  isUndefined(data.servesNMany),
+                 recipeDesc:  isUndefined(data.recipeDesc)
              }
             });
             var x = 1;
+            
             angular.forEach(ingredients, function (ing, index) {
                 var ingredientTable = new Firebase("https://boiling-fire-9023.firebaseio.com/recipe/ingredient/"+recipeGuid+x);
                 ingredientTable = $firebaseArray(ingredientTable);
@@ -97,17 +104,16 @@ app.service("addRecipeFirebaseService", function ($firebaseArray) {
                 ingredientTable.$add({
                             recipeGuid: recipeGuid,
                             ingredientGuid: ingredientGuid,
-                            ingName: ing.ingName,
-                            ingInstructions: ing.ingInstructions,
-                            quantity: ing.quantity,
-                            measurement: ing.measurement
+                            ingName:  isUndefined(ing.ingName),
+                            ingInstructions:  isUndefined(ing.ingInstructions),
+                            fatContent:  isUndefined(ing.fatContent),
+                            freshness:  isUndefined(ing.freshness),
+                            quantity:  isUndefined(ing.quantity),
+                            measurement:  isUndefined(ing.measurement),
+                            comments:  isUndefined(ing.comments)
                         });
 
             });
-
-
-
-
         }
     };
  })
@@ -192,7 +198,7 @@ app.service("MealService", function ($q,$ionicPopup, $firebaseObject) {
         var fullURL = url.concat(mealGuid.toString());
         var fbMeal = new Firebase(fullURL);
         var mealObj = $firebaseObject(fbMeal);
-        var user = fbMeal.getAuth(); //Can I do this?
+        var user = fbMeal.getAuth(); 
         var userEmail = user.password.email;
 
         mealObj.guid = mealGuid;
@@ -204,7 +210,7 @@ app.service("MealService", function ($q,$ionicPopup, $firebaseObject) {
         mealObj.time = data.time;
         mealObj.comment = data.comments;
 
-        console.log(userEmail);
+        console.log("user email ", userEmail);
 
         mealObj.$save().then(function(fbMeal){
           fbMeal.key() === mealObj.$id;
@@ -253,8 +259,6 @@ app.service("MealService", function ($q,$ionicPopup, $firebaseObject) {
             var d = $q.defer();
 
             var Recipe = Parse.Object.extend("Recipe");
-            //var user = AuthService.user;
-            //var file = data.picture ? Parse.File("photo.jpg", { base64: data.picture }) : null;
 
             var recipe = new Recipe();
             recipe.set("owner", "");
@@ -294,26 +298,25 @@ app.service("MealService", function ($q,$ionicPopup, $firebaseObject) {
             id: '',
             ingName: '',
             ingInstructions: '',
+            fatContent: '',
+            freshness: '',
             quantity: '',
-            measurement: ''
+            measurement: '',
+            comments: ''
         };
-
-      var self = {
-        'add': function (data) {
-          var fbIng = new Firebase("https://boiling-fire-9023.firebaseio.com/Ingredients");
-
-        }
-      };
 
         return {
             setIngredient: function (data, $http) {
                 x.push({
-                                id: i,
-                                ingName: data.ingName,
-                                ingInstructions: data.ingInstructions,
-                                quantity: data.quantity,
-                                measurement: data.measurement
-                            });
+                    id: i,
+                    ingName: data.ingName,
+                    ingInstructions: data.ingInstructions,
+                    fatContent: data.fatContent,
+                    freshness: data.freshness,
+                    quantity: data.quantity,
+                    measurement: data.measurement,
+                    comments: data.comments
+                });
                 i = i + 1;
             },
 
@@ -334,7 +337,6 @@ app.service("MealService", function ($q,$ionicPopup, $firebaseObject) {
             deleteSpecificIngredient: function (val) {
                 var index = x.indexOf(val);
                 x.splice(index, 1);
-                console.log(x);
                 return x;
             },
 
@@ -342,11 +344,13 @@ app.service("MealService", function ($q,$ionicPopup, $firebaseObject) {
                 passedPage.id = val.id;
                 passedPage.ingName = val.ingName;
                 passedPage.ingInstructions = val.ingInstructions;
+                passedPage.freshness = val.freshness;
+                passedPage.fatContent = val.fatContent;
                 passedPage.quantity = val.quantity;
                 passedPage.measurement = val.measurement;
+                passedPage.comments = val.comments;
                 console.log(passedPage);
-
-
+              
                 var index = x.indexOf(val);
                 x.splice(index, 1);
                 console.log(x);
@@ -355,8 +359,11 @@ app.service("MealService", function ($q,$ionicPopup, $firebaseObject) {
                 passedPage.id = "";
                 passedPage.ingName = "";
                 passedPage.ingInstructions = "";
+                passedPage.freshness = "";
+                passedPage.fatContent = "";
                 passedPage.quantity = "";
                 passedPage.measurement = "";
+                passedPage.comments = "";
                 return passedPage;
             },
             resetArray: function () {
