@@ -388,6 +388,20 @@ app.service("medicineService", function($q, $firebaseObject){
 
   }
 
+  function load(){
+    var fbMed = new Firebase("https://boiling-fire-9023.firebaseio.com/Medicine/");
+    var medObj = $firebaseObject(fbMed);
+
+    medObj.$loaded()
+      .then(function(data){
+        console.log(data == medObj);
+        //return medObj;
+      }).catch(function(error){
+      console.log(error);
+    });
+
+  }
+
   var self = {
      "add" : function(data)
       {

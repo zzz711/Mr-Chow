@@ -107,7 +107,11 @@ app.controller('addIngredientCtrl', function ($scope, $state,$http,  addIngredie
       console.log("addIng");
       //addIngredientService.add($scope.formData);
       console.log($scope.formData);
-      clearForm(form)
+
+      //TODO: find a way to clear the form
+
+      //$scope.addIngredientForm.$setPristine();
+      //clearForm(form)
     };
 
     var clearForm =function(form){
@@ -120,18 +124,18 @@ app.controller('addIngredientCtrl', function ($scope, $state,$http,  addIngredie
       $scope.form.comments = "";
     };
 
-    //$scope.$on('$ionicView.enter', function () {
-    //$scope.initialize = addIngredientService.getSpecificIngredient();
-    //    console.log("INITIALIZE IS ", $scope.initialize);
-    //    $scope.measurement =  $scope.initialize.measurement;
-    //});
+    $scope.$on('$ionicView.enter', function () {
+    $scope.initialize = addIngredientService.getSpecificIngredient();
+        console.log("INITIALIZE IS ", $scope.initialize);
+        $scope.measurement =  $scope.initialize.measurement;
+    });
 
-    //$scope.doStuff = function () {
-    //        // $ionicLoading.show();
-    //        addIngredientService.setIngredient($scope.initialize, $http);
-    //        $scope.initialize = addIngredientService.setEmpty();
-    //        $state.go('main.addARecipe');
-    //};
+    $scope.doStuff = function () {
+            // $ionicLoading.show();
+            addIngredientService.setIngredient($scope.initialize, $http);
+            $scope.initialize = addIngredientService.setEmpty();
+            $state.go('main.addARecipe');
+    };
 
 })
 
