@@ -19,7 +19,7 @@ app.controller('loginCtrl', function ($scope, AuthService, $state) {
 
         //console.log("uncomment parse code");
         AuthService.login($scope.formData.email, $scope.formData.password);
-    }
+    };
 
     $scope.reset = function () {
       var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
@@ -41,15 +41,22 @@ app.controller('signupCtrl', function ($scope, $state, $ionicPopup, AuthService)
     $scope.formData = {
         "name": "",
         "email": "",
-        "password": ""
+        "password": "",
+        "confirmPassword": ""
     };
 
     $scope.signUp = function (form) {
         console.log("loginCtrl::signUp");
 
-        if (form.$valid) {
+        if (form.$valid && $scope.formData.password === $scope.formData.confirmPassword) {
             //console.log("uncomment parse code");
             AuthService.signup($scope.formData.name, $scope.formData.email, $scope.formData.password);
+        }
+
+        else if($scope.formData.password != $scope.formData.confirmPassword){
+          $ionicPopup.alert({
+            title:"Passwords Do Not Match"
+          })
         }
 
         else {
@@ -213,11 +220,34 @@ app.controller('dailyNutritionCtrl', function($scope){
 })
 
 
-.controller('myMedsCtrl', function($scope) {
-
+.controller('myMedsCtrl', function($scope, $state) {
+  $scope.addMeds = function(){
+    $state.go("addMedicine");
+  }
 })
 
-app.controller('addMedicineCtrl', function($scope) {
+app.controller('addMedicineCtrl', function($scope, medicineService, $state) {
+  console.log("add medication");
+  $scope.formData = {
+    medicineName: "",
+    amount: "",
+    taken: "",
+    extra: ""
+  };
+
+
+  $scope.addMedication = function(form){ //wasn't getting called so I made a new function do the same thing
+    console.log("addMedication");
+    if(form.$valid) {
+      // medicineService.add($scope.formData);
+      $state.go("main.myMeds");
+    }
+  }
+
+  $scope.addMed = function(){
+    medicineService.add($scope.formData);
+    $state.go("main.myMeds");
+  }
 
 })
 

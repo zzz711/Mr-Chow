@@ -1,27 +1,34 @@
 <ion-view title="Add Medicine">
     <ion-content overflow-scroll="true" padding="true" class="has-header">
-        <h4>Medicine Name</h4>
-        <form class="list">
+        <form class="create-form"
+              name = "addMedicineForm"
+              novalidate = "novalidate"
+              ng-submit="addMedication(addMedicineForm)">
+          <h4>Medicine Name</h4>
             <label class="item item-input">
-                <input type="text" placeholder="Aspirin">
+                <input type="text" placeholder="Aspirin" ng-model="medicineName" name = "medicineName">
             </label>
-        </form>
+
         <h4>Amount Per Serving</h4>
-        <form class="list">
+
             <label class="item item-input">
-                <input type="number" placeholder="2, 3, 4">
+                <input type="number" placeholder="2, 3, 4" ng-model = "amount" name = "amount">
             </label>
-            <h4>Taken</h4>
-            <label class="item item-input">
-                <input type="text" placeholder="Daily, Monthly, etc">
-            </label>
-        </form>
+
+        <h4>Taken</h4>
+           <label class="item item-input">
+               <input type="text" placeholder="Daily, Monthly, etc" ng-model = "taken" name = "taken">
+           </label>
+
         <h4>Extra</h4>
-        <form class="list">
+
             <label class="item item-input">
-                <input type="text" placeholder="Take one at night with food.">
+                <input type="text" placeholder="Take one at night with food." ng-model="extra" name = "extra">
             </label>
         </form>
-        <a href="#/page5/page15" class="button button-stable button-block ">Add New</a>
+
+      <!--<button class="button button-balanced button-block" type="submit">Submit</button>-->
+      <button class="button button-balanced button-block" type ="submit" ng-click="addMed()">Submit</button>
+
     </ion-content>
 </ion-view>
