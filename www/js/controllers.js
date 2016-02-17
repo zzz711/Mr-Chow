@@ -1,7 +1,15 @@
 var app = angular.module('app.controllers', ['ngCordova', 'firebase', 'nix.api'/*, 'ion-autocomplete'*/])
 
 
-app.controller('recipeCardHolderCtrl', function($scope) {
+app.controller('recipeCardHolderCtrl', function($scope, AuthService, $state) {
+  $scope.login = function(){
+    if(AuthService.getUser()){
+      $state.go("main.recipeBook");
+    }
+    else{
+      $state.go("login");
+    }
+  }
 
 })
 
@@ -283,6 +291,7 @@ app.controller('addMedicineCtrl', function($scope, medicineService, $state) {
     if(form.$valid) {
       MealService.add($scope.formData);
       //TODO: clear form
+      clear(form);
       $state.go("main.dailyNutrition");
     }
     else{
@@ -295,6 +304,8 @@ app.controller('addMedicineCtrl', function($scope, medicineService, $state) {
     if(form.$valid) {
       MealService.add($scope.formData);
       //TODO: clear form
+      form.$setUntouched();
+      clear(form);
       $state.go("addAnIngredient");
     }
     else {
@@ -311,6 +322,15 @@ app.controller('addMedicineCtrl', function($scope, medicineService, $state) {
           console.log("An error happened -> " + error);
       });
   };
+
+  function clear(form){
+    form.mealName = "";
+    form.mealContents = "";
+    form.foodType = "";
+    form.date = "";
+    form.time = "";
+    form.comments = "";
+  }
 })
 
 
@@ -326,9 +346,14 @@ app.controller('11/3/2015Ctrl', function($scope) {
 
 })
 
-app.controller('settingsCtrl', function($scope, $state) {
+app.controller('settingsCtrl', function($scope, $state, AuthService) {
   $scope.changePW = function (){
     $state.go("changePW");
+  }
+
+  $scope.logOut = function(){
+    AuthService.logOut();
+    $state.go("recipeCardHolder");
   }
 
 })

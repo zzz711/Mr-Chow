@@ -7,9 +7,9 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
             var d = $q.defer();
             var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
 
-          if (fbUser.getAuth()) {
-            fbUser.unauth();
-          }
+          //if (fbUser.getAuth()) {
+          //  fbUser.unauth();
+          //}
 
           fbUser.authWithPassword({
             "email": email,
@@ -51,6 +51,18 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
                     console.log(error);
             });
 
+        },
+
+        getUser: function(){
+          var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
+
+          return fbUser.getAuth();
+        },
+
+        logOut: function(){
+          var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
+
+          fbUser.unauth();
         }
     };
 
