@@ -1,4 +1,4 @@
-var app = angular.module('app.controllers', ['ngCordova', 'firebase', 'nix.api', 'ion-autocomplete'])
+var app = angular.module('app.controllers', ['ngCordova', 'firebase', 'nix.api'/*, 'ion-autocomplete'*/])
 
 
 app.controller('recipeCardHolderCtrl', function($scope) {
@@ -99,43 +99,42 @@ app.controller('addIngredientCtrl', function ($scope, $state,$http,  addIngredie
 
     $scope.submit = function(form){
       console.log($scope.formData);
-      //addIngredientService.add($scope.formData, 1);
+      addIngredientService.add($scope.formData);
       $state.go("main.dailyNutrition");
     };
 
     $scope.addIngredient = function(form){
-      console.log("addIng");
-      //addIngredientService.add($scope.formData);
-      console.log($scope.formData);
+      addIngredientService.add($scope.formData);
+      //console.log($scope.formData);
 
       //TODO: find a way to clear the form
 
-      //$scope.addIngredientForm.$setPristine();
-      //clearForm(form)
+      form.$setPristine();
+      clearForm(form)
     };
 
     var clearForm =function(form){
       console.log("clear");
-      $scope.form.foodName = "";
-      $scope.form.foodColor = "";
-      $scope.form.foodType = "";
-      $scope.form.fatContent = "";
-      $scope.form.freshness = "";
-      $scope.form.comments = "";
+      form.foodName = "";
+      form.foodColor = "";
+      form.foodType = "";
+      form.fatContent = "";
+      form.freshness = "";
+      form.comments = "";
     };
 
-    $scope.$on('$ionicView.enter', function () {
-    $scope.initialize = addIngredientService.getSpecificIngredient();
-        console.log("INITIALIZE IS ", $scope.initialize);
-        $scope.measurement =  $scope.initialize.measurement;
-    });
-
-    $scope.doStuff = function () {
-            // $ionicLoading.show();
-            addIngredientService.setIngredient($scope.initialize, $http);
-            $scope.initialize = addIngredientService.setEmpty();
-            $state.go('main.addARecipe');
-    };
+    //$scope.$on('$ionicView.enter', function () {
+    //$scope.initialize = addIngredientService.getSpecificIngredient();
+    //    console.log("INITIALIZE IS ", $scope.initialize);
+    //    $scope.measurement =  $scope.initialize.measurement;
+    //});
+    //
+    //$scope.doStuff = function () {
+    //        // $ionicLoading.show();
+    //        addIngredientService.setIngredient($scope.initialize, $http);
+    //        $scope.initialize = addIngredientService.setEmpty();
+    //        $state.go('main.addARecipe');
+    //};
 
 })
 
@@ -283,6 +282,7 @@ app.controller('addMedicineCtrl', function($scope, medicineService, $state) {
     console.log($scope.formData);
     if(form.$valid) {
       MealService.add($scope.formData);
+      //TODO: clear form
       $state.go("main.dailyNutrition");
     }
     else{
@@ -293,6 +293,8 @@ app.controller('addMedicineCtrl', function($scope, medicineService, $state) {
 
   $scope.addIngredient = function(form){
     if(form.$valid) {
+      MealService.add($scope.formData);
+      //TODO: clear form
       $state.go("addAnIngredient");
     }
     else {

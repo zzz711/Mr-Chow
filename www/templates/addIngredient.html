@@ -11,25 +11,25 @@
              ng-show="addIngredientForm.myName.$touched || addIngredientForm.$submitted"
              ng-messages-include="templates/form-errors.html"></div>
         <label class="item item-input item-floating-label">
-          <span class="input-label">Meal Name</span>
+          <span class="input-label">Ingredient Name</span>
           <input type="text"
                  ng-model="formData.foodName"
                  name="foodName"
-                 placeholder="Food Name">
+                 placeholder="Ingredient Name">
         </label>
         <label class="item item-input item-floating-label">
-          <span class="input-label">Meal Contents</span>
+          <span class="input-label">Color</span>
           <input type="text"
                  ng-model="formData.foodColor"
                  name="foodColor"
                  placeholder="Color">
         </label>
         <label class="item item-input item-floating-label">
-          <span class="input-label">Type of Food</span>
+          <span class="input-label">Type of Ingredient</span>
           <input type="text"
                  ng-model="formData.foodType"
                  name="foodType"
-                 placeholder="Type of Food">
+                 placeholder="Type of Ingredient">
         </label>
 
         <label class="item item-input item-floating-label">
@@ -40,6 +40,7 @@
                  placeholder="Fat Content">
         </label>
 
+        <h4>Freshness</h4>
         <label class="item item-input item-floating-label">
           <span class="input-label"></span>
           <select ng-model="formData.freshness" name="freshness">
