@@ -1,4 +1,4 @@
-var app = angular.module('app.controllers', ['ngCordova', 'firebase', 'nix.api'/*, 'ion-autocomplete'*/])
+var app = angular.module('app.controllers', ['ngCordova', 'firebase', 'nix.api', 'ion-autocomplete'])
 
 
 app.controller('recipeCardHolderCtrl', function($scope, AuthService, $state) {
@@ -154,9 +154,32 @@ app.config(function (nixApiProvider) {
 
 
 
-app.controller('addIngredientRecipeCtrl', function ($scope, $state, $http, addIngredientService) {
+app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $http, nixApi, addIngredientService) {
+    
+        $scope.retValue = "";
+        $scope.model = "";
 
+        $scope.getTestItems = function (query) {
+            if (query) {
+                $http.get("https://api.nutritionix.com/v1_1/search/"+query+"?results=0%3A20&cal_min=0&cal_max=50000&fields=*&appId=b62a1056&appKey=0096e00788eb1a17cfe1c4c6d2008612").then(function (response) {
+                    var dataObject = response.data.hits; 
+                    var dataArray = new Array;
+                    var i = 0;
+                    for (var o in response.data.hits) {
+                        dataArray.push(response.data.hits[o].fields);
+                        i = i + 1;
+                    }
+                    $scope.retArray = { items: dataArray };
+                    return $scope.retArray;
+                 
+                });
+            }
+            return $scope.retArray;
+    };
 
+    $scope.itemsClicked = function (callback) {
+        $scope.initialize = addIngredientService.setPageVals(callback.selectedItems[0]);
+    };
 
     $scope.$on('$ionicView.enter', function () {
         $scope.initialize = addIngredientService.getSpecificIngredient();
@@ -167,20 +190,16 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $state, $http, addIn
         // $ionicLoading.show();
         addIngredientService.setIngredient($scope.initialize, $http);
         $scope.initialize = addIngredientService.setEmpty();
-        $state.go('main.addARecipe');
+        $state.go('main.addARecipe', {}, { reload: true });
     };
-
 })
 
 
 
-app.controller('addARecipeCtrl', function ($scope, nixApi, $q, $state,  $ionicPopover, $cordovaCamera,  addIngredientService, addRecipeFirebaseService) {
-
-   /*nixApi.autocomplete('apple')
-    .success(function (suggestions) {
-        $scope.autocomplete = suggestions;
-        console.log($scope.autocomplete);
-    });*/
+app.controller('addARecipeCtrl', function ($scope, nixApi, $q, $state, $window, $ionicPopover, $cordovaCamera,  addIngredientService, addRecipeFirebaseService) {
+   // $scope.$watch('', function () {
+        $scope.retVals = "";
+    //});
 
      $scope.ingredient = function () {
         $scope.retVals = addIngredientService.getAllIngredient();
@@ -189,6 +208,7 @@ app.controller('addARecipeCtrl', function ($scope, nixApi, $q, $state,  $ionicPo
     $scope.setRemove = function (value) {
         $scope.retVals = addIngredientService.deleteSpecificIngredient(value);
     };
+
 
     $scope.setFill = function (value) {
         addIngredientService.setSpecificIngredient(value);
@@ -204,12 +224,17 @@ app.controller('addARecipeCtrl', function ($scope, nixApi, $q, $state,  $ionicPo
         if (form.$valid) {
            $scope.retVals = addIngredientService.getAllIngredient();
            addRecipeFirebaseService.saveRecipe(form, $scope.retVals);
+          
            form.recipeName = "";
            form.recipeDesc = "";
            form.servesNMany = "";
            form.prepTime = "";
            form.cookingTime = "";
-
+           $scope.initialize = {}
+           addIngredientService.setEmpty();
+           addIngredientService.resetArray();
+           $scope.ingredient();
+           $state.reload();
            $state.go('main.recipeBook', {}, { reload: true });
         }
     };

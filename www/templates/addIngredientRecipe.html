@@ -1,67 +1,104 @@
 ﻿<ion-view title="Add Ingredient">
     <ion-content overflow-scroll="true" padding="true" class="has-header">
-            <div class="form-errors"
-                 ng-messages="addIngredientForm.recipeName.$error"
-                 ng-show="addIngredientForm.myName.$touched || addIngredientForm.$submitted"
-                 ng-messages-include="templates/form-errors.html"></div>
-            <label class="item item-input">
-                <span class="input-label">Meal Name</span>
-                <input type="text"
-                       ng-model="initialize.ingName"
-                       name="foodName"
-                       placeholder="Food Name">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Instructions</span>
-                <input type="text"
-                       ng-model="initialize.ingInstructions"
-                       name="foodColor"
-                       placeholder="Food Instructions">
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Fat Content</span>
-                <input type="text"
-                       ng-model="initialize.fatContent"
-                       name="fatContent"
-                       placeholder="Fat Content">
-            </label>
 
-            <label class="item item-input">
-                <span class="input-label">Freshness of Food</span>
-                <select ng-model="initialize.freshness" name="freshness">
-                    <option value="fresh">Fresh</option>
-                    <option value="frozen">Frozen</option>
-                    <option value="canned">Canned</option>
-                    <option value="dried">Dried</option>
-                    <option value="other">Other</option>
-                </select>
-            </label>
-            <label class="item item-input">
-                <span class="input-label">Quantity</span>
-                <input type="text"
-                       ng-model="initialize.quantity"
-                       name="foodType"
-                       placeholder="Quanity of food?">
-            </label>
-            <label class="item item-input">
-                <span class="input-label  item-text-wrap">Type of Measurement</span>
-                <select ng-model="initialize.measurement" name="freshness">
-                    <option value="Teaspoon">Teaspoon</option>
-                    <option value="Tablespoon">Tablespoon</option>
-                    <option value="Ounces">Ounces</option>
-                    <option value="Cups">Cups</option>
-                    <option value="Pints">Pints</option>
-                    <option value="Gallons">Gallons</option>
-                    <option value="Other">Other</option>
-                </select>
-            </label>
-            <label class="item item-input item-floating-label">
-                <span class="input-label  item-text-wrap">Additional Comments</span>
-                <input type="text"
-                       ng-model="initialize.comments"
-                       name="comments"
-                       placeholder="Additional Comments">
-            </label>
-        <button class="button button-balanced button-block"  ng-click="doStuff()">Submit</button>
+        <label class="item item-input">
+            <span class="input-label">Search</span>
+            <input ion-autocomplete type="text" class="ion-autocomplete" autocomplete="off"
+                   ng-model="model"
+                   item-value-key="item_name"
+                   item-view-value-key="item_name"
+                   items-method="getTestItems(query)"
+                   items-method-value-key="items"
+                   placeholder="Enter test query ..."
+                   items-clicked-method="itemsClicked(callback)"
+                   items-removed-method="itemsRemoved(callback)"
+                   max-selected-items="1"
+                   ng-model-options="{debounce:300}" />
+        </label>
+
+
+        <div class="form-errors"
+             ng-messages="addIngredientForm.recipeName.$error"
+             ng-show="addIngredientForm.myName.$touched || addIngredientForm.$submitted"
+             ng-messages-include="templates/form-errors.html"></div>
+        <label class="item item-input">
+            <span class="input-label">Meal Name</span>
+            <input type="text"
+                   ng-model="initialize.ingName"
+                   name="foodName"
+                   placeholder="Food Name">
+        </label>
+        <label class="item item-input">
+            <span class="input-label">Instructions</span>
+            <input type="text"
+                   ng-model="initialize.ingInstructions"
+                   name="foodColor"
+                   placeholder="Food Instructions">
+        </label>
+        <label class="item item-input">
+            <span class="input-label">Total Fat</span>
+            <input type="text"
+                   ng-model="initialize.fatContent"
+                   placeholder="Fat Content">
+        </label>
+        <label class="item item-input">
+            <span class="input-label">Calories</span>
+            <input type="text"
+                   ng-model="initialize.calories"
+                   name="calories"
+                   placeholder="Calories">
+        </label>
+        <label class="item item-input">
+            <span class="input-label">Protein</span>
+            <input type="text"
+                   ng-model="initialize.protein"
+                   name="protein"
+                   placeholder="Protein">
+        </label>
+        <label class="item item-input">
+            <span class="input-label">Sugars</span>
+            <input type="text"
+                   ng-model="initialize.sugars"
+                   name="sugars"
+                   placeholder="Sugars">
+        </label>
+        <label class="item item-input">
+            <span class="input-label">Sodium</span>
+            <input type="text"
+                   ng-model="initialize.sodium"
+                   name="sodium"
+                   placeholder="Sodium">
+        </label>
+
+
+        <label class="item item-input">
+            <span class="input-label">Freshness of Food</span>
+            <select ng-model="initialize.freshness" name="freshness">
+                <option value="fresh">Fresh</option>
+                <option value="frozen">Frozen</option>
+                <option value="canned">Canned</option>
+                <option value="dried">Dried</option>
+                <option value="other">Other</option>
+            </select>
+        </label>
+        <label class="item item-input">
+            <span class="input-label">Quantity</span>
+            <input type="text"
+                   ng-model="initialize.quantity"
+                   name="foodType"
+                   placeholder="Quanity of food?">
+        </label>
+        <label class="item item-input item-floating-label">
+            <span class="input-label  item-text-wrap">Additional Comments</span>
+            <input type="text"
+                   ng-model="initialize.comments"
+                   name="comments"
+                   placeholder="Additional Comments">
+        </label>
+
+        <button class="button button-balanced button-block" ng-click="doStuff()">Submit</button>
+
     </ion-content>
+
+
 </ion-view>

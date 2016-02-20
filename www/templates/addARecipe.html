@@ -1,5 +1,5 @@
 <ion-view title="Recipe Book">
-    <ion-content overflow-scroll="true" padding="true" class="has-header">
+    <ion-content overflow-scroll="true" padding="true"  class="has-header">
         <form name="addRecipeForm"
               novalidate="novalidate"
               ng-submit="trackMeal(addRecipeForm)"
@@ -54,12 +54,13 @@
             <br />
             <ion-list class="item-icon-right" ng-controller="addARecipeCtrl" ng-init="ingredient()">
                 <ion-item ng-repeat="i in retVals">
-                    <p>{{i.ingName}}</p>
-                    <p>{{i.ingInstructions}}</p>
-                    <p>Fat Content:  {{i.fatContent}}</p>
+                    <p>Name: {{i.ingName}}</p>
+                    <p>Instructions: {{i.ingInstructions}}</p>
+                    <p>Fat Content:  {{i.fatContent}} </p>
+                    <p>Calories : {{i.calories}} &nbsp;&nbsp;    Protein : {{i.protein}}</p>
+                    <p>Sugars : {{i.sugars}}   &nbsp;&nbsp;  Sodium : {{i.sodium}}</p>
                     <p>Freshness:  {{i.freshness}}</p>
                     <p>Quantity:  {{i.quantity}}</p>
-                    <p>Measurement: {{i.measurement}}</p>
                     <p>Comments:  {{i.comments}}</p>
 
                     <ion-option-button class="button-positive" ng-click="setFill(i)"><i class="icon ion-edit"></i></ion-option-button>
