@@ -94,16 +94,42 @@ app.controller('spaghettiCtrl', function($scope) {
 
 
 app.controller('addIngredientCtrl', function ($scope, $state,$http,  addIngredientService) {
-  console.log("add ingredient");
-
     $scope.formData = {
-      foodName: "",
-      foodColor: "",
-      foodType: "",
-      fatContent: "",
-      freshness: "",
-      comments: ""
+        foodName: "",
+        foodColor: "",
+        foodType: "",
+        fatContent: "",
+        freshness: "",
+        comments: ""
     };
+
+    $scope.getTestItems = function (query) {
+        if (query) {
+            $http.get("https://api.nutritionix.com/v1_1/search/" + query + "?results=0%3A20&cal_min=0&cal_max=50000&fields=*&appId=b62a1056&appKey=0096e00788eb1a17cfe1c4c6d2008612").then(function (response) {
+                var dataObject = response.data.hits;
+                var dataArray = new Array;
+                var i = 0;
+                for (var o in response.data.hits) {
+                    dataArray.push(response.data.hits[o].fields);
+                    i = i + 1;
+                }
+                $scope.retArray = { items: dataArray };
+                return $scope.retArray;
+
+            });
+        }
+        return $scope.retArray;
+    };
+
+    $scope.itemsClicked = function (callback) {
+        $scope.formData.foodName = isUndefined(callback.selectedItems[0].item_name);
+        $scope.formData.foodColor = "";
+        $scope.formData.foodType = "";
+        $scope.formData.fatContent = isUndefined(callback.selectedItems[0].nf_total_fat);
+        $scope.formData.freshness = "";
+         $scope.formData.comments = "";
+    };
+
 
     $scope.submit = function(form){
       console.log($scope.formData);
@@ -131,25 +157,9 @@ app.controller('addIngredientCtrl', function ($scope, $state,$http,  addIngredie
       form.comments = "";
     };
 
-    //$scope.$on('$ionicView.enter', function () {
-    //$scope.initialize = addIngredientService.getSpecificIngredient();
-    //    console.log("INITIALIZE IS ", $scope.initialize);
-    //    $scope.measurement =  $scope.initialize.measurement;
-    //});
-    //
-    //$scope.doStuff = function () {
-    //        // $ionicLoading.show();
-    //        addIngredientService.setIngredient($scope.initialize, $http);
-    //        $scope.initialize = addIngredientService.setEmpty();
-    //        $state.go('main.addARecipe');
-    //};
 
 })
 
-app.config(function (nixApiProvider) {
-    // change to your credentials
-    nixApiProvider.setApiCredentials('b62a1056', '0096e00788eb1a17cfe1c4c6d2008612');
-});
 
 
 
