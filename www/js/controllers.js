@@ -448,3 +448,8 @@ app.controller('changePWCtrl', function($scope, $ionicPopup, $state){
   }
 
 })
+
+app.controller('recipeBookCtrl', function ($scope, pullRecipeFirebaseService)
+{
+     $scope.retVals = pullRecipeFirebaseService.pullRecipe();   
+})

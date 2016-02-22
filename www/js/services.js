@@ -520,3 +520,37 @@ app.service("medicineService", function($q, $firebaseObject){
 
   return self;
 });
+
+app.service("pullRecipeFirebaseService", function ($firebaseArray) 
+{
+
+    var recipeTable = new Firebase("https://boiling-fire-9023.firebaseio.com/recipe/recipe");
+
+    recipeTable = $firebaseArray(recipeTable);
+
+    return {
+
+        pullRecipe: function () {
+
+            return recipeTable;
+            // May have input var "data"
+            //var recipeGuid = guid();      //User ID not GUID
+               /*     recipeTable.$getRecord(); //ASK what is getRecord key?
+                "recipe": {                         //ASK does it put the data in data?
+                    recipeGuid: recipeGuid,
+                    recipeName: isUndefined(data.recipeName),
+                    prepTime: isUndefined(data.prepTime),
+                    cookingTime: isUndefined(data.cookingTime),
+                    servesNMany: isUndefined(data.servesNMany),
+                    recipeDesc: isUndefined(data.recipeDesc)
+                } 
+            });
+*/
+        }
+
+
+
+    };
+})
+
+
