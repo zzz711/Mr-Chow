@@ -1,21 +1,25 @@
 <ion-view title="My Meds">
     <ion-content overflow-scroll="true" padding="true" class="has-header">
-        <div class="list card">
-            <div class="item item-divider">Aspirin</div>
-            <div class="item item-body">
-                <div>
-                    <p>Serving : 1</p>
-                </div>
-                <div>
-                    <p>Taken: when needed</p>
-                </div>
-                <div>
-                    <p>Take with food.</p>
-                </div>
-            </div>
-        </div>
-        <ion-list></ion-list>
-        <ion-list></ion-list>
+        
+        <ion-list>
+        <div class="spacer" style="width: 300px; height: 23px;"></div>
+        <ion-list ng-controller="MedCtrl">
+            <ion-item class="item-thumbnail-left" ng-repeat="i in retVals">
+             
+                <p>Name:  {{i.name}}</p>
+                <p>Amount:  {{i.amount}}</p>
+                <p>Taken:  {{i.taken}}</p>
+                <p>Extra:  {{i.extra}}</p>
+                <p>Guid:  {{i.guid}}</p>
+
+                <ion-option-button class="button-positive" ng-click="setFill(i)"><i class="icon ion-edit"></i></ion-option-button>
+                <ion-option-button class="button-assertive" ng-click="setRemove(i)"><i class="icon ion-ios-trash"></i></ion-option-button>
+
+
+            </ion-item>
+        </ion-list>
+
+
         <div class="list card">
             <div class="item item-divider">Card</div>
             <div class="item item-body"></div>

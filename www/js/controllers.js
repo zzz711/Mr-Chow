@@ -453,3 +453,8 @@ app.controller('recipeBookCtrl', function ($scope, pullRecipeFirebaseService)
 {
      $scope.retVals = pullRecipeFirebaseService.pullRecipe();   
 })
+
+app.controller('MedCtrl', function ($scope, pullMedsFirebaseService)
+{
+    $scope.retVals = pullMedsFirebaseService.pullMeds();
+})

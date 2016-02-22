@@ -554,3 +554,21 @@ app.service("pullRecipeFirebaseService", function ($firebaseArray)
 })
 
 
+app.service("pullMedsFirebaseService", function ($firebaseArray) {
+
+    var MedTable = new Firebase("https://boiling-fire-9023.firebaseio.com/Medicine");
+
+    MedTable = $firebaseArray(MedTable);
+
+    return {
+
+        pullMeds: function () {
+
+            return MedTable;
+            
+        }
+
+
+
+    };
+})
