@@ -23,7 +23,8 @@
     "ionic-plugin-keyboard",
     "ionic-plugin-deploy",
     "phonegap-plugin-push",
-    "org.apache.cordova.camera"
+    "org.apache.cordova.camera",
+    "cordova-plugin-camera@2.1.0"
   ],
   "cordovaPlatforms": [
     "ios",

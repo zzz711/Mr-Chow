@@ -29,21 +29,18 @@
           <span class="input-label">Ingredient Name</span>
           <input type="text"
                  ng-model="formData.foodName"
-                 name="foodName"
                  placeholder="Ingredient Name">
         </label>
         <label class="item item-input item-floating-label">
           <span class="input-label">Color</span>
           <input type="text"
-                 ng-model="formData.foodColor"
-                 name="foodColor"
-                 placeholder="Color">
+                 ng-model="addRecipeForm.recipeDesc"
+                 placeholder="Describe Your Recipe">
         </label>
         <label class="item item-input item-floating-label">
           <span class="input-label">Type of Ingredient</span>
           <input type="text"
                  ng-model="formData.foodType"
-                 name="foodType"
                  placeholder="Type of Ingredient">
         </label>
 
@@ -51,14 +48,13 @@
           <span class="input-label">Fat Content</span>
           <input type="text"
                  ng-model="formData.fatContent"
-                 name="fatContent"
                  placeholder="Fat Content">
         </label>
 
         <h4>Freshness</h4>
         <label class="item item-input item-floating-label">
           <span class="input-label"></span>
-          <select ng-model="formData.freshness" name="freshness">
+          <select ng-model="formData.freshness" >
             <option value="fresh">Fresh</option>
             <option value="frozen">Frozen</option>
             <option value="canned">Canned</option>
@@ -71,7 +67,6 @@
           <span class="input-label  item-text-wrap">Additional Comments</span>
           <input type="text"
                  ng-model="formData.comments"
-                 name="comments"
                  placeholder="Additional Comments">
         </label>
     </form>

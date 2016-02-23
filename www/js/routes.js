@@ -210,7 +210,7 @@ angular.module('app.routes', [])
     })
 
     .state('changePW',{
-      url: '/page20',
+      url: '/page30',
       templateUrl: 'templates/changePW.html',
       controller: 'changePWCtrl'
     })

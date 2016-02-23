@@ -1,6 +1,13 @@
 var app = angular.module('app.services', ['ngCordova', 'firebase', 'ngRoute', 'jsonFormatter']);
 
 app.service('AuthService', function ($q, $ionicPopup, $state) {
+  //TODO: switch to using AngularFire
+  function logOut(){
+    var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
+
+    fbUser.unauth();
+  }
+
     var self = {
         user: null,
         login: function (email, password) {
@@ -59,11 +66,62 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
           return fbUser.getAuth();
         },
 
-        logOut: function(){
-          var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
 
-          fbUser.unauth();
-        }
+        changePW: function(data){
+          var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
+          var user = fbUser.getAuth();
+
+          fbUser.changePassword({
+            email: user.password.email, //not sure this will work
+            oldPassword: data.password,
+            newPassword: data.newPassword
+          }).then(function () {
+            $ionicPopup.alert({
+              title: "Password Changed"
+            });
+            logOut();
+            form.$setPristine();
+          }).catch(function (error) {
+              console.log(error);
+          })
+        },
+
+        changeEmail: function(newEmail, passwrd){
+          var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
+          var user = fbUser.getAuth();
+          console.log(user.password.email);
+
+          fbUser.changeEmail({
+            oldEmail: fbUser.getAuth().password.email,
+            newEmail: newEmail,
+            password: passwrd
+          }, function(error) {
+            if (error) {
+              switch (error.code) {
+                //TODO change these to popups
+                case "INVALID_USER":
+                  console.log("The specified user account does not exist.");
+
+                  break;
+                case "INVALID_PASSWORD":
+                  console.log("The specified user account password is incorrect.");
+                  break;
+                default:
+                  console.log("Error updating user:", error);
+              }
+            }
+              else{
+                $ionicPopup.alert({
+                  title: "Email Updated"
+                });
+              $state.go("login");
+
+            }
+
+          });
+        logOut();
+        },
+
     };
 
     return self;
@@ -521,7 +579,7 @@ app.service("medicineService", function($q, $firebaseObject){
   return self;
 });
 
-app.service("pullRecipeFirebaseService", function ($firebaseArray) 
+app.service("pullRecipeFirebaseService", function ($firebaseArray)
 {
 
     var recipeTable = new Firebase("https://boiling-fire-9023.firebaseio.com/recipe/recipe");
@@ -543,7 +601,7 @@ app.service("pullRecipeFirebaseService", function ($firebaseArray)
                     cookingTime: isUndefined(data.cookingTime),
                     servesNMany: isUndefined(data.servesNMany),
                     recipeDesc: isUndefined(data.recipeDesc)
-                } 
+                }
             });
 */
         }
@@ -565,7 +623,7 @@ app.service("pullMedsFirebaseService", function ($firebaseArray) {
         pullMeds: function () {
 
             return MedTable;
-            
+
         }
 
 

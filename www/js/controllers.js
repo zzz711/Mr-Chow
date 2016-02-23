@@ -26,6 +26,8 @@ app.controller('loginCtrl', function ($scope, AuthService, $state) {
         console.log("loginCtrl::login");
 
         //console.log("uncomment parse code");
+
+      //TODO: clear form
         AuthService.login($scope.formData.email, $scope.formData.password);
     };
 
@@ -132,8 +134,10 @@ app.controller('addIngredientCtrl', function ($scope, $state,$http,  addIngredie
 
 
     $scope.submit = function(form){
-      console.log($scope.formData);
+      console.log("FORM DATA", form);
       addIngredientService.add($scope.formData);
+      clearForm(form);
+      console.log("FORM DATA 2 ", form);
       $state.go("main.dailyNutrition");
     };
 
@@ -165,14 +169,14 @@ app.controller('addIngredientCtrl', function ($scope, $state,$http,  addIngredie
 
 
 app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $http, nixApi, addIngredientService) {
-    
+
         $scope.retValue = "";
         $scope.model = "";
 
         $scope.getTestItems = function (query) {
             if (query) {
                 $http.get("https://api.nutritionix.com/v1_1/search/"+query+"?results=0%3A20&cal_min=0&cal_max=50000&fields=*&appId=b62a1056&appKey=0096e00788eb1a17cfe1c4c6d2008612").then(function (response) {
-                    var dataObject = response.data.hits; 
+                    var dataObject = response.data.hits;
                     var dataArray = new Array;
                     var i = 0;
                     for (var o in response.data.hits) {
@@ -181,7 +185,7 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $ht
                     }
                     $scope.retArray = { items: dataArray };
                     return $scope.retArray;
-                 
+
                 });
             }
             return $scope.retArray;
@@ -234,7 +238,7 @@ app.controller('addARecipeCtrl', function ($scope, nixApi, $q, $state, $window, 
         if (form.$valid) {
            $scope.retVals = addIngredientService.getAllIngredient();
            addRecipeFirebaseService.saveRecipe(form, $scope.retVals);
-          
+
            form.recipeName = "";
            form.recipeDesc = "";
            form.servesNMany = "";
@@ -325,9 +329,8 @@ app.controller('addMedicineCtrl', function($scope, medicineService, $state) {
     console.log($scope.formData);
     if(form.$valid) {
       MealService.add($scope.formData);
-      //TODO: clear form
       clear(form);
-      $state.go("main.dailyNutrition");
+      $state.go("main.dailyNutrition", {}, { reload: true });
     }
     else{
       console.log("Form is not valid")
@@ -384,16 +387,51 @@ app.controller('11/3/2015Ctrl', function($scope) {
 app.controller('settingsCtrl', function($scope, $state, AuthService) {
   $scope.changePW = function (){
     $state.go("changePW");
-  }
+  };
 
   $scope.logOut = function(){
     AuthService.logOut();
     $state.go("recipeCardHolder");
-  }
+  };
 
 })
 
-app.controller('myAccountCtrl', function($scope) {
+app.controller('myAccountCtrl', function($scope, $ionicPopup, AuthService, $state) {
+  $scope.formData = {
+    email: "",
+  };
+
+  $scope.submit = function(form) {
+    $scope.data = {};
+      //TODO: use an ionic popup show to get password
+    var passwrd = $ionicPopup.show({
+      template: '<input type="password" ng-model="data.password">',
+      title: "Please Enter Your Password",
+      scope: $scope,
+      buttons: [
+        { text: 'Cancel' },
+        {
+          text: '<b>Ok</b>',
+          type: 'button-positive',
+          onTap: function(e) {
+            if (!$scope.data.password) {
+              e.preventDefault();
+            }
+            else{
+              //return $scope.data.password;
+              AuthService.changeEmail($scope.formData.email, $scope.data.password);
+              //TODO clear form
+            }
+
+            }
+          }
+        ]
+    });
+
+     // AuthService.changeEmail($scope.formData.email, passwrd);
+      //$state.go("login");
+    }
+
 
 })
 
@@ -401,57 +439,42 @@ app.controller('shareMyDataCtrl', function($scope) {
 
 })
 
-app.controller('changePWCtrl', function($scope, $ionicPopup, $state){
+app.controller('changePWCtrl', function($scope, $ionicPopup, $state, AuthService){
   $scope.formData = {
     password: "",
     newPassword: "",
     confirmNewPassword: ""
   };
 
+
+
   $scope.changePW = function(form) {
-    if (form.$valid) {
-      if ($scope.formData.newPassword === $scope.formData.confirmNewPassword) {
-        var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
-        var user = fbUser.getAuth();
-
-        fbUser.changePassword({
-          email: user.password.email,
-          oldPassword: $scope.formData.password,
-          newPassword: $scope.formData.newPassword
-        }).then(function () {
-          $ionicPopup.alert({
-            title: "Password Changed"
-          });
-          fbUser.unauth(); //will this cause an error?
-          $state.go("main.recipeBook");
-          form.$setPristine();
-        }).catch(function (error) {
-          console.log(error);
-
-          if (user.password != $scope.formData.password) {
-            $ionicPopup.alert({
-              title: "Password is not correct",
-              template: "The password you have entered is incorrect. Please try again"
-            });
-          }
-
-        })
-      }
-
-      else {
-        $ionicPopup.alert({
-          title: "An Error has Occurred",
-          template: "Please make sure all fields are filled out and are at least six characters in length"
-        });
-      }
+    if ($scope.formData.newPassword === $scope.formData.confirmNewPassword) {
+      AuthService.changePW($scope.formData);
+      $state.go("login");
     }
-  }
+    else if($scope.formData.newPassword != $scope.formData.confirmNewPassword) {
+      $ionicPopup.alert({
+        title: "New Passwords Do Not Match"
+      });
+    }
+
+    else {
+      $ionicPopup.alert({
+        title: "An Error has Occurred",
+        template: "Please make sure all fields are filled out and are at least six characters in length"
+      });
+    }
+  };
+
+
+
 
 })
 
 app.controller('recipeBookCtrl', function ($scope, pullRecipeFirebaseService)
 {
-     $scope.retVals = pullRecipeFirebaseService.pullRecipe();   
+     $scope.retVals = pullRecipeFirebaseService.pullRecipe();
 })
 
 app.controller('MedCtrl', function ($scope, pullMedsFirebaseService)

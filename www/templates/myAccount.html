@@ -1,8 +1,36 @@
-<ion-view title="My Account">
+<ion-view title="Change Email">
     <ion-content overflow-scroll="true" padding="true" class="has-header">
+      <form name = "myAccForm"
+            ng-submit="submit(myAccForm)"
+            novalidate =""
+            class="change-form">
         <div>
-            <p>YOUR INFO HERE</p>
-        </div>
-        <a href="#/page5/page17" class="button button-stable button-block ">Update Info</a>
+          <label class="item item-input"
+          ng-class="{'has-error':createForm.email.$invalid}">
+          <span class="input-label">New Email</span>
+          <input type="email"
+            placeholder=""
+            ng-model="formData.email"
+            ng-minlength="6"
+            ng-messages-include="templates/form-errors.html"
+            ng-required="true"
+          >
+          </label>
+          </div>
+
+          <div class="form-errors"
+            ng-messages="changePWForm.email.$error">
+          </div>
+          <div ng-messages-include="templates/form-errors.html">
+          </div>
+
+          <div class="form-errors"
+          ng-messages="changePWForm.minlength.$error">
+          <div ng-messages-include="templates/form-errors.html"> </div>
+          </div>
+
+
+        </form>
+        <button class="button button-block" type="submit" ng-click="submit(form)">Change Email</button>
     </ion-content>
 </ion-view>
