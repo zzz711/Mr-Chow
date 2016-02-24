@@ -8,6 +8,8 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
     fbUser.unauth();
   }
 
+
+
     var self = {
         user: null,
         login: function (email, password) {
@@ -122,6 +124,11 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
         logOut();
         },
 
+      getEmail: function (){
+        var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
+        return fbUser.password.email;
+      }
+
     };
 
     return self;
@@ -194,6 +201,8 @@ app.service("addRecipeFirebaseService", function ($firebaseArray) {
 
 
 app.service("MealService", function ($q,$ionicPopup, $firebaseObject) {
+  var mealGUID;
+
   function guid() {
     function s4() {
       return Math.floor((1 + Math.random()) * 0x10000)
@@ -203,6 +212,8 @@ app.service("MealService", function ($q,$ionicPopup, $firebaseObject) {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
       s4() + '-' + s4() + s4() + s4();
   }
+
+
 
     var self = {
         'page': 0,
@@ -291,8 +302,12 @@ app.service("MealService", function ($q,$ionicPopup, $firebaseObject) {
         }), function(error){
           console.log(error);
         }
+        mealGUID = mealGuid;
+      },
 
-      }
+      getMealGuid: function(){
+       return mealGUID;
+     }
 
     };
 
@@ -364,7 +379,7 @@ app.service("MealService", function ($q,$ionicPopup, $firebaseObject) {
     return self;
 });
 
-    app.service('addIngredientService', function ($q, $firebaseObject) {
+    app.service('addIngredientService', function ($q, $firebaseObject, MealService) {
         var x = [];
         var i = 1;
 
@@ -414,6 +429,7 @@ app.service("MealService", function ($q,$ionicPopup, $firebaseObject) {
             ingObj.freshness = data.freshness;
             ingObj.comments = data.comments;
             ingObj.user = userEmail;
+            ingObj.mealGUID = MealService.getMealGuid();
 
             ingObj.$save().then(function(ref){
               ref.key()=== ingObj.$id;

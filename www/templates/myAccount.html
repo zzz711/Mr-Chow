@@ -4,6 +4,16 @@
             ng-submit="submit(myAccForm)"
             novalidate =""
             class="change-form">
+
+        <div>
+          <label class="item item-input"
+                 ng-class="{'has-error':createForm.email.$invalid}">
+            <span class="input-label" onload="setEmail()" id="currentEmail"></span>
+
+          </label>
+        </div>
+
+
         <div>
           <label class="item item-input"
           ng-class="{'has-error':createForm.email.$invalid}">

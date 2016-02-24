@@ -101,6 +101,10 @@ app.controller('addIngredientCtrl', function ($scope, $state,$http,  addIngredie
         foodColor: "",
         foodType: "",
         fatContent: "",
+        calories: "",
+        protein: "",
+        sugars: "",
+        sodium: "",
         freshness: "",
         comments: ""
     };
@@ -400,6 +404,11 @@ app.controller('myAccountCtrl', function($scope, $ionicPopup, AuthService, $stat
   $scope.formData = {
     email: "",
   };
+
+  $scope.setEmail = function(){
+      $document.getElementById("currentEmail").textContent = AuthService.getEmail();
+
+  }
 
   $scope.submit = function(form) {
     $scope.data = {};
