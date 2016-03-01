@@ -1,12 +1,18 @@
 <ion-view title="Daily Nutrition">
-    <ion-content overflow-scroll="true" padding="true" class="has-header">
-        <ion-list>
-            <ion-item href="#/page20">11/1/2015</ion-item>
-        </ion-list>
-        <ion-list>
-            <ion-item href="#/page21">11/2/2015</ion-item>
-            <ion-item href="#/page22">11/3/2015</ion-item>
-        </ion-list>
+ <ion-content overflow-scroll="true" padding="true" class="has-header">
+                <ion-list>
+                    <div class="spacer" style="width: 300px; height: 23px;"></div>
+                    <ion-list ng-controller="nutritionCtrl">
+                        <ion-item ng-repeat="i in retVals">
+
+                            <p>Name:  {{i.meal}}</p>
+                            <p>Amount:  {{i.date}}</p>
+                            <p>Extra:  {{i.comments}}</p>
+
+                            <ion-option-button class="button-positive" ng-click="setFill(i)"><i class="icon ion-edit"></i></ion-option-button>
+                            <ion-option-button class="button-assertive" ng-click="setRemove(i)"><i class="icon ion-ios-trash"></i></ion-option-button>
+                         </ion-item>
+                    </ion-list>
         <a href="#/page9" class="button button-stable button-block ">Add New Daily Nutrition</a>
     </ion-content>
 </ion-view>

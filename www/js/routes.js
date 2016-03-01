@@ -124,7 +124,7 @@ angular.module('app.routes', [])
       views: {
         'tab4': {
           templateUrl: 'templates/myMeds.html',
-          controller: 'myMedsCtrl'
+          controller: 'medPullCtrl'
         }
       }
     })

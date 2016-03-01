@@ -11,13 +11,12 @@
         </ion-list>
         <div class="spacer" style="width: 300px; height: 23px;"></div>
         <ion-list ng-controller="recipeBookCtrl">
-            <ion-item class="item-thumbnail-left" ng-repeat="i in retVals">
-                <p>Guid: {{i.recipe.recipeGuid}}</p>
-                <p>Name:  {{i.recipe.recipeName}}</p>
-                <p>Preperation Time:  {{i.recipe.prepTime}}</p>
-                <p>Cooking Time:  {{i.recipe.cookingTime}}</p>
-                <p>Serves:  {{i.recipe.servesNMany}}</p>
-                <p>Description:  {{i.recipe.recipeDesc}}</p>
+            <ion-item ng-repeat="i in retVals">
+                <p>Name:  {{i.recipeName}}</p>
+                <p>Preperation Time:  {{i.prepTime}}</p>
+                <p>Cooking Time:  {{i.cookingTime}}</p>
+                <p>Serves:  {{i.servesNMany}}</p>
+                <p>Description:  {{i.recipeDesc}}</p>
 
                 <ion-option-button class="button-positive" ng-click="setFill(i)"><i class="icon ion-edit"></i></ion-option-button>
                 <ion-option-button class="button-assertive" ng-click="setRemove(i)"><i class="icon ion-ios-trash"></i></ion-option-button>

@@ -6,7 +6,6 @@
               class="create-form">
 
             <section>
-                <h2>Add a recipe</h2>
                 <div class="form-errors"
                      ng-messages="addRecipeForm.recipeName.$error"
                      ng-show="addRecipeForm.myName.$touched || addRecipeForm.$submitted"
@@ -38,7 +37,6 @@
             </section>
             <br />
             <section>
-                <h2>Description</h2>
                 <label class="item item-input item-floating-label">
                     <span class="input-label  item-text-wrap">Describe Your Recipe</span>
                     <input type="text"
@@ -48,24 +46,28 @@
             </section>
             <br />
             <!-- <button class="button button-icon ion-camera" ng-click="addPicture()"></button>-->
-
-            <br />
-           <!-- <json-formatter json="autocomplete" open="2"></json-formatter>--->
             <br />
             <ion-list class="item-icon-right" ng-controller="addARecipeCtrl" ng-init="ingredient()">
                 <ion-item ng-repeat="i in retVals">
                     <p>Name: {{i.ingName}}</p>
-                    <p>Instructions: {{i.ingInstructions}}</p>
-                    <p>Fat Content:  {{i.fatContent}} </p>
                     <p>Calories : {{i.calories}} &nbsp;&nbsp;    Protein : {{i.protein}}</p>
                     <p>Sugars : {{i.sugars}}   &nbsp;&nbsp;  Sodium : {{i.sodium}}</p>
-                    <p>Freshness:  {{i.freshness}}</p>
-                    <p>Quantity:  {{i.quantity}}</p>
+                    <p>Fat Content:  {{i.fatContent}} &nbsp;&nbsp; Food Color:  {{i.foodColor}} </p>
+                    <p>Freshness:  {{i.freshness}}  &nbsp;&nbsp; Quantity:  {{i.quantity}}</p>
                     <p>Comments:  {{i.comments}}</p>
 
                     <ion-option-button class="button-positive" ng-click="setFill(i)"><i class="icon ion-edit"></i></ion-option-button>
                     <ion-option-button class="button-assertive" ng-click="setRemove(i)"><i class="icon ion-ios-trash"></i></ion-option-button>
-
+                </ion-item>
+            </ion-list>
+            <p></p>
+            <p></p>
+            <ion-list class="item-icon-right" ng-controller="addARecipeCtrl" ng-init="ingredient()">
+                <ion-item>
+                    <p>Totals for Meal</p>
+                    <p>Calories : {{totalVal.calories}} &nbsp;&nbsp;    Protein : {{totalVal.protein}}</p>
+                    <p>Sugars : {{totalVal.sugars}}   &nbsp;&nbsp;  Sodium : {{totalVal.sodium}}</p>
+                    <p>Fat Content : {{totalVal.fatContent}}</p>
                 </ion-item>
             </ion-list>
 

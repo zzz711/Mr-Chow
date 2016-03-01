@@ -25,55 +25,43 @@
             <span class="input-label">Meal Name</span>
             <input type="text"
                    ng-model="initialize.ingName"
-                   name="foodName"
                    placeholder="Food Name">
         </label>
         <label class="item item-input">
-            <span class="input-label">Instructions</span>
-            <input type="text"
-                   ng-model="initialize.ingInstructions"
-                   name="foodColor"
-                   placeholder="Food Instructions">
-        </label>
-        <label class="item item-input">
             <span class="input-label">Total Fat</span>
-            <input type="text"
+            <input type="number"
                    ng-model="initialize.fatContent"
                    placeholder="Fat Content">
         </label>
         <label class="item item-input">
             <span class="input-label">Calories</span>
-            <input type="text"
+            <input type="number"
                    ng-model="initialize.calories"
-                   name="calories"
                    placeholder="Calories">
         </label>
         <label class="item item-input">
             <span class="input-label">Protein</span>
-            <input type="text"
+            <input type="number"
                    ng-model="initialize.protein"
-                   name="protein"
                    placeholder="Protein">
         </label>
         <label class="item item-input">
             <span class="input-label">Sugars</span>
-            <input type="text"
+            <input type="number"
                    ng-model="initialize.sugars"
-                   name="sugars"
                    placeholder="Sugars">
         </label>
         <label class="item item-input">
             <span class="input-label">Sodium</span>
-            <input type="text"
+            <input type="number"
                    ng-model="initialize.sodium"
-                   name="sodium"
                    placeholder="Sodium">
         </label>
 
 
         <label class="item item-input">
             <span class="input-label">Freshness of Food</span>
-            <select ng-model="initialize.freshness" name="freshness">
+            <select ng-model="initialize.freshness" >
                 <option value="fresh">Fresh</option>
                 <option value="frozen">Frozen</option>
                 <option value="canned">Canned</option>
@@ -85,14 +73,12 @@
             <span class="input-label">Quantity</span>
             <input type="text"
                    ng-model="initialize.quantity"
-                   name="foodType"
                    placeholder="Quanity of food?">
         </label>
         <label class="item item-input item-floating-label">
             <span class="input-label  item-text-wrap">Additional Comments</span>
             <input type="text"
                    ng-model="initialize.comments"
-                   name="comments"
                    placeholder="Additional Comments">
         </label>
 

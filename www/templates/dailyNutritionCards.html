@@ -1,0 +1,70 @@
+﻿<ion-view title="Daily Nutrition">
+    <ion-content overflow-scroll="true" padding="true" class="has-header">
+
+        <ion-list class="item-icon-right" ng-controller="addARecipeCtrl">
+            <ion-item>
+                <p>Breakfast</p>
+                <p>Items Eaten: {{breakfast.ingName}}</p>
+                <p>Fat Content:  {{breakfast.fatContent}} </p>
+                <p>Calories : {{breakfast.calories}} &nbsp;&nbsp;    Protein : {{breakfast.protein}}</p>
+                <p>Sugars : {{breakfast.sugars}}   &nbsp;&nbsp;  Sodium : {{breakfast.sodium}}</p>
+                <p>Comments:  {{breakfast.comments}}</p>
+
+                <ion-option-button class="button-positive" ng-click="setFill(breakfast)"><i class="icon ion-edit"></i></ion-option-button>
+                <ion-option-button class="button-assertive" ng-click="setRemove(breakfast)"><i class="icon ion-ios-trash"></i></ion-option-button>
+            </ion-item>
+            <ion-item>
+                <p>Lunch</p>
+                <p>Items Eaten: {{lunch.ingName}}</p>
+                <p>Fat Content:  {{lunch.fatContent}} </p>
+                <p>Calories : {{lunch.calories}} &nbsp;&nbsp;    Protein : {{lunch.protein}}</p>
+                <p>Sugars : {{lunch.sugars}}   &nbsp;&nbsp;  Sodium : {{lunch.sodium}}</p>
+                <p>Comments:  {{lunch.comments}}</p>
+
+                <ion-option-button class="button-positive" ng-click="setFill(lunch)"><i class="icon ion-edit"></i></ion-option-button>
+                <ion-option-button class="button-assertive" ng-click="setRemove(lunch)"><i class="icon ion-ios-trash"></i></ion-option-button>
+            </ion-item>
+            <ion-item>
+                <p>Dinner</p>
+                <p>Items Eaten: {{dinner.ingName}}</p>
+                <p>Fat Content:  {{dinner.fatContent}} </p>
+                <p>Calories : {{dinner.calories}} &nbsp;&nbsp;    Protein : {{dinner.protein}}</p>
+                <p>Sugars : {{dinner.sugars}}   &nbsp;&nbsp;  Sodium : {{dinner.sodium}}</p>
+                <p>Comments:  {{dinner.comments}}</p>
+
+                <ion-option-button class="button-positive" ng-click="setFill(dinner)"><i class="icon ion-edit"></i></ion-option-button>
+                <ion-option-button class="button-assertive" ng-click="setRemove(dinner)"><i class="icon ion-ios-trash"></i></ion-option-button>
+            </ion-item>
+            <ion-view title="Add Ingredient">
+                <ion-content overflow-scroll="true" padding="true" class="has-header">
+                    <ion-list class="item-icon-right" ng-controller="addARecipeCtrl" ng-init="ingredient()">
+                        <ion-item>
+                            <p>Breakfast</p>
+                            <p>Items Eaten: {{i.ingName}}</p>
+                            <p>Fat Content:  {{i.fatContent}} </p>
+                            <p>Calories : {{i.calories}} &nbsp;&nbsp;    Protein : {{i.protein}}</p>
+                            <p>Sugars : {{i.sugars}}   &nbsp;&nbsp;  Sodium : {{i.sodium}}</p>
+                            <p>Comments:  {{i.comments}}</p>
+
+                            <ion-option-button class="button-positive" ng-click="setFill(i)"><i class="icon ion-edit"></i></ion-option-button>
+                            <ion-option-button class="button-assertive" ng-click="setRemove(i)"><i class="icon ion-ios-trash"></i></ion-option-button>
+                        </ion-item>
+                        <ion-item>
+                            <p>Lunch</p>
+                            <p>Items Eaten: {{i.ingName}}</p>
+                            <p>Fat Content:  {{i.fatContent}} </p>
+                            <p>Calories : {{i.calories}} &nbsp;&nbsp;    Protein : {{i.protein}}</p>
+                            <p>Sugars : {{i.sugars}}   &nbsp;&nbsp;  Sodium : {{i.sodium}}</p>
+                            <p>Comments:  {{i.comments}}</p>
+
+                            <ion-option-button class="button-positive" ng-click="setFill(i)"><i class="icon ion-edit"></i></ion-option-button>
+                            <ion-option-button class="button-assertive" ng-click="setRemove(i)"><i class="icon ion-ios-trash"></i></ion-option-button>
+                        </ion-item>
+
+
+                </ion-content>
+            </ion-view>
+
+        </ion-list>
+    </ion-content>
+</ion-view>
