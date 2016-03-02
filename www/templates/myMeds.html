@@ -1,6 +1,6 @@
 <ion-view title="My Meds">
     <ion-content overflow-scroll="true" padding="true" class="has-header">
-        
+
 
         <ion-list>
             <ion-item  ng-repeat="i in retVals">
@@ -9,7 +9,7 @@
                 <p>Taken:  {{i.taken}}</p>
                 <p>Extra Info:  {{i.extra}}</p>
                 <ion-option-button class="button-positive" ng-click="setFill(i)"><i class="icon ion-edit"></i></ion-option-button>
-                <ion-option-button class="button-assertive" ng-click="setRemove(i)"><i class="icon ion-ios-trash"></i></ion-option-button>
+                <ion-option-button class="button-assertive" ng-click="deleteMeds(i)"><i class="icon ion-ios-trash"></i></ion-option-button>
             </ion-item>
     </ion-list>
       <button class="button button-block" type="submit" ng-click="medPage()">Add New</button>
