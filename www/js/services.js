@@ -26,6 +26,7 @@ function isUndefined(val) {
         return val
 }
 
+
 function getEmail() {
     var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
     var user = fbUser.getAuth();
@@ -33,11 +34,12 @@ function getEmail() {
     var userGUID = user.uid;
     console.log(userGUID);
 
-  //var userEmail = user.password.email;
+    //var userEmail = user.password.email;
     //console.log(userEmail.replace(/[^a-zA-Z ]/g, ""));
     //return (userEmail.replace(/[^a-zA-Z ]/g, ""));
     return userGUID;
 }
+
 
 app.service('AuthService', function ($q, $ionicPopup, $state) {
   //TODO: switch to using AngularFire
@@ -186,6 +188,7 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject, M
 
             nutritionTable.$add({
                 nutritionGuid: nutritionGuid,
+                mealName: isUndefined(data.mealName),
                 meal: isUndefined(data.meal),
                 date: isUndefined(data.date).toString(),
                 time: isUndefined(data.time).toString(),
@@ -382,7 +385,7 @@ app.service("MealService", function ($q,$ionicPopup, $firebaseObject) {
     return self;
 });
 
-app.service("RecipeService", function ($q,$ionicPopup) {
+app.service("RecipeService", function ($q,$ionicPopup, $firebaseObject) {
     var self = {
         'page': 0,
         'page_size': '20',
@@ -715,49 +718,26 @@ app.service("medicineService", function ($q, $firebaseObject) {
 
 app.service("pullRecipeFirebaseService", function ($firebaseArray)
 {
-    var recipeTable = new Firebase("https://boiling-fire-9023.firebaseio.com/"+getEmail() + "/recipe/");
-    recipeTable = $firebaseArray(recipeTable);
-
     return {
         pullRecipe: function () {
-            return recipeTable;
-            // May have input var "data"
-            //var recipeGuid = guid();      //User ID not GUID
-               /*     recipeTable.$getRecord(); //ASK what is getRecord key?
-                "recipe": {                         //ASK does it put the data in data?
-                    recipeGuid: recipeGuid,
-                    recipeName: isUndefined(data.recipeName),
-                    prepTime: isUndefined(data.prepTime),
-                    cookingTime: isUndefined(data.cookingTime),
-                    servesNMany: isUndefined(data.servesNMany),
-                    recipeDesc: isUndefined(data.recipeDesc)
-                }
-            });
-*/
+            return $firebaseArray(new Firebase("https://boiling-fire-9023.firebaseio.com/"+getEmail() + "/recipe/")).$loaded();
         }
     };
 })
 
 
 app.service("pullMedsFirebaseService", function ($firebaseArray) {
-    var medTable = new Firebase("https://boiling-fire-9023.firebaseio.com/" + getEmail() + "/medicine/");
-    medTable = $firebaseArray(medTable);
-    console.log(medTable);
     return {
         pullMeds: function () {
-            return medTable;
+            return $firebaseArray(new Firebase("https://boiling-fire-9023.firebaseio.com/" + getEmail() + "/medicine/")).$loaded();
         }
     };
 })
 
 app.service("pullNutritionFirebaseService", function ($firebaseArray) {
-    var nutritionTable = new Firebase("https://boiling-fire-9023.firebaseio.com/" + getEmail() + "/nutrition/");
-    nutritionTable = $firebaseArray(nutritionTable);
-
     return {
         pullNutrition: function () {
-            console.log(nutritionTable);
-            return nutritionTable;
+            return $firebaseArray(new Firebase("https://boiling-fire-9023.firebaseio.com/" + getEmail() + "/nutrition/")).$loaded();
         }
     };
 })

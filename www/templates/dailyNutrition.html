@@ -2,10 +2,10 @@
  <ion-content overflow-scroll="true" padding="true" class="has-header">
                 <ion-list>
                     <div class="spacer" style="width: 300px; height: 23px;"></div>
-                    <ion-list ng-controller="nutritionCtrl">
+                    <ion-list ng-controller="nutritionCtrl" >
                         <ion-item ng-repeat="i in retVals">
-
-                            <p>Name:  {{i.meal}}</p>
+                            <p>Meal Name:  {{i.mealName}}</p>
+                            <p>Meal Type:  {{i.meal}}</p>
                             <p>Amount:  {{i.date}}</p>
                             <p>Extra:  {{i.comments}}</p>
 

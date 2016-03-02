@@ -86,12 +86,7 @@ app.controller('signupCtrl', function ($scope, $state, $ionicPopup, AuthService)
 })
 
 
-app.controller('recipeBookCtrl', function ($scope, RecipeService) {
-  $scope.deleteRecipe = function(obj){
-    console.log(obj);
-    RecipeService.deleteRecipe(obj);
-  }
-})
+
 
 app.controller('friedChickenCtrl', function ($scope) {
 
@@ -325,25 +320,11 @@ app.controller('addARecipeCtrl', function ($scope, nixApi, $q, $http, $state, $w
 
 })
 
-app.controller('dailyNutritionCtrl', function ($scope, addIngredientService) {
-    $scope.setRemove = function(guid){
-      console.log(guid.id);
-      addIngredientService.deleteMeal(guid);
-      //TODO: refresh list
-    }
 
-})
 
 
 .controller('myMedsCtrl', function ($scope, $state, medicineService) {
-    $scope.addMeds = function () {
-        $state.go("addMedicine");
-    };
 
-    $scope.deleteMeds = function(obj){
-      console.log(obj);
-      medicineService.deleteMeds(obj);
-    }
 })
 
 app.controller('addMedicineCtrl', function ($scope, medicineService, $state) {
@@ -548,31 +529,55 @@ app.controller('changePWCtrl', function ($scope, $ionicPopup, $state, AuthServic
 
 })
 
-app.controller('recipeBookCtrl', function ($scope, pullRecipeFirebaseService) {
-    var x = pullRecipeFirebaseService.pullRecipe().$loaded().then(function (retVal) {
-        var arg = new Array;
-        angular.forEach(retVal, function (ing) {
-            arg.push(ing);
-        });
-        $scope.retVals = arg;
-        console.log(arg);
-    });
+app.controller('recipeBookCtrl', function ($scope, RecipeService) {
+  
 })
 
-app.controller('medPullCtrl', function ($scope,$state, pullMedsFirebaseService) {
-    $scope.retVals = pullMedsFirebaseService.pullMeds();
-    $scope.medPage = function () {
-        $state.go("addMedicine");
+app.controller('recipeBookCtrl', function ($scope, pullRecipeFirebaseService, RecipeService) {
+    $scope.retVals2 = pullRecipeFirebaseService.pullRecipe().then(function (result) {
+        $scope.retVals = result; 
+    });
+    $scope.$watch('search', function (oldValue, newValue) {
+        if (!angular.isUndefined(oldValue)) {
+           // $scope.retVals2 = pullRecipeFirebaseService.pullRecipeSpecific(oldValue);
+        }
+    });
+
+    $scope.deleteRecipe = function (obj) {
+        console.log(obj);
+        RecipeService.deleteRecipe(obj);
     }
 })
 
-app.controller('nutritionCtrl', function ($scope, pullNutritionFirebaseService) {
-    var x = pullNutritionFirebaseService.pullNutrition().$loaded().then(function (retVal) {
-        var arg = new Array;
-        angular.forEach(retVal, function (ing) {
-            arg.push(ing);
-        });
-        $scope.retVals = arg;
+app.controller('medPullCtrl', function ($scope,$state, medicineService, pullMedsFirebaseService) {
+    $scope.retVals2 = pullMedsFirebaseService.pullMeds().then(function (result) {
+        $scope.retVals = result;
     });
+    $scope.medPage = function () {
+        $state.go("addMedicine");
+    }
 
+    $scope.addMeds = function () {
+        $state.go("addMedicine");
+    };
+
+    $scope.deleteMeds = function (obj) {
+        console.log(obj);
+        medicineService.deleteMeds(obj);
+    }
+})
+
+
+app.controller('dailyNutritionCtrl', function ($scope, addIngredientService) {
+    $scope.setRemove = function (guid) {
+        console.log(guid.id);
+        addIngredientService.deleteMeal(guid);
+        //TODO: refresh list
+    }
+
+})
+app.controller('nutritionCtrl', function ($scope, pullNutritionFirebaseService) {
+    $scope.retVals2 = pullNutritionFirebaseService.pullNutrition().then(function (result) {
+        $scope.retVals = result;
+    });
 })

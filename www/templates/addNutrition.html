@@ -11,12 +11,16 @@
                      ng-show="addNutritonForm.myName.$touched || addNutritonForm.$submitted"
                      ng-messages-include="templates/form-errors.html"></div>
                 <label class="item item-input">
+                    <span class="input-label">Meal Name</span>
+                    <input type="text" placeholder="Meal Name" ng-model="formData.mealName">
+                </label>
+                <label class="item item-input">
                     <span class="input-label">Meal Type</span>
                     <select ng-model="formData.meal">
-                        <option value="breakfast" selected>Breakfast</option>
-                        <option value="lunch">Lunch</option>
-                        <option value="dinner">Dinner</option>
-                        <option value="other">Other</option>
+                        <option value="Breakfast" selected>Breakfast</option>
+                        <option value="Lunch">Lunch</option>
+                        <option value="Dinner">Dinner</option>
+                        <option value="Other">Other</option>
                     </select>
                 </label>
                 <label class="item item-input">
