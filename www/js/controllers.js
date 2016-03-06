@@ -535,11 +535,14 @@ app.controller('recipeBookCtrl', function ($scope, RecipeService) {
 
 app.controller('recipeBookCtrl', function ($scope, pullRecipeFirebaseService, RecipeService) {
     $scope.retVals2 = pullRecipeFirebaseService.pullRecipe().then(function (result) {
-        $scope.retVals = result; 
+        $scope.retVals2 = $scope.retVals = result; 
     });
-    $scope.$watch('search', function (oldValue, newValue) {
-        if (!angular.isUndefined(oldValue)) {
-           // $scope.retVals2 = pullRecipeFirebaseService.pullRecipeSpecific(oldValue);
+    $scope.$watch('search', function (newValue) {
+        if (newValue) {
+            $scope.retVals2 = $scope.retVals.filter(function (recipe) { return recipe.recipeName.indexOf(newValue) != -1; });
+        }
+        else {
+            $scope.retVals2 = $scope.retVals;
         }
     });
 
