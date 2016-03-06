@@ -6,8 +6,8 @@
                         <ion-item ng-repeat="i in retVals">
                             <p>Meal Name:  {{i.mealName}}</p>
                             <p>Meal Type:  {{i.meal}}</p>
-                            <p>Amount:  {{i.date}}</p>
-                            <p>Extra:  {{i.comments}}</p>
+                            <p>Date:  {{i.date  | date:'MM/dd/yyyy @ h:mma'}}</p>
+                            <p>Extra Info:  {{i.comments}}</p>
 
                             <ion-option-button class="button-positive" ng-click="setFill(i)"><i class="icon ion-edit"></i></ion-option-button>
                             <ion-option-button class="button-assertive" ng-click="setRemove(i)"><i class="icon ion-ios-trash"></i></ion-option-button>

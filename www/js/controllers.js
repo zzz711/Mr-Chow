@@ -453,6 +453,7 @@ app.controller('dailyNutritionCtrl', function ($scope, addIngredientService) {
 
 app.controller('nutritionCtrl', function ($scope, pullNutritionFirebaseService) {
     $scope.retVals2 = pullNutritionFirebaseService.pullNutrition().then(function (result) {
+        console.log(typeof(result));
         $scope.retVals = result;
     });
 })
