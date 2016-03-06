@@ -1,8 +1,6 @@
 angular.module('app.routes', [])
 
 .config(function ($stateProvider, $urlRouterProvider) {
-
-
     $stateProvider
      .state('recipeCardHolder', {
          url: '/page2',
@@ -22,7 +20,6 @@ angular.module('app.routes', [])
           controller: 'signupCtrl'
       })
 
-
       .state('main', {
           url: '/page5',
           abstract: true,
@@ -38,7 +35,6 @@ angular.module('app.routes', [])
               }
           }
       })
-
 
       .state('main.addARecipe', {
           url: '/page13',
@@ -71,15 +67,11 @@ angular.module('app.routes', [])
           }
       })
 
-
-
-
-
-      .state('addAnIngredient', {
+     /* .state('addAnIngredient', {
           url: '/page23',
           templateUrl: 'templates/addIngredient.html',
           controller: 'addIngredientCtrl'
-      })
+      })*/
 
       .state('addAnIngredientRecipe', {
           url: '/page24',
@@ -87,59 +79,17 @@ angular.module('app.routes', [])
           controller: 'addIngredientRecipeCtrl'
       })
 
-
-
-
-
       .state('addMedicine', {
           url: '/page16',
           templateUrl: 'templates/addMedicine.html',
           controller: 'addMedicineCtrl'
       })
 
-
-
-
-
       .state('addNutrition', {
           url: '/page9',
           templateUrl: 'templates/addNutrition.html',
           controller: 'addNutritionCtrl'
       })
-
-
-
-
-
-      .state('11/1/2015', {
-          url: '/page20',
-          templateUrl: 'templates/11/1/2015.html',
-          controller: '11/1/2015Ctrl'
-      })
-
-
-
-
-
-      .state('11/2/2015', {
-          url: '/page21',
-          templateUrl: 'templates/11/2/2015.html',
-          controller: '11/2/2015Ctrl'
-      })
-
-
-
-
-
-      .state('11/3/2015', {
-          url: '/page22',
-          templateUrl: 'templates/11/3/2015.html',
-          controller: '11/3/2015Ctrl'
-      })
-
-
-
-
 
       .state('main.settings', {
           url: '/page17',
@@ -151,15 +101,11 @@ angular.module('app.routes', [])
           }
       })
 
-
-
       .state('myAccount', {
           url: '/page18',
           templateUrl: 'templates/myAccount.html',
           controller: 'myAccountCtrl'
       })
-
-
 
       .state('shareMyData', {
           url: '/page19',
@@ -171,17 +117,8 @@ angular.module('app.routes', [])
           url: '/page30',
           templateUrl: 'templates/changePW.html',
           controller: 'changePWCtrl'
-      })
+      });
 
-    //.state('addIngredient',{
-    //  url: '/page21',
-    //  templateUrl: "templates/addIngredient.html",
-    //  controller: "addIngredientCtrl"
-    //})
-
-    ;
-
-    // if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/page2');
 
 });
