@@ -76,13 +76,11 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
               fbUser.unauth();
             }
 
-            console.log(email);
-
             fbUser.createUser({
               email: email,
               password: password
             }).then( function(userData) {
-              console.log("User " + userData.uid + " created successfully!");
+              console.log("User created successfully!");
                     $state.go("login");
               return d.promise;
             }).catch(function(error){
@@ -207,7 +205,7 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
                 });
             });
         },
-        saveRecipe: function (data, ingredients) {
+        saveRecipe: function (data, ingredients, totals) {
             var recipeGuid = guid();
             recipeTable = new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/recipe/");
             recipeTable = $firebaseArray(recipeTable);
@@ -218,7 +216,13 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
                  prepTime:  isUndefined(data.prepTime),
                  cookingTime:  isUndefined(data.cookingTime),
                  servesNMany:  isUndefined(data.servesNMany),
-                 recipeDesc:  isUndefined(data.recipeDesc)
+                 totalCal: isUndefined(totals.calories),
+                 totalProtein: isUndefined(totals.protein),
+                 totalSugars: isUndefined(totals.sugars),
+                 totalSodium: isUndefined(totals.sodium),
+                 totalFat: isUndefined(totals.fatContent),
+
+
              });
             var x = 1;
 
@@ -278,7 +282,6 @@ app.service("RecipeService", function ($q,$ionicPopup, $firebaseObject) {
             var url = "https://boiling-fire-9023.firebaseio.com/";
             var partURL = url.concat(getUID());
             var fullURL = partURL.concat("/recipe/" + guid.$id);
-            console.log(fullURL);
             var fbMeal = new Firebase(fullURL);
             var mealObj = $firebaseObject(fbMeal);
 
@@ -326,7 +329,6 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
 
       return {
           totalContentsAdd: function (data, $http) {
-              console.log(totalContents.fatContent);
               totalContents.fatContent = totalContents.fatContent + isBlank(isUndefined(data.fatContent));
               totalContents.calories = totalContents.calories + isBlank(isUndefined(data.calories));
               totalContents.protein = totalContents.protein + isBlank(isUndefined(data.protein));
@@ -462,7 +464,6 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
                 var url = "https://boiling-fire-9023.firebaseio.com/";
                 var partURL = url.concat(getUID());
                 var fullURL = partURL.concat("/nutrition/" + guid.$id);
-                console.log(fullURL);
                 var fbMeal = new Firebase(fullURL);
                 var mealObj = $firebaseObject(fbMeal);
 
@@ -531,7 +532,6 @@ app.service("medicineService", function ($q, $firebaseObject) {
             var url = "https://boiling-fire-9023.firebaseio.com/";
             var partURL = url.concat(getUID());
             var fullURL = partURL.concat("/medicine/" + medObj.$id);
-            console.log(medObj);
             var fbMeal = new Firebase(fullURL);
             var mealObj = $firebaseObject(fbMeal);
 

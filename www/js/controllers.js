@@ -24,10 +24,6 @@ app.controller('loginCtrl', function ($scope, AuthService, $state) {
 
     $scope.login = function (form) {
         console.log("loginCtrl::login");
-
-        //console.log("uncomment parse code");
-
-        //TODO: clear form
         form.email = "";
         form.password = "";
         AuthService.login($scope.formData.email, $scope.formData.password);
@@ -61,7 +57,6 @@ app.controller('signupCtrl', function ($scope, $state, $ionicPopup, AuthService)
         console.log("loginCtrl::signUp");
 
         if (form.$valid && $scope.formData.password === $scope.formData.confirmPassword) {
-            //console.log("uncomment parse code");
             form.name = null; //null or empty string?
             form.email = "";
             form.password = "";
@@ -93,104 +88,6 @@ app.controller('friedChickenCtrl', function ($scope) {
 })
 
 app.controller('spaghettiCtrl', function ($scope) {
-
-})
-
-
-app.controller('addIngredientCtrl', function ($scope, $state, $http, addIngredientService) {
-    $scope.formData = {
-        foodName: "",
-        foodColor: "",
-        foodType: "",
-        fatContent: "",
-        calories: "",
-        protein: "",
-        sugars: "",
-        sodium: "",
-        freshness: "",
-        comments: ""
-    };
-
-    $scope.getTestItems = function (query) {
-        if (query) {
-            $http.get("https://api.nutritionix.com/v1_1/search/" + query + "?results=0%3A20&cal_min=0&cal_max=50000&fields=*&appId=b62a1056&appKey=0096e00788eb1a17cfe1c4c6d2008612").then(function (response) {
-                var dataObject = response.data.hits;
-                var dataArray = new Array;
-                var i = 0;
-                for (var o in response.data.hits) {
-                    dataArray.push(response.data.hits[o].fields);
-                    i = i + 1;
-                }
-                $scope.retArray = { items: dataArray };
-                return $scope.retArray;
-
-            });
-        }
-        return $scope.retArray;
-    };
-
-    $scope.itemsClicked = function (callback) {
-        $scope.formData.foodName = isUndefined(callback.selectedItems[0].item_name);
-        $scope.formData.foodColor = "";
-        $scope.formData.foodType = "";
-        $scope.formData.fatContent = isUndefined(callback.selectedItems[0].nf_total_fat);
-        $scope.formData.freshness = "";
-        $scope.formData.comments = "";
-    };
-
-
-    $scope.submit = function (form) {
-        console.log("FORM DATA", form);
-        addIngredientService.add($scope.formData);
-        clearForm(form);
-        console.log("FORM DATA 2 ", form);
-        $state.go("addNutrition");
-    };
-
-    $scope.submit = function (form) {
-        console.log("FORM DATA", form);
-        addIngredientService.add($scope.formData);
-        clearForm(form);
-        console.log("FORM DATA 2 ", form);
-        $state.go(addIngredientService.getPageCalled());
-    };
-
-    $scope.addIngredient = function (form) {
-        addIngredientService.add($scope.formData);
-        //console.log($scope.formData);
-
-        //TODO: find a way to clear the form
-
-
-        form.$setPristine();
-        form.$setUntouched();
-        clearForm(form)
-    };
-
-    var clearForm = function (form) {
-        console.log("clear");
-        form.foodName = "";
-        form.foodColor = "";
-        form.foodType = "";
-        form.fatContent = "";
-        form.freshness = "";
-        form.comments = "";
-    };
-
-    var clearForm = function (form) {
-        console.log("clear");
-        form.foodName = "";
-        form.foodColor = "";
-        form.foodType = "";
-        form.fatContent = "";
-        form.calories = "";
-        form.protein = "";
-        form.sugars = "";
-        form.sodium = "";
-        form.freshness = "";
-        form.comments = "";
-    };
-
 
 })
 
@@ -246,7 +143,7 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $ht
     };
 
     $scope.itemsClicked = function (callback) {
-           $scope.initialize = addIngredientService.setPageVals(callback.selectedItems[0]);
+        $scope.initialize = addIngredientService.setPageVals(callback.selectedItems[0]);
     };
 
     $scope.$on('$ionicView.enter', function () {
@@ -296,7 +193,7 @@ app.controller('addARecipeCtrl', function ($scope, nixApi, $q, $http, $state, $w
     $scope.trackMeal = function (form) {
         if (form.$valid) {
             $scope.retVals = addIngredientService.getAllIngredient();
-            addToFirebaseService.saveRecipe(form, $scope.retVals);
+            addToFirebaseService.saveRecipe(form, $scope.retVals, $scope.totalVal);
 
             form.recipeName = "";
             form.recipeDesc = "";
@@ -350,17 +247,10 @@ app.controller('addMedicineCtrl', function ($scope, medicineService, $state) {
         extra: ""
     };
 
-
-    $scope.addMedication = function () { //wasn't getting called so I made a new function do the same thin
-        console.log($scope.addMed);
+    $scope.addMedication = function () { 
         medicineService.add($scope.addMed);
         $state.go("main.myMeds");
     }
-
-
-
-
-
 })
 
 .controller('addNutritionCtrl', function ($scope, $http, $state, addIngredientService, addToFirebaseService) {
@@ -400,7 +290,6 @@ app.controller('addMedicineCtrl', function ($scope, medicineService, $state) {
 
     $scope.addNewDailyNutrition = function (form) {
         if (form.$valid) {
-            //MealService.add($scope.formData);
             addToFirebaseService.saveNutrition($scope.formData, addIngredientService.getAllIngredient());
             addIngredientService.setTotalEmpty();
             $state.go("main.dailyNutrition", {}, { reload: true });
@@ -411,7 +300,6 @@ app.controller('addMedicineCtrl', function ($scope, medicineService, $state) {
     };
 
     $scope.addIngredient = function (form) {
-        // MealService.add($scope.formData);
         addIngredientService.setEmpty();
         addIngredientService.setPageCalled("addNutrition");
         $state.go('addAnIngredientRecipe', {}, { reload: true });
@@ -437,17 +325,6 @@ app.controller('addMedicineCtrl', function ($scope, medicineService, $state) {
 })
 
 
-app.controller('11/1/2015Ctrl', function ($scope) {
-
-})
-
-.controller('11/2/2015Ctrl', function ($scope) {
-
-})
-
-app.controller('11/3/2015Ctrl', function ($scope) {
-
-})
 
 app.controller('settingsCtrl', function ($scope, $state, AuthService) {
     $scope.changePW = function () {
@@ -562,7 +439,6 @@ app.controller('recipeBookCtrl', function ($scope, pullRecipeFirebaseService, Re
     });
 
     $scope.deleteRecipe = function (obj) {
-        console.log(obj);
         RecipeService.deleteRecipe(obj);
     }
 })
@@ -580,7 +456,6 @@ app.controller('medPullCtrl', function ($scope, $state, medicineService, pullMed
     };
 
     $scope.deleteMeds = function (obj) {
-        console.log(obj);
         medicineService.deleteMeds(obj);
     }
 })
@@ -588,12 +463,10 @@ app.controller('medPullCtrl', function ($scope, $state, medicineService, pullMed
 
 app.controller('dailyNutritionCtrl', function ($scope, addIngredientService) {
     $scope.setRemove = function (guid) {
-        console.log(guid.id);
         addIngredientService.deleteMeal(guid);
-        //TODO: refresh list
     }
-
 })
+
 app.controller('nutritionCtrl', function ($scope, pullNutritionFirebaseService) {
     $scope.retVals2 = pullNutritionFirebaseService.pullNutrition().then(function (result) {
         $scope.retVals = result;
