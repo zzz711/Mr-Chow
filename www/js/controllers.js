@@ -195,7 +195,7 @@ app.controller('addIngredientCtrl', function ($scope, $state, $http, addIngredie
 })
 
 
-app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $http, nixApi, addIngredientService) {
+app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $http, nixApi, addIngredientService, pullRecipeIngredientFirebaseService) {
     $scope.initialize = {
         calories: "",
         comments: "",
@@ -211,10 +211,25 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $ht
     };
     $scope.retValue = "";
     $scope.model = "";
+    $scope.recipeIngredients = pullRecipeIngredientFirebaseService.pullRecipeIngredients().then(function (result) {
+        $scope.recipeIngredients = result.map(function (recipeIngredient) {
+            recipeIngredient.item_name = recipeIngredient.ingName;
+            return recipeIngredient;
+        });
+    });
 
     $scope.getTestItems = function (query) {
         if (query) {
             $http.get("https://api.nutritionix.com/v1_1/search/" + query + "?results=0%3A20&cal_min=0&cal_max=50000&fields=*&appId=b62a1056&appKey=0096e00788eb1a17cfe1c4c6d2008612").then(function (response) {
+                $scope.retArray = { items: [] };
+                if ($scope.recipeIngredients) {
+                    var matchingRecipeIngredients = $scope.recipeIngredients.filter(function (recipeIngredient) {
+                        return recipeIngredient.ingName && recipeIngredient.ingName.toLowerCase().indexOf(query.toLowerCase()) != -1;
+                    });
+                    matchingRecipeIngredients = matchingRecipeIngredients.slice(0, matchingRecipeIngredients.length < 20 ? matchingRecipeIngredients.length : 20);
+                    $scope.retArray.items = $scope.retArray.items.concat(matchingRecipeIngredients);
+                }
+
                 var dataObject = response.data.hits;
                 var dataArray = new Array;
                 var i = 0;
@@ -222,7 +237,7 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $ht
                     dataArray.push(response.data.hits[o].fields);
                     i = i + 1;
                 }
-                $scope.retArray = { items: dataArray };
+                $scope.retArray.items = $scope.retArray.items.concat(dataArray);
                 return $scope.retArray;
 
             });
@@ -231,7 +246,7 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $ht
     };
 
     $scope.itemsClicked = function (callback) {
-        $scope.initialize = addIngredientService.setPageVals(callback.selectedItems[0]);
+           $scope.initialize = addIngredientService.setPageVals(callback.selectedItems[0]);
     };
 
     $scope.$on('$ionicView.enter', function () {
@@ -539,7 +554,7 @@ app.controller('recipeBookCtrl', function ($scope, pullRecipeFirebaseService, Re
     });
     $scope.$watch('search', function (newValue) {
         if (newValue) {
-            $scope.retVals2 = $scope.retVals.filter(function (recipe) { return recipe.recipeName.indexOf(newValue) != -1; });
+            $scope.retVals2 = $scope.retVals.filter(function (recipe) { return recipe.recipeName.toLowerCase().indexOf(newValue.toLowerCase()) != -1; });
         }
         else {
             $scope.retVals2 = $scope.retVals;
