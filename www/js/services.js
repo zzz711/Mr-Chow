@@ -392,17 +392,22 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
             },
 
             setPageVals: function (item) {
-                passedPage.id = isBlank(isUndefined(item.brand_id));
-                passedPage.ingName = isBlank(isUndefined(item.item_name));
-                passedPage.foodColor = isBlank(isUndefined(item.foodColor));
-                passedPage.freshness = isBlank(isUndefined(item.freshness));
-                passedPage.fatContent = isBlank(isUndefined(item.nf_total_fat));
-                passedPage.calories = isBlank(isUndefined(item.nf_calories));
-                passedPage.protein = isBlank(isUndefined(item.nf_protein));
-                passedPage.sugars = isBlank(isUndefined(item.nf_sugars));
-                passedPage.sodium = isBlank(isUndefined(item.nf_sodium));
-                passedPage.quantity = (isBlank(isUndefined(item.nf_serving_size_qty))  + " "+ isBlank(isUndefined(item.nf_serving_size_unit)));
-                passedPage.comments = "";
+                if (item.ingredientGuid) {
+                    this.setSpecificIngredient(item);
+                }
+                else {
+                    passedPage.id = isBlank(isUndefined(item.brand_id));
+                    passedPage.ingName = isBlank(isUndefined(item.item_name));
+                    passedPage.foodColor = isBlank(isUndefined(item.foodColor));
+                    passedPage.freshness = isBlank(isUndefined(item.freshness));
+                    passedPage.fatContent = isBlank(isUndefined(item.nf_total_fat));
+                    passedPage.calories = isBlank(isUndefined(item.nf_calories));
+                    passedPage.protein = isBlank(isUndefined(item.nf_protein));
+                    passedPage.sugars = isBlank(isUndefined(item.nf_sugars));
+                    passedPage.sodium = isBlank(isUndefined(item.nf_sodium));
+                    passedPage.quantity = (isBlank(isUndefined(item.nf_serving_size_qty)) + " " + isBlank(isUndefined(item.nf_serving_size_unit)));
+                    passedPage.comments = "";
+                }
                 return passedPage;
             },
 
@@ -545,6 +550,14 @@ app.service("pullRecipeFirebaseService", function ($firebaseArray)
     return {
         pullRecipe: function () {
             return $firebaseArray(new Firebase("https://boiling-fire-9023.firebaseio.com/"+getUID() + "/recipe/")).$loaded();
+        }
+    };
+})
+
+app.service("pullRecipeIngredientFirebaseService", function ($firebaseArray) {
+    return {
+        pullRecipeIngredients: function () {
+            return $firebaseArray(new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/recipeIngredient/")).$loaded();
         }
     };
 })
