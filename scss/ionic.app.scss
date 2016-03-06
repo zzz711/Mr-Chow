@@ -4,9 +4,6 @@ in ionic's _variables.scss file.
 
 For example, you might change some of the default colors:
 
-
-*/
-
 $light:                           #CCCCCC !default;
 $stable:                          #008080!default;
 $positive:                        #f1f341 !default;
@@ -63,6 +60,8 @@ div.title  {
     color:rgba(243, 19, 1, 0.82); }
     .bar.bar-stable .title {
       color: rgba(243, 19, 1, 0.82); }
+
+        */
 @import url(https://fonts.googleapis.com/css?family=Raleway); 
 $font-family-base: ‘Raleway’, serif; 
 // The path for our ionicons font files, relative to the built CSS in www/css

@@ -27,7 +27,7 @@ app.controller('loginCtrl', function ($scope, AuthService, $state) {
 
         //console.log("uncomment parse code");
 
-      //TODO: clear form
+        //TODO: clear form
         form.email = "";
         form.password = "";
         AuthService.login($scope.formData.email, $scope.formData.password);
@@ -139,12 +139,12 @@ app.controller('addIngredientCtrl', function ($scope, $state, $http, addIngredie
     };
 
 
-    $scope.submit = function(form) {
-      console.log("FORM DATA", form);
-      addIngredientService.add($scope.formData);
-      clearForm(form);
-      console.log("FORM DATA 2 ", form);
-      $state.go("addNutrition");
+    $scope.submit = function (form) {
+        console.log("FORM DATA", form);
+        addIngredientService.add($scope.formData);
+        clearForm(form);
+        console.log("FORM DATA 2 ", form);
+        $state.go("addNutrition");
     };
 
     $scope.submit = function (form) {
@@ -162,33 +162,33 @@ app.controller('addIngredientCtrl', function ($scope, $state, $http, addIngredie
         //TODO: find a way to clear the form
 
 
-      form.$setPristine();
-      form.$setUntouched();
-      clearForm(form)
+        form.$setPristine();
+        form.$setUntouched();
+        clearForm(form)
     };
 
     var clearForm = function (form) {
-      console.log("clear");
-      form.foodName = "";
-      form.foodColor = "";
-      form.foodType = "";
-      form.fatContent = "";
-      form.freshness = "";
-      form.comments = "";
+        console.log("clear");
+        form.foodName = "";
+        form.foodColor = "";
+        form.foodType = "";
+        form.fatContent = "";
+        form.freshness = "";
+        form.comments = "";
     };
 
-    var clearForm =function(form){
-      console.log("clear");
-      form.foodName = "";
-      form.foodColor = "";
-      form.foodType = "";
-      form.fatContent = "";
-      form.calories = "";
-      form.protein = "";
-      form.sugars = "";
-      form.sodium = "";
-      form.freshness = "";
-      form.comments = "";
+    var clearForm = function (form) {
+        console.log("clear");
+        form.foodName = "";
+        form.foodColor = "";
+        form.foodType = "";
+        form.fatContent = "";
+        form.calories = "";
+        form.protein = "";
+        form.sugars = "";
+        form.sodium = "";
+        form.freshness = "";
+        form.comments = "";
     };
 
 
@@ -396,10 +396,10 @@ app.controller('addMedicineCtrl', function ($scope, medicineService, $state) {
     };
 
     $scope.addIngredient = function (form) {
-            // MealService.add($scope.formData);
-            addIngredientService.setEmpty();
-            addIngredientService.setPageCalled("addNutrition");
-            $state.go('addAnIngredientRecipe', {}, { reload: true });
+        // MealService.add($scope.formData);
+        addIngredientService.setEmpty();
+        addIngredientService.setPageCalled("addNutrition");
+        $state.go('addAnIngredientRecipe', {}, { reload: true });
     };
 
     $scope.scanBarcode = function () {
@@ -446,47 +446,47 @@ app.controller('settingsCtrl', function ($scope, $state, AuthService) {
 
 })
 
-app.controller('myAccountCtrl', function($scope, $ionicPopup, AuthService, $state) {
-  $scope.formData = {
-    email: ""
-  };
+app.controller('myAccountCtrl', function ($scope, $ionicPopup, AuthService, $state) {
+    $scope.formData = {
+        email: ""
+    };
 
-  $scope.$on('$ionicView.enter', function () {
-    $scope.setEmail = function () {
-      console.log("current email");
-      //$document.getElementById("currentEmail").textContent = AuthService.getEmail();
-      $scope.currentEmail = AuthService.getEmail();
+    $scope.$on('$ionicView.enter', function () {
+        $scope.setEmail = function () {
+            console.log("current email");
+            //$document.getElementById("currentEmail").textContent = AuthService.getEmail();
+            $scope.currentEmail = AuthService.getEmail();
 
-    }
-  });
+        }
+    });
 
-  $scope.submit = function(form) {
-    $scope.data = {};
-      //TODO: use an ionic popup show to get password
-    var passwrd = $ionicPopup.show({
-      template: '<input type="password" ng-model="data.password">',
-      title: "Please Enter Your Password",
-      scope: $scope,
-      buttons: [
-        { text: 'Cancel' },
-        {
-          text: '<b>Enter</b>',
-          type: 'button-positive',
-          onTap: function(e) {
-            if (!$scope.data.password) {
-              e.preventDefault();
-            }
-            else{
-            //TODO clear form
-  //            form.email = "";
-              AuthService.changeEmail($scope.formData.email, $scope.data.password);
+    $scope.submit = function (form) {
+        $scope.data = {};
+        //TODO: use an ionic popup show to get password
+        var passwrd = $ionicPopup.show({
+            template: '<input type="password" ng-model="data.password">',
+            title: "Please Enter Your Password",
+            scope: $scope,
+            buttons: [
+              { text: 'Cancel' },
+              {
+                  text: '<b>Enter</b>',
+                  type: 'button-positive',
+                  onTap: function (e) {
+                      if (!$scope.data.password) {
+                          e.preventDefault();
+                      }
+                      else {
+                          //TODO clear form
+                          //            form.email = "";
+                          AuthService.changeEmail($scope.formData.email, $scope.data.password);
 
-            }
+                      }
 
-            }
-          }
-        ]
-      });
+                  }
+              }
+            ]
+        });
     }
 
 
@@ -530,16 +530,19 @@ app.controller('changePWCtrl', function ($scope, $ionicPopup, $state, AuthServic
 })
 
 app.controller('recipeBookCtrl', function ($scope, RecipeService) {
-  
+
 })
 
 app.controller('recipeBookCtrl', function ($scope, pullRecipeFirebaseService, RecipeService) {
     $scope.retVals2 = pullRecipeFirebaseService.pullRecipe().then(function (result) {
-        $scope.retVals = result; 
+        $scope.retVals2 = $scope.retVals = result;
     });
-    $scope.$watch('search', function (oldValue, newValue) {
-        if (!angular.isUndefined(oldValue)) {
-           // $scope.retVals2 = pullRecipeFirebaseService.pullRecipeSpecific(oldValue);
+    $scope.$watch('search', function (newValue) {
+        if (newValue) {
+            $scope.retVals2 = $scope.retVals.filter(function (recipe) { return recipe.recipeName.indexOf(newValue) != -1; });
+        }
+        else {
+            $scope.retVals2 = $scope.retVals;
         }
     });
 
@@ -549,7 +552,7 @@ app.controller('recipeBookCtrl', function ($scope, pullRecipeFirebaseService, Re
     }
 })
 
-app.controller('medPullCtrl', function ($scope,$state, medicineService, pullMedsFirebaseService) {
+app.controller('medPullCtrl', function ($scope, $state, medicineService, pullMedsFirebaseService) {
     $scope.retVals2 = pullMedsFirebaseService.pullMeds().then(function (result) {
         $scope.retVals = result;
     });

@@ -10,25 +10,25 @@
                      ng-messages="addRecipeForm.recipeName.$error"
                      ng-show="addRecipeForm.myName.$touched || addRecipeForm.$submitted"
                      ng-messages-include="templates/form-errors.html"></div>
-                <label class="item item-input item-floating-label">
+                <label class="item item-input">
                     <span class="input-label">Recipe Title</span>
                     <input type="text"
                            ng-model="addRecipeForm.recipeName"
                            placeholder="Recipe Title">
                 </label>
-                <label class="item item-input item-floating-label">
+                <label class="item item-input">
                     <span class="input-label">Prep Time</span>
                     <input type="text"
                            ng-model="addRecipeForm.prepTime"
                            placeholder="Prep Time">
                 </label>
-                <label class="item item-input item-floating-label">
+                <label class="item item-input">
                     <span class="input-label">Cooking Time</span>
                     <input type="text"
                            ng-model="addRecipeForm.cookingTime"
                            placeholder="Cooking Time">
                 </label>
-                <label class="item item-input item-floating-label">
+                <label class="item item-input">
                     <span class="input-label">Serves how many?</span>
                     <input type="text"
                            ng-model="addRecipeForm.servesNMany"
@@ -37,7 +37,7 @@
             </section>
             <br />
             <section>
-                <label class="item item-input item-floating-label">
+                <label class="item item-input">
                     <span class="input-label  item-text-wrap">Describe Your Recipe</span>
                     <input type="text"
                            ng-model="addRecipeForm.recipeDesc"
