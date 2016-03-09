@@ -45,7 +45,11 @@
                 </label>
             </section>
             <br />
-            <!-- <button class="button button-icon ion-camera" ng-click="addPicture()"></button>-->
+            <section>
+                <span class="input-label  item-text-wrap">Add a Picture</span>
+                <img ng-src="data:image/jpeg;base64,{{formData.picture}}" alt=""/>
+                <button class="button button-icon ion-camera" ng-click="addPicture()"></button>
+            </section>
             <br />
             <ion-list class="item-icon-right" ng-controller="addARecipeCtrl" ng-init="ingredient()">
                 <ion-item  ng-class= "balanced" ng-repeat="i in retVals">

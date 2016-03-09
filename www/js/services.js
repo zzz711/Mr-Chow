@@ -545,6 +545,52 @@ app.service("medicineService", function ($q, $firebaseObject) {
     };
 })
 
+app.service("NutritionService", function(){
+  return{
+    getNutrition: function(){
+      var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutrition/";
+      var fbObj = new Firebase(url);
+      var allMeals = [];
+      //var currMeal = {};
+      var num = 0;
+
+      fbObj.orderByChild("date").on("child_added", function(snapshot){
+        //TODO create an object and then add the datq for each key to the object
+        //This is basically a for each loop. It will go through and get
+        var currMeal = {};
+        currMeal.key = snapshot.key();
+        var key = currMeal.key;
+
+        currMeal.mealName = snapshot.val().mealName;
+        currMeal.meal = snapshot.val().meal;
+        currMeal.date = snapshot.val().date;
+        currMeal.time = snapshot.val().time;
+        currMeal.comments = snapshot.val().comments;
+        allMeals[num] = currMeal;
+
+        num++;
+
+        //currMeal.key = snapshot.key();
+        //currMeal.mealName = snapshot.val().mealName;
+        //allMeals.meal = currMeal;
+        //console.log(snapshot.key());
+        //console.log(snapshot.val().mealName);
+        //console.log(snapshot.val().time);
+        //console.log(allMeals);
+        //console.log(currMeal);
+        //console.log(allMeals);
+      });
+
+
+
+
+
+
+      return allMeals;
+    }
+  }
+})
+
 app.service("pullRecipeFirebaseService", function ($firebaseArray)
 {
     return {
