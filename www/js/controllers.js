@@ -171,11 +171,11 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $ht
                     recipeGuid: recipe.recipeGuid,
                     ingName: recipe.recipeName,
                     item_name: recipe.recipeName,
-                    fatContent: recipe.totalFat / servings,
-                    calories: recipe.totalCal / servings,
-                    protein: recipe.totalProtein / servings,
-                    sugars: recipe.totalSugars / servings,
-                    sodium: recipe.totalSodium / servings
+                    fatContent: Math.round(recipe.totalFat / servings),
+                    calories: Math.round(recipe.totalCal / servings),
+                    protein: Math.round(recipe.totalProtein / servings),
+                    sugars: Math.round(recipe.totalSugars / servings),
+                    sodium: Math.round(recipe.totalSodium / servings)
                 };
                 return recipeItem;
             });
@@ -193,7 +193,7 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $ht
 
 
 
-app.controller('addARecipeCtrl', function ($scope, $cordovaCamera,nixApi, $q, $http, $state, $window, $ionicPopover, $cordovaCamera, addIngredientService, addToFirebaseService) {
+app.controller('addARecipeCtrl', function ($scope, nixApi, $q, $http, $state, $window, $ionicPopover, $cordovaCamera, addIngredientService, addToFirebaseService) {
     $scope.retVals = "";
     $scope.totalVal = addIngredientService.getTotalContents($http);
 
@@ -243,8 +243,8 @@ app.controller('addARecipeCtrl', function ($scope, $cordovaCamera,nixApi, $q, $h
         var options = {
             quality: 50,
             destinationType: Camera.DestinationType.DATA_URL,
-            //IN PROD - sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-            sourceType: Camera.PictureSourceType.CAMERA,
+            sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+            //IN PROD -sourceType: Camera.PictureSourceType.CAMERA
             allowEdit: true,
             encodingType: Camera.EncodingType.JPEG,
             targetWidth: 480,
@@ -259,6 +259,8 @@ app.controller('addARecipeCtrl', function ($scope, $cordovaCamera,nixApi, $q, $h
             console.error("yolo ", err);
         });
     };
+
+
 })
 
 
@@ -276,7 +278,7 @@ app.controller('addMedicineCtrl', function ($scope, medicineService, $state) {
         extra: ""
     };
 
-    $scope.addMedication = function () {
+    $scope.addMedication = function () { 
         medicineService.add($scope.addMed);
         $state.go("main.myMeds");
     }
@@ -413,53 +415,7 @@ app.controller('myAccountCtrl', function ($scope, $ionicPopup, AuthService, $sta
 
 })
 
-app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, NutritionService) {
-  $scope.formData = {
-    NutritionInfo: false,
-    MedInfo: false,
-    RecipeInfo: false,
-    StartDate: null,
-    EndDate: null,
-    recipient: ""
-
-  };
-
-  $scope.shareData = function(){
-    var data = {}; //do I want to put the retrieved information in the email body or as an attachment?
-    var subject = "Test";
-    var recipient = [$scope.formData.recipient];
-    var ccArr = null;
-    var bccArr = null;
-    var file = null;
-
-    //TODO: get data form a service
-    if($scope.formData.NutritionInfo){
-      data.nutrion = NutritionService.getNutrition();
-    }
-
-    console.log(data);
-
-    $cordovaSocialSharing
-      .shareViaEmail(data, subject, recipient, ccArr, bccArr, file)
-      //.canShareViaEmail()
-      .then(function(result) {
-        console.log("Success!");
-      }, function(err) {
-        // An error occurred. Show a message to the user
-        console.log(err);
-
-      });
-
-    //cordova.plugins.email.open({
-    //  to:          recipient, // email addresses for TO field
-    //  cc:          ccArr, // email addresses for CC field
-    //  bcc:         bccArr, // email addresses for BCC field
-    //  attachments: file, // file paths or base64 data streams
-    //  subject:    subject, // subject of the email
-    //  body:       data // email body (for HTML, set isHtml to true)
-    //  //isHtml:    false, // indicats if the body is HTML or plain text
-    //});
-  }
+app.controller('shareMyDataCtrl', function ($scope) {
 
 })
 
