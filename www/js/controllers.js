@@ -162,7 +162,7 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $ht
 
 
 
-app.controller('addARecipeCtrl', function ($scope, nixApi, $q, $http, $state, $window, $ionicPopover, $cordovaCamera, addIngredientService, addToFirebaseService) {
+app.controller('addARecipeCtrl', function ($scope, $cordovaCamera,nixApi, $q, $http, $state, $window, $ionicPopover, $cordovaCamera, addIngredientService, addToFirebaseService) {
     $scope.retVals = "";
     $scope.totalVal = addIngredientService.getTotalContents($http);
 
@@ -212,8 +212,8 @@ app.controller('addARecipeCtrl', function ($scope, nixApi, $q, $http, $state, $w
         var options = {
             quality: 50,
             destinationType: Camera.DestinationType.DATA_URL,
-            sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-            //IN PROD -sourceType: Camera.PictureSourceType.CAMERA
+            //IN PROD - sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+            sourceType: Camera.PictureSourceType.CAMERA,
             allowEdit: true,
             encodingType: Camera.EncodingType.JPEG,
             targetWidth: 480,
@@ -228,8 +228,6 @@ app.controller('addARecipeCtrl', function ($scope, nixApi, $q, $http, $state, $w
             console.error("yolo ", err);
         });
     };
-
-
 })
 
 
