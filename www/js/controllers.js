@@ -92,7 +92,7 @@ app.controller('spaghettiCtrl', function ($scope) {
 })
 
 
-app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $http, nixApi, addIngredientService, pullRecipeIngredientFirebaseService) {
+app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $http, nixApi, addIngredientService, pullRecipeIngredientFirebaseService, pullRecipeFirebaseService) {
     $scope.initialize = {
         calories: "",
         comments: "",
@@ -108,25 +108,32 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $ht
     };
     $scope.retValue = "";
     $scope.model = "";
-    $scope.recipeIngredients = pullRecipeIngredientFirebaseService.pullRecipeIngredients().then(function (result) {
-        $scope.recipeIngredients = result.map(function (recipeIngredient) {
-            recipeIngredient.item_name = recipeIngredient.ingName;
-            return recipeIngredient;
-        });
-    });
 
     $scope.getTestItems = function (query) {
         if (query) {
             $http.get("https://api.nutritionix.com/v1_1/search/" + query + "?results=0%3A20&cal_min=0&cal_max=50000&fields=*&appId=b62a1056&appKey=0096e00788eb1a17cfe1c4c6d2008612").then(function (response) {
+
                 $scope.retArray = { items: [] };
-                if ($scope.recipeIngredients) {
-                    var matchingRecipeIngredients = $scope.recipeIngredients.filter(function (recipeIngredient) {
+
+                // include recipeIngredients or recipes, depending on where we came from
+                var pageCalled = addIngredientService.getPageCalled();
+                var toFilter = [];
+                if (pageCalled == "addIngredient" && $scope.recipeIngredients) {
+                    toFilter = toFilter.concat($scope.recipeIngredients);
+                }
+                if (pageCalled == "addNutrition" && $scope.recipes) {
+                    toFilter = toFilter.concat($scope.recipes);
+                }
+                if (toFilter) {
+                    // add matching items to returned array
+                    var matchingRecipeIngredients = toFilter.filter(function (recipeIngredient) {
                         return recipeIngredient.ingName && recipeIngredient.ingName.toLowerCase().indexOf(query.toLowerCase()) != -1;
                     });
                     matchingRecipeIngredients = matchingRecipeIngredients.slice(0, matchingRecipeIngredients.length < 20 ? matchingRecipeIngredients.length : 20);
                     $scope.retArray.items = $scope.retArray.items.concat(matchingRecipeIngredients);
                 }
 
+                // add matches from API to returned array
                 var dataObject = response.data.hits;
                 var dataArray = new Array;
                 var i = 0;
@@ -149,6 +156,30 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $ht
     $scope.$on('$ionicView.enter', function () {
         $scope.initialize = addIngredientService.getSpecificIngredient();
         $scope.measurement = $scope.initialize.measurement;
+
+        // load all recipes and recipeIngredients the user has
+        $scope.recipeIngredients = pullRecipeIngredientFirebaseService.pullRecipeIngredients().then(function (result) {
+            $scope.recipeIngredients = result.map(function (recipeIngredient) {
+                recipeIngredient.item_name = recipeIngredient.ingName;
+                return recipeIngredient;
+            });
+        });
+        $scope.recipes = pullRecipeFirebaseService.pullRecipe().then(function (result) {
+            $scope.recipes = result.map(function (recipe) {
+                var servings = (recipe.servesNMany && recipe.servesNMany >= 1) ? recipe.servesNMany : 1;
+                var recipeItem = {
+                    recipeGuid: recipe.recipeGuid,
+                    ingName: recipe.recipeName,
+                    item_name: recipe.recipeName,
+                    fatContent: recipe.totalFat / servings,
+                    calories: recipe.totalCal / servings,
+                    protein: recipe.totalProtein / servings,
+                    sugars: recipe.totalSugars / servings,
+                    sodium: recipe.totalSodium / servings
+                };
+                return recipeItem;
+            });
+        });
     });
 
     $scope.doStuff = function () {
@@ -469,7 +500,6 @@ app.controller('dailyNutritionCtrl', function ($scope, addIngredientService) {
 
 app.controller('nutritionCtrl', function ($scope, pullNutritionFirebaseService) {
     $scope.retVals2 = pullNutritionFirebaseService.pullNutrition().then(function (result) {
-        console.log(typeof(result));
         $scope.retVals = result;
     });
 })

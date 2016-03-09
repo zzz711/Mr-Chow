@@ -392,7 +392,7 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
             },
 
             setPageVals: function (item) {
-                if (item.ingredientGuid) {
+                if (item.ingredientGuid || item.recipeGuid) {
                     this.setSpecificIngredient(item);
                 }
                 else {
