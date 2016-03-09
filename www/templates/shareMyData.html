@@ -1,21 +1,21 @@
 <ion-view title="Share My Data">
     <ion-content overflow-scroll="true" padding="true" class="has-header">
         <form class="list">
-            <ion-checkbox name="shareDailyNutritionInfo">Daily Nutrition</ion-checkbox>
-            <ion-checkbox name="shareMyMedInfo">My Meds</ion-checkbox>
-            <ion-checkbox name="shareRecipeBookInfo">Recipe Book</ion-checkbox>
+            <ion-checkbox name="shareDailyNutritionInfo" ng-model="formData.NutritionInfo">Daily Nutrition</ion-checkbox>
+            <ion-checkbox name="shareMyMedInfo" ng-model="formData.MedInfo">My Meds</ion-checkbox>
+            <ion-checkbox name="shareRecipeBookInfo" ng-model="formData.RecipeInfo">Recipe Book</ion-checkbox>
             <div class="spacer" style="width: 283px; height: 15px;"></div>
             <h4>Dates for daily nutrition</h4>
             <div class="spacer" style="width: 283px; height: 16px;"></div>
             <label class="item item-input" name="dateFrom">
                 <span class="input-label">Input</span>
-                <input type="date" placeholder="Enter Date">
+                <input type="date" placeholder="Enter Date" ng-model="formData.StartDate">
             </label>
         </form>
         <form class="list">
             <label class="item item-input" name="dateTo">
                 <span class="input-label">Input</span>
-                <input type="date" placeholder="">
+                <input type="date" placeholder="" ng-model="formData.EndDate">
             </label>
         </form>
         <div class="spacer" style="width: 283px; height: 11px;"></div>
@@ -23,9 +23,10 @@
             <h4>Enter Email to Share Info</h4>
             <label class="item item-input" name="emailToShare">
                 <span class="input-label">Input</span>
-                <input type="email" placeholder="Enter Email">
+                <input type="email" placeholder="Enter Email" ng-model="formData.recipient">
             </label>
         </form>
-        <a href="#/page5/page17" class="button button-stable button-block ">Share!!</a>
+        <!--<a href="#/page5/page17" class="button button-stable button-block ">Share!!</a>-->
+        <button class="button button-block" type="submit" ng-click="shareData()">Share Data</button>
     </ion-content>
 </ion-view>
