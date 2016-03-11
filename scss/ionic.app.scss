@@ -13,25 +13,40 @@ $energized:                       rgba(243, 19, 1, 0.82) !default;
 $assertive:                       rgba(224, 18, 2, 0.97) !default;
 $royal:                           #000568 !default;
 $dark:                            #b2b2b2 !default;
-
+    */
 
 .button.button-stable {
     border-color: transparent;
     background-color: #AA0909;
-    color: #AA0909;
+    color: #000000;
+}
+//Login Page
+button.button.button-block {
+    color: white;
+    background-color: #008080;
 }
 
 a.button.button-stable.button-block {
-    color: #F90000;
-}
-div.tab-nav.tabs {
+    color: white;
     background-color: #008080;
 }
+
+//Top tab page
+.tabs-striped.tabs-light{
+    background-color: #008080;
+}
+.tabs-top.tabs-striped {
+    padding-bottom: 0;
+    background-color: #AA0909;
+}
+
 .tabs-icon-top > .tabs .tab-item, .tabs-icon-top.tabs .tab-item, .tabs-icon-bottom > .tabs .tab-item, .tabs-icon-bottom.tabs .tab-item {
     font-size: 10px;
     line-height: 14px;
     color: white;
+    background-color: #008080;
 }
+
 
 div.title  {
     color:rgba(243, 19, 1, 0.82);
@@ -61,7 +76,6 @@ div.title  {
     .bar.bar-stable .title {
       color: rgba(243, 19, 1, 0.82); }
 
-        */
 @import url(https://fonts.googleapis.com/css?family=Raleway); 
 $font-family-base: ‘Raleway’, serif; 
 // The path for our ionicons font files, relative to the built CSS in www/css

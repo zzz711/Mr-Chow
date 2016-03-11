@@ -3,7 +3,8 @@
                 <ion-list>
                     <div class="spacer" style="width: 300px; height: 23px;"></div>
                     <ion-list ng-controller="nutritionCtrl" >
-                        <ion-item ng-repeat="i in retVals">
+                        <ion-item ng-repeat="i in retVals | orderBy:'-date'">
+                            <img ng-src="data:image/jpeg;base64,{{i.picture}}" height="100px" width="100px" alt="" />
                             <p>Meal Name:  {{i.mealName}}</p>
                             <p>Meal Type:  {{i.meal}}</p>
                             <p>Date:  {{i.date  | date:'MM/dd/yyyy @ h:mma'}}</p>

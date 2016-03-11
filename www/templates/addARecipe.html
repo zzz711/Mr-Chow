@@ -1,4 +1,4 @@
-<ion-view title="Recipe Book">
+<ion-view title="Add A Recipe">
     <ion-content overflow-scroll="true" padding="true"  class="has-header">
         <form name="addRecipeForm"
               novalidate="novalidate"
@@ -45,11 +45,10 @@
                 </label>
             </section>
             <br />
-            <section>
-                <span class="input-label  item-text-wrap">Add a Picture</span>
-                <img ng-src="data:image/jpeg;base64,{{formData.picture}}" alt=""/>
-                <button class="button button-icon ion-camera" ng-click="addPicture()"></button>
-            </section>
+            <ion-list>
+                <img ng-src="data:image/jpeg;base64,{{picture}}"  height={{height}} width={{width}} alt="" />
+            </ion-list>
+            <a class="button button-stable" ng-click="addPicture()">Add a Picture</a>
             <br />
             <ion-list class="item-icon-right" ng-controller="addARecipeCtrl" ng-init="ingredient()">
                 <ion-item  ng-class= "balanced" ng-repeat="i in retVals">

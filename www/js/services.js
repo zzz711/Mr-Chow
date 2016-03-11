@@ -170,7 +170,7 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
 app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
 
     return {
-        saveNutrition: function (data, ingredients) {
+        saveNutrition: function (data, ingredients, pic) {
             var nutritionGuid = guid();
             nutritionTable = new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutrition/");
             nutritionTable = $firebaseArray(nutritionTable);
@@ -181,7 +181,8 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
                 meal: isUndefined(data.meal),
                 date: isUndefined(data.date).toString(),
                 time: isUndefined(data.time).toString(),
-                comments: isUndefined(data.comments)
+                comments: isUndefined(data.comments),
+                picture: isUndefined(pic)
             });
 
             var x = 1;
@@ -205,7 +206,7 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
                 });
             });
         },
-        saveRecipe: function (data, ingredients, totals) {
+        saveRecipe: function (data, ingredients, totals, pic) {
             var recipeGuid = guid();
             recipeTable = new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/recipe/");
             recipeTable = $firebaseArray(recipeTable);
@@ -221,7 +222,7 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
                  totalSugars: isUndefined(totals.sugars),
                  totalSodium: isUndefined(totals.sodium),
                  totalFat: isUndefined(totals.fatContent),
-
+                 picture : isUndefined(pic)
 
              });
             var x = 1;
@@ -590,6 +591,7 @@ app.service("NutritionService", function(){
     }
   }
 })
+
 
 app.service("pullRecipeFirebaseService", function ($firebaseArray)
 {

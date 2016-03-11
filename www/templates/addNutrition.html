@@ -40,6 +40,10 @@
                            ng-model="formData.time"
                            placeholder="hh:mm">
                 </label>
+                <ion-list>
+                    <img ng-src="data:image/jpeg;base64,{{picture}}" height={{height}} width={{width}} alt="" />
+                </ion-list>
+                <a class="button button-stable" ng-click="addPicture()">Add a Picture</a>
                 <ion-list class="item-icon-right" ng-controller="addNutritionCtrl" ng-init="mealInfo()">
                     <ion-item ng-repeat="i in returnVals">
                         <p>Name: {{i.ingName}}</p>

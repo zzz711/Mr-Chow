@@ -81,17 +81,6 @@ app.controller('signupCtrl', function ($scope, $state, $ionicPopup, AuthService)
 })
 
 
-
-
-app.controller('friedChickenCtrl', function ($scope) {
-
-})
-
-app.controller('spaghettiCtrl', function ($scope) {
-
-})
-
-
 app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $http, nixApi, addIngredientService, pullRecipeIngredientFirebaseService) {
     $scope.initialize = {
         calories: "",
@@ -121,6 +110,7 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $ht
                 $scope.retArray = { items: [] };
                 if ($scope.recipeIngredients) {
                     var matchingRecipeIngredients = $scope.recipeIngredients.filter(function (recipeIngredient) {
+                        
                         return recipeIngredient.ingName && recipeIngredient.ingName.toLowerCase().indexOf(query.toLowerCase()) != -1;
                     });
                     matchingRecipeIngredients = matchingRecipeIngredients.slice(0, matchingRecipeIngredients.length < 20 ? matchingRecipeIngredients.length : 20);
@@ -162,10 +152,12 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $ht
 
 
 
-app.controller('addARecipeCtrl', function ($scope, $cordovaCamera,nixApi, $q, $http, $state, $window, $ionicPopover, $cordovaCamera, addIngredientService, addToFirebaseService) {
+app.controller('addARecipeCtrl', function ($scope, $cordovaCamera,nixApi, $q, $http, $state, $window, $ionicPopover, addIngredientService, addToFirebaseService) {
     $scope.retVals = "";
     $scope.totalVal = addIngredientService.getTotalContents($http);
-
+    $scope.picture = "";
+    $scope.height = "0px";
+    $scope.width = "0px";
 
     $scope.ingredient = function () {
         $scope.retVals = addIngredientService.getAllIngredient();
@@ -193,14 +185,17 @@ app.controller('addARecipeCtrl', function ($scope, $cordovaCamera,nixApi, $q, $h
     $scope.trackMeal = function (form) {
         if (form.$valid) {
             $scope.retVals = addIngredientService.getAllIngredient();
-            addToFirebaseService.saveRecipe(form, $scope.retVals, $scope.totalVal);
+            addToFirebaseService.saveRecipe(form, $scope.retVals, $scope.totalVal, $scope.picture);
 
             form.recipeName = "";
             form.recipeDesc = "";
             form.servesNMany = "";
             form.prepTime = "";
             form.cookingTime = "";
-            $scope.initialize = {}
+            $scope.initialize = {};
+            $scope.picture = "";
+            $scope.height = "0px";
+            $scope.width = "0px";
             addIngredientService.setEmpty();
             addIngredientService.resetArray();
             addIngredientService.setTotalEmpty();
@@ -220,10 +215,11 @@ app.controller('addARecipeCtrl', function ($scope, $cordovaCamera,nixApi, $q, $h
             popoverOptions: CameraPopoverOptions,
             saveToPhotoAlbum: false
         };
-
-
         $cordovaCamera.getPicture(options).then(function (imageData) {
-            $scope.formData.picture = imageData;
+            $scope.picture = imageData;
+            $scope.height = "200px";
+            $scope.width = "200px";
+         //   $state.go('main.addARecipe');
         }, function (err) {
             console.error("yolo ", err);
         });
@@ -251,7 +247,7 @@ app.controller('addMedicineCtrl', function ($scope, medicineService, $state) {
     }
 })
 
-.controller('addNutritionCtrl', function ($scope, $http, $state, addIngredientService, addToFirebaseService) {
+.controller('addNutritionCtrl', function ($scope, $http, $state, $cordovaCamera, addIngredientService, addToFirebaseService) {
     $scope.formData = {
         mealName: "",
         mealContents: "",
@@ -260,6 +256,9 @@ app.controller('addMedicineCtrl', function ($scope, medicineService, $state) {
         time: "",
         comments: ""
     };
+    $scope.picture = "";
+    $scope.height = "0px";
+    $scope.width = "0px";
 
     $scope.returnVals = "";
     $scope.totalVal = addIngredientService.getTotalContents($http);
@@ -288,8 +287,11 @@ app.controller('addMedicineCtrl', function ($scope, medicineService, $state) {
 
     $scope.addNewDailyNutrition = function (form) {
         if (form.$valid) {
-            addToFirebaseService.saveNutrition($scope.formData, addIngredientService.getAllIngredient());
+            addToFirebaseService.saveNutrition($scope.formData, addIngredientService.getAllIngredient(), $scope.picture);
             addIngredientService.setTotalEmpty();
+            $scope.picture = "";
+            $scope.height = "0px";
+            $scope.width = "0px";
             $state.go("main.dailyNutrition", {}, { reload: true });
         }
         else {
@@ -320,6 +322,28 @@ app.controller('addMedicineCtrl', function ($scope, medicineService, $state) {
         form.time = "";
         form.comments = "";
     }
+
+    $scope.addPicture = function () {
+        var options = {
+            quality: 50,
+            destinationType: Camera.DestinationType.DATA_URL,
+            //IN PROD - sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+            sourceType: Camera.PictureSourceType.CAMERA,
+            allowEdit: true,
+            encodingType: Camera.EncodingType.JPEG,
+            targetWidth: 480,
+            popoverOptions: CameraPopoverOptions,
+            saveToPhotoAlbum: false
+        };
+        $cordovaCamera.getPicture(options).then(function (imageData) {
+            $scope.picture = imageData;
+            $scope.height = "200px";
+            $scope.width = "200px";
+            //   $state.go('main.addARecipe');
+        }, function (err) {
+            console.error("yolo ", err);
+        });
+    };
 })
 
 
@@ -408,8 +432,7 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
 
     console.log(data);
 
-    $cordovaSocialSharing
-      .shareViaEmail(data, subject, recipient, ccArr, bccArr, file)
+    $cordovaSocialSharing.shareViaEmail(data, subject, recipient, ccArr, bccArr, file)
       //.canShareViaEmail()
       .then(function(result) {
         console.log("Success!");
@@ -462,10 +485,6 @@ app.controller('changePWCtrl', function ($scope, $ionicPopup, $state, AuthServic
 
 
 
-
-})
-
-app.controller('recipeBookCtrl', function ($scope, RecipeService) {
 
 })
 
