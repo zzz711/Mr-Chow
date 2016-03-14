@@ -446,7 +446,7 @@ app.controller('myAccountCtrl', function ($scope, $ionicPopup, AuthService, $sta
 
 })
 
-app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, NutritionService) {
+app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, NutritionService, MedicineService) {
   $scope.formData = {
     NutritionInfo: false,
     MedInfo: false,
@@ -464,23 +464,31 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
     var ccArr = null;
     var bccArr = null;
     var file = null;
+    var output;
 
     //TODO: get data form a service
     if($scope.formData.NutritionInfo){
       data.nutrion = NutritionService.getNutrition();
     }
 
+    if($scope.formData.MedInfo){
+      data.medicine = MedicineService.getMeds();
+    }
+
     console.log(data);
-
-    $cordovaSocialSharing.shareViaEmail(data, subject, recipient, ccArr, bccArr, file)
-      //.canShareViaEmail()
-      .then(function(result) {
-        console.log("Success!");
-      }, function(err) {
-        // An error occurred. Show a message to the user
-        console.log(err);
-
-      });
+    var node = JsonHuman.format(data);
+    //var output = output.appendChild(node);
+    console.log(node);
+    //
+    //$cordovaSocialSharing.shareViaEmail(data, subject, recipient, ccArr, bccArr, file)
+    //  //.canShareViaEmail()
+    //  .then(function(result) {
+    //    console.log("Success!");
+    //  }, function(err) {
+    //    // An error occurred. Show a message to the user
+    //    console.log(err);
+    //
+    //  });
 
     //cordova.plugins.email.open({
     //  to:          recipient, // email addresses for TO field
@@ -489,9 +497,10 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
     //  attachments: file, // file paths or base64 data streams
     //  subject:    subject, // subject of the email
     //  body:       data // email body (for HTML, set isHtml to true)
-    //  //isHtml:    false, // indicats if the body is HTML or plain text
+    //  //isHtml:    true, // indicats if the body is HTML or plain text
     //});
   }
+
 
 })
 

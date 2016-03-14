@@ -592,6 +592,34 @@ app.service("NutritionService", function(){
   }
 })
 
+app.service("MedicineService", function(){
+  return{
+    getMeds: function(){
+      var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/medicine/";
+      var fbObj = new Firebase(url);
+      var allMeds = [];
+      var num = 0;
+
+      fbObj.orderByChild("date").on("child_added", function(snapshot){
+        var currentMed = [];
+        currentMed.key = snapshot.key();
+        var key = currentMed.key; //do I need this?
+
+        currentMed.name = snapshot.val().name;
+        currentMed.taken = snapshot.val().taken;
+        currentMed.amount = snapshot.val().amount;
+        currentMed.extra = snapshot.val().extra;
+        currentMed.date = snapshot.val().date;
+
+        allMeds[num] = currentMed;
+        num++;
+
+      });
+
+      return allMeds
+    }
+  }
+})
 
 app.service("pullRecipeFirebaseService", function ($firebaseArray)
 {
