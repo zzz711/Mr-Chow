@@ -44,8 +44,8 @@
 /* Allow parent element of tabs to define color, or just the tab itself */
 .tabs-light > .tabs,
 .tabs.tabs-light {
-  @include tab-style($tabs-light-bg, $tabs-light-border, $tabs-light-text);
-  @include tab-badge-style($tabs-light-text, $tabs-light-bg);
+  @include tab-style($tabs-stable-bg, $tabs-stable-border, $tabs-stable-text);
+  @include tab-badge-style($tabs-stable-text, $tabs-stable-bg);
 }
 .tabs-stable > .tabs,
 .tabs.tabs-stable {
@@ -91,11 +91,11 @@
 @mixin tabs-striped($style, $color, $background) {
   &.#{$style} {
     .tabs{
-      background-color: $background;
+      background-color: #008080;
     }
     .tab-item {
-      color: rgba($color, $tabs-striped-off-opacity);
-      opacity: 1;
+      color: rgba(white, $tabs-striped-off-opacity);
+      opacity:  1;
       .badge{
         opacity:$tabs-striped-off-opacity;
       }
@@ -103,10 +103,10 @@
       &.active,
       &.activated {
         margin-top: -$tabs-striped-border-width;
-        color: $color;
+        color: white;
         border-style: solid;
         border-width: $tabs-striped-border-width 0 0 0;
-        border-color: $color;
+        border-color: #008080;
       }
     }
   }
@@ -127,7 +127,7 @@
   .#{$style} {
     .tabs,
     &> .tabs{
-      background-color: $color;
+      background-color: #008080;
       background-image: linear-gradient(0deg, $border-color, $border-color 50%, transparent 50%);
       border-color: $border-color;
     }
@@ -137,7 +137,7 @@
 @mixin tabs-striped-background($style, $color) {
   &.#{$style} {
     .tabs {
-      background-color: $color;
+      background-color: #008080;
       background-image:none;
     }
   }
@@ -146,18 +146,18 @@
 @mixin tabs-color($style, $color) {
   .#{$style} {
     .tab-item {
-      color: rgba($color, $tabs-off-opacity);
-      opacity: 1;
+      color: rgba(white, $tabs-off-opacity);
+      opacity:  1;
       .badge{
         opacity:$tabs-off-opacity;
       }
       &.tab-item-active,
       &.active,
       &.activated {
-        color: $color;
-        border: 0 solid $color;
+        color: white;
+        border: 0 solid #008080;
         .badge{
-          opacity: 1;
+          opacity:  1;
         }
       }
     }
@@ -167,8 +167,8 @@
 @mixin tabs-striped-color($style, $color) {
   &.#{$style} {
     .tab-item {
-      color: rgba($color, $tabs-striped-off-opacity);
-      opacity: 1;
+      color: rgba(white, $tabs-striped-off-opacity);
+      opacity:  1;
       .badge{
         opacity:$tabs-striped-off-opacity;
       }
@@ -176,12 +176,12 @@
       &.active,
       &.activated {
         margin-top: -$tabs-striped-border-width;
-        color: $color;
-        border: 0 solid $color;
+        color:white;
+        border: 0 solid #008080;
         border-top-width: $tabs-striped-border-width;
         .badge{
           top:$tabs-striped-border-width;
-          opacity: 1;
+          opacity:  1;
         }
       }
     }
@@ -190,10 +190,10 @@
 
 .tabs-striped {
   .tabs {
-    background-color: white;
+    background-color:#008080;
     background-image: none;
     border: none;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid white;
     padding-top: $tabs-striped-border-width;
   }
   .tab-item {
@@ -207,7 +207,7 @@
       border-color: $dark;
       .badge{
         top:$tabs-striped-border-width;
-        opacity: 1;
+        opacity:  1;
       }
     }
   }
@@ -271,7 +271,7 @@
       &.tab-item-active,
       &.active,
       &.activated {
-        color: $color;
+        color: white;
       }
     }
   }
@@ -386,7 +386,7 @@ ion-tabs {
   font-size: $tabs-text-font-size;
   font-family: $font-family-sans-serif;
 
-  opacity: 0.7;
+  opacity: 1;
 
   &:hover {
     cursor: pointer;
@@ -472,7 +472,7 @@ ion-tabs {
 .tab-item.tab-item-active,
 .tab-item.active,
 .tab-item.activated {
-  opacity: 1;
+  opacity:  1;
 
   &.tab-item-light {
     color: $light;
@@ -514,15 +514,15 @@ ion-tabs {
 
 .tab-item.disabled,
 .tab-item[disabled] {
-  opacity: .4;
+  opacity: 1;
   cursor: default;
   pointer-events: none;
 }
 
 .nav-bar-tabs-top.hide ~ .view-container .tabs-top .tabs{
-  top: 0
+  top: 0;
 }
 .pane[hide-nav-bar="true"] .has-tabs-top{
-  top:$tabs-height
+  top:$tabs-height;
 }
 

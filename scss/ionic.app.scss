@@ -5,7 +5,7 @@ in ionic's _variables.scss file.
 For example, you might change some of the default colors:
 
 $light:                           #CCCCCC !default;
-$stable:                          #008080!default;
+$stable:                          #008080;!default;
 $positive:                        #f1f341 !default;
 $calm:                            #f6c400 !default;
 $balanced:                        rgba(62, 232, 71, 0.34) !default;
@@ -23,17 +23,17 @@ $dark:                            #b2b2b2 !default;
 //Login Page
 button.button.button-block {
     color: white;
-    background-color: #008080;
+    background-color: #008080;;
 }
 
 a.button.button-stable.button-block {
     color: white;
-    background-color: #008080;
+    background-color: #008080;;
 }
 
 //Top tab page
 .tabs-striped.tabs-light{
-    background-color: #008080;
+    background-color: #008080;;
 }
 .tabs-top.tabs-striped {
     padding-bottom: 0;
@@ -44,15 +44,20 @@ a.button.button-stable.button-block {
     font-size: 10px;
     line-height: 14px;
     color: white;
-    background-color: #008080;
+    background-color: #008080;;
 }
 
-
+.tabs-top > .tabs, .tabs.tabs-top {
+     background-color: #008080;;
+}
+.tabs-striped.tabs-light .tabs{
+    background-color: #008080;;
+}
 div.title  {
     color:rgba(243, 19, 1, 0.82);
 }
 
-
+.logo-text-body { text-align: center;}
 
  .bar {
     border-color: #ddd;
@@ -70,11 +75,23 @@ div.title  {
       background-image: linear-gradient(180deg, #ddd, #ddd 50%, transparent 50%); }
   .bar.bar-stable {
     border-color: #b2b2b2;
-    background-color: teal;
+    background-color: #008080;;
     background-image: linear-gradient(0deg, #b2b2b2, #b2b2b2 50%, transparent 50%);
     color:rgba(243, 19, 1, 0.82); }
     .bar.bar-stable .title {
       color: rgba(243, 19, 1, 0.82); }
+
+
+.bar .title.title-left{
+    text-align:center;
+}
+.bar.bar-stable .title{
+    color:white;
+}
+
+.navBar  {
+    text-align:center;
+}
 
 @import url(https://fonts.googleapis.com/css?family=Raleway); 
 $font-family-base: ‘Raleway’, serif; 

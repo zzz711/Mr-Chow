@@ -3,7 +3,7 @@
 // -------------------------------
 
 $light:                           #fff !default;
-$stable:                          #f8f8f8 !default;
+$stable:                          #004040 !default;
 $positive:                        #387ef5 !default;
 $calm:                            #11c1f3 !default;
 $balanced:                        #33cd5f !default;
@@ -99,8 +99,8 @@ $button-light-border:             #ddd !default;
 $button-light-active-bg:          #fafafa !default;
 $button-light-active-border:      #ccc !default;
 
-$button-stable-bg:                $stable !default;
-$button-stable-text:              #444 !default;
+$button-stable-bg:               #008080 !default;
+$button-stable-text:              #fff !default;
 $button-stable-border:            #b2b2b2 !default;
 $button-stable-active-bg:         #e5e5e5 !default;
 $button-stable-active-border:     #a2a2a2 !default;
@@ -158,7 +158,7 @@ $button-default-active-border:    $button-stable-active-border !default;
 // -------------------------------
 
 $bar-height:                      44px !default;
-$bar-title-font-size:             17px !default;
+$bar-title-font-size:             25px !default;
 $bar-padding-portrait:            5px !default;
 $bar-padding-landscape:           5px !default;
 $bar-transparency:                1 !default;
@@ -173,11 +173,11 @@ $bar-light-border:                $button-light-border !default;
 $bar-light-active-bg:             $button-light-active-bg !default;
 $bar-light-active-border:         $button-light-active-border !default;
 
-$bar-stable-bg:                   rgba($button-stable-bg, $bar-transparency) !default;
-$bar-stable-text:                 $button-stable-text !default;
-$bar-stable-border:               $button-stable-border !default;
-$bar-stable-active-bg:            $button-stable-active-bg !default;
-$bar-stable-active-border:        $button-stable-active-border !default;
+$bar-stable-bg:                   rgba(#004040, $bar-transparency) !default;
+$bar-stable-text:                 #fff !default;
+$bar-stable-border:               #004040 !default;
+$bar-stable-active-bg:            #004040 !default;
+$bar-stable-active-border:        #004040 !default;
 
 $bar-positive-bg:                 rgba($button-positive-bg, $bar-transparency) !default;
 $bar-positive-text:               $button-positive-text !default;
@@ -232,11 +232,11 @@ $bar-default-active-border:       $bar-light-active-border !default;
 // -------------------------------
 
 $tabs-height:                     49px !default;
-$tabs-text-font-size:             14px !default;
-$tabs-text-font-size-side-icon:   10px !default;
+$tabs-text-font-size:             16px !default;
+$tabs-text-font-size-side-icon:   13px !default;
 $tabs-icon-size:                  32px !default;
 $tabs-badge-padding:              1px 6px !default;
-$tabs-badge-font-size:            12px !default;
+$tabs-badge-font-size:            13px !default;
 
 $tabs-light-bg:                   $button-light-bg !default;
 $tabs-light-border:               $button-light-border !default;

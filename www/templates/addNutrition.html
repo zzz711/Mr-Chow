@@ -1,9 +1,9 @@
-<ion-view title="Add Nutrition">
+
+<ion-view title="Add Nutrition"   >
     <ion-content overflow-scroll="true" padding="true" class="has-header">
         <form class="list"
               name="addNutritonForm"
               ng-submit="addNewDailyNutrition(addNutritonForm)"
-              novalidate
               class="create-form">
             <section>
                 <div class="form-errors"
@@ -40,6 +40,9 @@
                            ng-model="formData.time"
                            placeholder="hh:mm">
                 </label>
+                <ion-list>
+                    <canvas id="bar" class="chart chart-bar" data="graph.data" labels="graph.labels" series='graph.series' height="50"></canvas>
+                </ion-list>
                 <ion-list>
                     <img ng-src="data:image/jpeg;base64,{{picture}}" height={{height}} width={{width}} alt="" />
                 </ion-list>
