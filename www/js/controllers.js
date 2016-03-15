@@ -446,7 +446,7 @@ app.controller('myAccountCtrl', function ($scope, $ionicPopup, AuthService, $sta
 
 })
 
-app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, NutritionService, MedicineService) {
+app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, NutritionService, MedicineService, $state) {
   $scope.formData = {
     NutritionInfo: false,
     MedInfo: false,
@@ -472,9 +472,12 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
     var Nutrition = {};
     var Medicine = {};
 
+
+    console.log($scope.formData.StartDate);
+    console.log($scope.formData.EndDate);
     //TODO: get data form a service
     if($scope.formData.NutritionInfo){
-      var nutArr = NutritionService.getNutrition();
+      var nutArr = NutritionService.getNutrition($scope.formData.StartDate, $scope.formData.EndDate);
       console.log(nutArr);
       for(var i = 0; i < nutArr.length; i++){
         var nutKey = nutArr[i].key;
@@ -521,7 +524,10 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
     //  body:       data // email body (for HTML, set isHtml to true)
     //  //isHtml:    true, // indicats if the body is HTML or plain text
     //});
+
+    //$state.go("main.settings");
   }
+
 
 
 })
