@@ -446,7 +446,7 @@ app.controller('myAccountCtrl', function ($scope, $ionicPopup, AuthService, $sta
 
 })
 
-app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, NutritionService, MedicineService, $state) {
+app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, NutritionService, medicineService, RecipeService, $state) {
   $scope.formData = {
     NutritionInfo: false,
     MedInfo: false,
@@ -458,12 +458,7 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
   };
 
   $scope.shareData = function(){
-    var data = {
-      Nutrition:
-      {
-
-      }
-    }; //do I want to put the retrieved information in the email body or as an attachment?
+    var data = {}; //do I want to put the retrieved information in the email body or as an attachment?
     var subject = "Test";
     var recipient = [$scope.formData.recipient];
     var ccArr = null;
@@ -471,11 +466,9 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
     var file = null;
     var Nutrition = {};
     var Medicine = {};
+    var Recipe = {};
 
 
-    console.log($scope.formData.StartDate);
-    console.log($scope.formData.EndDate);
-    //TODO: get data form a service
     if($scope.formData.NutritionInfo){
       var nutArr = NutritionService.getNutrition($scope.formData.StartDate, $scope.formData.EndDate);
       console.log(nutArr);
@@ -489,7 +482,7 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
     }
 
     if($scope.formData.MedInfo){
-      var medArr = MedicineService.getMeds();
+      var medArr = medicineService.getMeds();
 
       for(var c = 0; c < medArr.length; c++){
         var medKey = medArr[c].key;
@@ -498,6 +491,22 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
       }
 
       data.Medicine = Medicine;
+    }
+
+    if($scope.formData.RecipeInfo){
+
+      var recipeArray = RecipeService.getRecipe();
+      console.log(recipeArray);
+
+      for(var a = 0; a < recipeArray.length; a++){
+
+        var recipeKey = recipeArray[a].key;
+
+        Recipe[recipeKey] = recipeArray[a];
+
+      }
+
+      data.Recipe = Recipe;
     }
 
     console.log(data);

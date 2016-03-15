@@ -302,9 +302,40 @@ app.service("RecipeService", function ($q,$ionicPopup, $firebaseObject) {
               console.log(error);
             })
 
+      },
+
+      getRecipe: function(){
+        var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/recipe/";
+        var fbObj = new Firebase(url);
+        var allRecipes = [];
+        var num = 0;
+
+        fbObj.orderByChild("recipeName").on("child_added", function(snapshot){
+          var currentRecipe = {};
+          currentRecipe.key = snapshot.key();
+          var key = currentRecipe.key; //do I need this?
+
+          currentRecipe.recipeName = snapshot.val().recipeName;
+          currentRecipe.picture = snapshot.val().picture;
+          currentRecipe.cookingTime = snapshot.val().cookingTime;
+          currentRecipe.prepTime = snapshot.val().prepTime;
+          currentRecipe.servesNMany = snapshot.val().servesNMany;
+          currentRecipe.totalCal = snapshot.val().totalCal;
+          currentRecipe.totalFat = snapshot.val().totalFat;
+          currentRecipe.totalProtein = snapshot.val().totalProtein;
+          currentRecipe.totalSodium = snapshot.val().totalSodium;
+          currentRecipe.totalSugars = snapshot.val().totalSugars;
+
+
+          allRecipes[num] = currentRecipe;
+          num++;
+
+        });
+        return allRecipes
       }
 
     };
+
 
     return self;
 });
@@ -552,7 +583,32 @@ app.service("medicineService", function ($q, $firebaseObject) {
                 console.log(error);
             })
 
-        }
+        },
+
+      getMeds: function(){
+        var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/medicine/";
+        var fbObj = new Firebase(url);
+        var allMeds = [];
+        var num = 0;
+
+        fbObj.orderByChild("date").on("child_added", function(snapshot){
+          var currentMed = {};
+          currentMed.key = snapshot.key();
+          var key = currentMed.key; //do I need this?
+
+          currentMed.name = snapshot.val().name;
+          currentMed.taken = snapshot.val().taken;
+          currentMed.amount = snapshot.val().amount;
+          currentMed.extra = snapshot.val().extra;
+          currentMed.date = snapshot.val().date;
+
+          allMeds[num] = currentMed;
+          num++;
+
+        });
+
+        return allMeds
+      }
     };
 })
 
@@ -566,7 +622,6 @@ app.service("NutritionService", function(){
       var num = 0;
 
       fbObj.orderByChild("date").on("child_added", function(snapshot){
-        //TODO chagne this to use dates
         //This is basically a for each loop. It will go through and get
 
         if(new Date(snapshot.val().date) < startDate){
@@ -611,35 +666,6 @@ app.service("NutritionService", function(){
       console.log(allMeals);
 
       return allMeals;
-    }
-  }
-})
-
-app.service("MedicineService", function(){
-  return{
-    getMeds: function(){
-      var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/medicine/";
-      var fbObj = new Firebase(url);
-      var allMeds = [];
-      var num = 0;
-
-      fbObj.orderByChild("date").on("child_added", function(snapshot){
-        var currentMed = {};
-        currentMed.key = snapshot.key();
-        var key = currentMed.key; //do I need this?
-
-        currentMed.name = snapshot.val().name;
-        currentMed.taken = snapshot.val().taken;
-        currentMed.amount = snapshot.val().amount;
-        currentMed.extra = snapshot.val().extra;
-        currentMed.date = snapshot.val().date;
-
-        allMeds[num] = currentMed;
-        num++;
-
-      });
-
-      return allMeds
     }
   }
 })
