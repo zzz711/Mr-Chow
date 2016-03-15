@@ -32,7 +32,17 @@ function getUID() {
     var user = fbUser.getAuth();
 
     var userGUID = user.uid;
-    return userGUID;
+    if(userGUID == null){
+      $ionicPopup.show({
+        title: "Your login cookie has expired. You will now be logged out"
+      });
+      user.unauth();
+      $state.go("login");
+    }
+
+    //console.log(userGUID);
+    else{return userGUID}
+  //return userGUID;
 }
 
 
@@ -585,7 +595,7 @@ app.service("NutritionService", function(){
 
 
 
-
+      console.log(allMeals);
 
       return allMeals;
     }
@@ -601,7 +611,7 @@ app.service("MedicineService", function(){
       var num = 0;
 
       fbObj.orderByChild("date").on("child_added", function(snapshot){
-        var currentMed = [];
+        var currentMed = {};
         currentMed.key = snapshot.key();
         var key = currentMed.key; //do I need this?
 

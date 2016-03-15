@@ -458,21 +458,43 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
   };
 
   $scope.shareData = function(){
-    var data = {}; //do I want to put the retrieved information in the email body or as an attachment?
+    var data = {
+      Nutrition:
+      {
+
+      }
+    }; //do I want to put the retrieved information in the email body or as an attachment?
     var subject = "Test";
     var recipient = [$scope.formData.recipient];
     var ccArr = null;
     var bccArr = null;
     var file = null;
-    var output;
+    var Nutrition = {};
+    var Medicine = {};
 
     //TODO: get data form a service
     if($scope.formData.NutritionInfo){
-      data.nutrion = NutritionService.getNutrition();
+      var nutArr = NutritionService.getNutrition();
+      console.log(nutArr);
+      for(var i = 0; i < nutArr.length; i++){
+        var nutKey = nutArr[i].key;
+
+        Nutrition[nutKey] = nutArr[i];
+      }
+      data.Nutrition = Nutrition;
+
     }
 
     if($scope.formData.MedInfo){
-      data.medicine = MedicineService.getMeds();
+      var medArr = MedicineService.getMeds();
+
+      for(var c = 0; c < medArr.length; c++){
+        var medKey = medArr[c].key;
+
+        Medicine[medKey] = medArr[c];
+      }
+
+      data.Medicine = Medicine;
     }
 
     console.log(data);
