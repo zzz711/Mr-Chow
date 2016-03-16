@@ -624,17 +624,16 @@ app.service("NutritionService", function(){
       fbObj.orderByChild("date").on("child_added", function(snapshot){
         //This is basically a for each loop. It will go through and get
 
-        if(new Date(snapshot.val().date) < startDate){
-          console.log("date is before");
-          console.log(allMeals);
-        }
+        //if(new Date(snapshot.val().date) < startDate){
+        //  console.log("date is before");
+        //  //do I need to do more?
+        //}
+        //
+        //else if(new Date(snapshot.val().date) > endDate){
+        //  console.log("date is after");
+        //}
 
-        else if(new Date(snapshot.val().date) > endDate){
-          console.log("date is after");
-          console.log(allMeals);
-        }
-
-        else {
+        if(new Date(snapshot.val().date) > startDate &&  new Date(snapshot.val().date) < endDate) {
           var currMeal = {};
           currMeal.key = snapshot.key();
           var key = currMeal.key;
