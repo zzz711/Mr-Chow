@@ -5144,7 +5144,7 @@ ion-tabs.tabs-color-active-dark .tab-item {
   text-overflow: ellipsis;
   white-space: nowrap;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 14px;
   font-family: "-apple-system", "Helvetica Neue", "Roboto", "Segoe UI", sans-serif;
   opacity: 1; }
   .tab-item:hover {
@@ -5160,8 +5160,8 @@ ion-tabs.tabs-color-active-dark .tab-item {
 .tabs-icon-top.tabs .tab-item,
 .tabs-icon-bottom > .tabs .tab-item,
 .tabs-icon-bottom.tabs .tab-item {
-  font-size: 13px;
-  line-height: 16px; }
+  font-size: 11px;
+  line-height: 14px; }
 
 .tab-item .icon {
   display: block;
@@ -5173,7 +5173,7 @@ ion-tabs.tabs-color-active-dark .tab-item {
 .tabs-icon-left > .tabs .tab-item,
 .tabs-icon-right.tabs .tab-item,
 .tabs-icon-right > .tabs .tab-item {
-  font-size: 13px; }
+  font-size: 11px; }
   .tabs-icon-left.tabs .tab-item .icon, .tabs-icon-left.tabs .tab-item .tab-title,
   .tabs-icon-left > .tabs .tab-item .icon,
   .tabs-icon-left > .tabs .tab-item .tab-title,
@@ -5216,8 +5216,8 @@ ion-tabs.tabs-color-active-dark .tab-item {
   right: calc(50% - 26px);
   padding: 1px 6px;
   height: auto;
-  font-size: 13px;
-  line-height: 17px; }
+  font-size: 11px;
+  line-height: 15px; }
 
 /* Navigational tab */
 /* Active state for tab */

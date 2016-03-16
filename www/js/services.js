@@ -193,8 +193,8 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
                 nutritionGuid: nutritionGuid,
                 mealName: isUndefined(data.mealName),
                 meal: isUndefined(data.meal),
-                date: isUndefined(data.date).toString(),
-                time: isUndefined(data.time).toString(),
+                date: isUndefined( Date.parse(data.date)).toString(),
+                time: isUndefined( Date.parse(data.time)).toString(),
                 comments: isUndefined(data.comments),
                 picture: isUndefined(pic)
             });

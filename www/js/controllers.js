@@ -81,7 +81,21 @@ app.controller('signupCtrl', function ($scope, $state, $ionicPopup, AuthService)
 })
 
 
-app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $http, nixApi, addIngredientService, pullRecipeIngredientFirebaseService) {
+app.controller('addIngredientRecipeCtrl', function ($scope, $ionicPlatform, $cordovaBarcodeScanner, $rootScope, $state, $http, nixApi, addIngredientService, pullRecipeIngredientFirebaseService, pullRecipeFirebaseService) {
+
+    $scope.vm = "";
+    $scope.scanResults = '';
+
+    $scope.scan = function () {
+        $scope.scanResults = $cordovaBarcodeScanner.scan().then(function (result) {
+            $http.get("https://api.nutritionix.com/v1_1/item?upc=" + result.text + "&appId=b62a1056&appKey=0096e00788eb1a17cfe1c4c6d2008612").then(function (response) {
+                $scope.initialize = addIngredientService.setPageVals(response.data);
+            });
+        }, function (error) {
+            $scope.scanResults = 'Error: ' + error;
+        });
+    };
+
     $scope.initialize = {
         calories: "",
         comments: "",
@@ -131,10 +145,9 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $ht
                     i = i + 1;
                 }
                 $scope.retArray.items = $scope.retArray.items.concat(dataArray);
-                return $scope.retArray;
-
             });
         }
+        console.log($scope.retArray);
         return $scope.retArray;
     };
 
@@ -146,13 +159,15 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $ht
         $scope.initialize = addIngredientService.getSpecificIngredient();
         $scope.measurement = $scope.initialize.measurement;
 
+
         // load all recipes and recipeIngredients the user has
         $scope.recipeIngredients = pullRecipeIngredientFirebaseService.pullRecipeIngredients().then(function (result) {
             $scope.recipeIngredients = result.map(function (recipeIngredient) {
                 recipeIngredient.item_name = recipeIngredient.ingName;
                 return recipeIngredient;
-    });
+            });
         });
+
         $scope.recipes = pullRecipeFirebaseService.pullRecipe().then(function (result) {
             $scope.recipes = result.map(function (recipe) {
                 var servings = (recipe.servesNMany && recipe.servesNMany >= 1) ? recipe.servesNMany : 1;
@@ -182,7 +197,7 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $window, $state, $ht
 
 
 
-app.controller('addARecipeCtrl', function ($scope, $cordovaCamera,nixApi, $q, $http, $state, $window, $ionicPopover, addIngredientService, addToFirebaseService) {
+app.controller('addARecipeCtrl', function ($scope, $cordovaCamera, nixApi, $q, $http, $state, $window, $ionicPopover, addIngredientService, addToFirebaseService) {
     $scope.retVals = "";
     $scope.totalVal = addIngredientService.getTotalContents($http);
     $scope.picture = "";
@@ -249,7 +264,7 @@ app.controller('addARecipeCtrl', function ($scope, $cordovaCamera,nixApi, $q, $h
             $scope.picture = imageData;
             $scope.height = "200px";
             $scope.width = "200px";
-         //   $state.go('main.addARecipe');
+            //   $state.go('main.addARecipe');
         }, function (err) {
             console.error("yolo ", err);
         });
@@ -291,15 +306,7 @@ app.controller('addMedicineCtrl', function ($scope, medicineService, $state) {
     $scope.picture = "";
     $scope.height = "0px";
     $scope.width = "0px";
-    $scope.graph = {};
-    $scope.graph.data = [
-      //Awake
-      [16, 15, 20, 12, 16, 12, 8],
-      //Asleep
-      [8, 9, 4, 12, 8, 12, 14]
-    ];
-    $scope.graph.labels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    $scope.graph.series = ['Awake', 'Asleep'];
+
     $scope.returnVals = "";
     $scope.totalVal = addIngredientService.getTotalContents($http);
 
@@ -345,14 +352,6 @@ app.controller('addMedicineCtrl', function ($scope, medicineService, $state) {
         $state.go('addAnIngredientRecipe', {}, { reload: true });
     };
 
-    $scope.scanBarcode = function () {
-        $cordovaBarcodeScanner.scan().then(function (imageData) {
-            alert(imageData.text);
-            console.log("Barcode Format " + imageData.format);
-        }, function (error) {
-            console.log("An error happened -> " + error);
-        });
-    };
 
     function clear(form) {
         form.mealName = "";
@@ -455,7 +454,7 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
     EndDate: null,
     recipient: ""
 
-  };
+    };
 
   $scope.shareData = function(){
     var data = {}; //do I want to put the retrieved information in the email body or as an attachment?

@@ -1,7 +1,7 @@
 <ion-view title="My Meds">
     <ion-content overflow-scroll="true" padding="true" class="has-header">
         <ion-list>
-            <ion-item  ng-repeat="i in retVals">
+            <ion-item  ng-repeat="i in retVals | orderBy:'name'">
                 <p>Medicine Name:  {{i.name}}</p>
                 <p>Amount Per Serving:  {{i.amount}}</p>
                 <p>Taken:  {{i.taken}}</p>

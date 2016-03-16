@@ -1,22 +1,27 @@
 ﻿<ion-view title="Add Ingredient" style="text-align:center;color:white;">
     <ion-content overflow-scroll="true" padding="true" class="has-header">
-
-        <label class="item item-input">
-            <span class="input-label">Search</span>
-            <input ion-autocomplete type="text" class="ion-autocomplete" autocomplete="off"
-                   ng-model="model"
-                   item-value-key="item_name"
-                   item-view-value-key="item_name"
-                   items-method="getTestItems(query)"
-                   items-method-value-key="items"
-                   placeholder="Enter test query ..."
-                   items-clicked-method="itemsClicked(callback)"
-                   items-removed-method="itemsRemoved(callback)"
-                   max-selected-items="1"
-                   ng-model-options="{debounce:300}" />
-        </label>
-
-
+        <div class="item" style="float: left;">
+                <button class="button button-positive" ng-click="scan()">
+                    <i class="icon ion-qr-scanner"></i>
+                    Scan a Barcode
+                </button>
+                <button ion-autocomplete type="text" class="ion-autocomplete button button-positive" autocomplete="off"
+                        ng-model="model"
+                        item-value-key="item_name"
+                        item-view-value-key="item_name"
+                        items-method="getTestItems(query)"
+                        items-method-value-key="items"
+                        placeholder="Enter test query ..."
+                        items-clicked-method="itemsClicked(callback)"
+                        items-removed-method="itemsRemoved(callback)"
+                        max-selected-items="1"
+                        ng-model-options="{debounce:300}">
+                    <i class="icon ion-ios-search"></i>
+                    Search Myself
+                </button>
+                <b></b>
+                <p></p>
+            </div>
         <div class="form-errors"
              ng-messages="addIngredientForm.recipeName.$error"
              ng-show="addIngredientForm.myName.$touched || addIngredientForm.$submitted"
@@ -82,9 +87,9 @@
                    placeholder="Additional Comments">
         </label>
 
-        <button class="button button-balanced button-block" ng-click="doStuff()">Submit</button>
-
-    </ion-content>
+         <button class="button button-balanced button-block" ng-click="doStuff()">Submit</button>
+        
+</ion-content>
 
 
 </ion-view>
