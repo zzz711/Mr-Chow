@@ -31,17 +31,21 @@ function getUID() {
     var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
     var user = fbUser.getAuth();
 
+  if(user.uid === null){
+    $ionicPopup.show({
+      title: "Your login cookie has expired. You will now be logged out"
+    });
+    user.unauth();
+    $state.go("login");
+  }
+
+  else {
     var userGUID = user.uid;
-    if(userGUID == null){
-      $ionicPopup.show({
-        title: "Your login cookie has expired. You will now be logged out"
-      });
-      user.unauth();
-      $state.go("login");
-    }
+    return userGUID
+  }
 
     //console.log(userGUID);
-    else{return userGUID}
+   // else{return userGUID}
   //return userGUID;
 }
 
@@ -261,7 +265,7 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
     };
  })
 
-app.service("RecipeService", function ($q,$ionicPopup, $firebaseObject) {
+app.service("RecipeService", function ($q,$ionicPopup, $firebaseObject, addIngredientService) {
     var self = {
         'page': 0,
         'page_size': '20',
@@ -295,6 +299,9 @@ app.service("RecipeService", function ($q,$ionicPopup, $firebaseObject) {
             var fullURL = partURL.concat("/recipe/" + guid.$id);
             var fbMeal = new Firebase(fullURL);
             var mealObj = $firebaseObject(fbMeal);
+            var recipeGUID = guid.$id;
+
+            addIngredientService.getIng(recipeGUID);
 
             mealObj.$remove().then(function(ref){
               console.log("item deleted");
@@ -310,26 +317,27 @@ app.service("RecipeService", function ($q,$ionicPopup, $firebaseObject) {
         var allRecipes = [];
         var num = 0;
 
-        fbObj.orderByChild("recipeName").on("child_added", function(snapshot){
-          var currentRecipe = {};
-          currentRecipe.key = snapshot.key();
-          var key = currentRecipe.key; //do I need this?
-
-          currentRecipe.recipeName = snapshot.val().recipeName;
-          currentRecipe.picture = snapshot.val().picture;
-          currentRecipe.cookingTime = snapshot.val().cookingTime;
-          currentRecipe.prepTime = snapshot.val().prepTime;
-          currentRecipe.servesNMany = snapshot.val().servesNMany;
-          currentRecipe.totalCal = snapshot.val().totalCal;
-          currentRecipe.totalFat = snapshot.val().totalFat;
-          currentRecipe.totalProtein = snapshot.val().totalProtein;
-          currentRecipe.totalSodium = snapshot.val().totalSodium;
-          currentRecipe.totalSugars = snapshot.val().totalSugars;
+        fbObj.orderByChild("recipeName").on("value", function(snapshot){
+          for (var p in snapshot.val()) {
+            var currentRecipe = snapshot.val()[p];
+            currentRecipe.key = p;
 
 
-          allRecipes[num] = currentRecipe;
-          num++;
+            //currentRecipe.recipeName = snapshot.val().recipeName;
+            //currentRecipe.picture = snapshot.val().picture;
+            //currentRecipe.cookingTime = snapshot.val().cookingTime;
+            //currentRecipe.prepTime = snapshot.val().prepTime;
+            //currentRecipe.servesNMany = snapshot.val().servesNMany;
+            //currentRecipe.totalCal = snapshot.val().totalCal;
+            //currentRecipe.totalFat = snapshot.val().totalFat;
+            //currentRecipe.totalProtein = snapshot.val().totalProtein;
+            //currentRecipe.totalSodium = snapshot.val().totalSodium;
+            //currentRecipe.totalSugars = snapshot.val().totalSugars;
 
+
+            allRecipes[num] = currentRecipe;
+            num++;
+          }
         });
         return allRecipes
       }
@@ -502,6 +510,30 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
                 return x;
             },
 
+            getIng: function(recipeGUID){
+              var url = "https://boiling-fire-9023.firebaseio.com/";
+              var partURL = url.concat(getUID());
+              var fullURL = partURL.concat("/recipeIngredient/");
+              var fbjObj = new Firebase(fullURL);
+              var mealObj = $firebaseObject(fbjObj);
+
+              fbjObj.orderByChild("ingName").on("value", function(snapshot){
+                //TODO add the rest of the query code
+                for (var p in snapshot.val()) {
+                  console.log(snapshot.val()[p].recipeGuid);
+                  console.log(recipeGUID);
+                  if (snapshot.val()[p].recipeGuid === recipeGUID) {
+                    mealObj.$remove().then(function (ref) {
+                      console.log("item deleted");
+                    }, function (error) {
+                      console.log(error);
+                    })
+                  }
+                }
+              });
+
+            },
+
             deleteMeal: function (guid) {
                 var url = "https://boiling-fire-9023.firebaseio.com/";
                 var partURL = url.concat(getUID());
@@ -591,19 +623,27 @@ app.service("medicineService", function ($q, $firebaseObject) {
         var allMeds = [];
         var num = 0;
 
-        fbObj.orderByChild("date").on("child_added", function(snapshot){
-          var currentMed = {};
-          currentMed.key = snapshot.key();
-          var key = currentMed.key; //do I need this?
-
-          currentMed.name = snapshot.val().name;
-          currentMed.taken = snapshot.val().taken;
-          currentMed.amount = snapshot.val().amount;
-          currentMed.extra = snapshot.val().extra;
-          currentMed.date = snapshot.val().date;
-
-          allMeds[num] = currentMed;
-          num++;
+        fbObj.orderByChild("date").on("value", function(snapshot){
+          for (var p in snapshot.val()) {
+            if (snapshot.val().hasOwnProperty(p)) {
+              var currentMed = snapshot.val()[p];
+              currentMed.key = p;
+              allMeds[num] = currentMed;
+              num++;
+            }
+          }
+          //var currentMed = {};
+          //currentMed.key = snapshot.key();
+          //var key = currentMed.key; //do I need this?
+          //
+          //currentMed.name = snapshot.val().name;
+          //currentMed.taken = snapshot.val().taken;
+          //currentMed.amount = snapshot.val().amount;
+          //currentMed.extra = snapshot.val().extra;
+          //currentMed.date = snapshot.val().date;
+          //
+          //allMeds[num] = currentMed;
+          //num++;
 
         });
 
@@ -621,48 +661,33 @@ app.service("NutritionService", function(){
       //var currMeal = {};
       var num = 0;
 
-      fbObj.orderByChild("date").on("child_added", function(snapshot){
-        //This is basically a for each loop. It will go through and get
+      fbObj.orderByChild("date").on("value", function(snapshot){
+        //console.log(snapshot.val());
 
-        //if(new Date(snapshot.val().date) < startDate){
-        //  console.log("date is before");
-        //  //do I need to do more?
-        //}
-        //
-        //else if(new Date(snapshot.val().date) > endDate){
-        //  console.log("date is after");
-        //}
 
-        if(new Date(snapshot.val().date) > startDate &&  new Date(snapshot.val().date) < endDate) {
-          var currMeal = {};
-          currMeal.key = snapshot.key();
-          var key = currMeal.key;
+        for (var p in snapshot.val()) {
+          if (snapshot.val().hasOwnProperty(p)) {
+            //console.log(p);
+            if(new Date(snapshot.val()[p].date) >= startDate &&  new Date(snapshot.val()[p].date) <= endDate) {
+              var currMeal = snapshot.val()[p];
+              currMeal.key = p;
+              //currMeal.mealName = snapshot.val()[p].mealName;
+              //currMeal.meal = snapshot.val()[p].meal;
+              //currMeal.date = snapshot.val()[p].date;
+              //currMeal.time = snapshot.val().time;
+              //currMeal.comments = snapshot.val().comments;
+              allMeals[num] = currMeal;
 
-          currMeal.mealName = snapshot.val().mealName;
-          currMeal.meal = snapshot.val().meal;
-          currMeal.date = snapshot.val().date;
-          currMeal.time = snapshot.val().time;
-          currMeal.comments = snapshot.val().comments;
-          allMeals[num] = currMeal;
-
-          num++;
-
-          //currMeal.key = snapshot.key();
-          //currMeal.mealName = snapshot.val().mealName;
-          //allMeals.meal = currMeal;
-          //console.log(snapshot.key());
-          //console.log(snapshot.val().mealName);
-          //console.log(snapshot.val().time);
-          //console.log(allMeals);
-          //console.log(currMeal);
-          //console.log(allMeals);
+              num++;
+            }
+          }
         }
+
+        console.log(allMeals);
       });
 
 
-
-
-      console.log(allMeals);
+      //console.log(allMeals);
 
       return allMeals;
     }

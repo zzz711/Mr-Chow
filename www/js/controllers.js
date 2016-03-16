@@ -471,6 +471,7 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
 
     if($scope.formData.NutritionInfo){
       var nutArr = NutritionService.getNutrition($scope.formData.StartDate, $scope.formData.EndDate);
+
       console.log(nutArr);
       for(var i = 0; i < nutArr.length; i++){
         var nutKey = nutArr[i].key;
@@ -483,6 +484,7 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
 
     if($scope.formData.MedInfo){
       var medArr = medicineService.getMeds();
+
 
       for(var c = 0; c < medArr.length; c++){
         var medKey = medArr[c].key;
