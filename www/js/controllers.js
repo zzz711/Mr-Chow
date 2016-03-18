@@ -456,8 +456,10 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
 
     };
 
+  $scope.data = {};
+
   $scope.shareData = function(){
-    var data = {}; //do I want to put the retrieved information in the email body or as an attachment?
+    var Data = {}; //do I want to put the retrieved information in the email body or as an attachment?
     var subject = "Test";
     var recipient = [$scope.formData.recipient];
     var ccArr = null;
@@ -466,54 +468,75 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
     var Nutrition = {};
     var Medicine = {};
     var Recipe = {};
+    var table;
+
 
 
     if($scope.formData.NutritionInfo){
-      var nutArr = NutritionService.getNutrition($scope.formData.StartDate, $scope.formData.EndDate);
+      NutritionService.getNutrition($scope.formData.StartDate, $scope.formData.EndDate, function (data) {
+        var nutArr = data;
+        for(var i = 0; i < nutArr.length; i++){
+          var nutKey = nutArr[i].key;
 
-      console.log(nutArr);
-      for(var i = 0; i < nutArr.length; i++){
-        var nutKey = nutArr[i].key;
+          Nutrition[nutKey] = nutArr[i];
+        }
+        Data.Nutrition = Nutrition;
 
-        Nutrition[nutKey] = nutArr[i];
-      }
-      data.Nutrition = Nutrition;
+        console.log(Data);
+        var node = JsonHuman.format(Nutrition);
+        //table.append(node);
+      });
 
     }
 
     if($scope.formData.MedInfo){
-      var medArr = medicineService.getMeds();
+      medicineService.getMeds(function (data) {
+        var medArr = data;
+        console.log(data);
+
+        for(var c = 0; c < medArr.length; c++){
+          var medKey = medArr[c].key;
+
+          Medicine[medKey] = medArr[c];
+        }
+
+        Data.Medicine = Medicine;
+        console.log(Data);
+        var node = JsonHuman.format(Medicine);
+        console.log(node);;
+        //table.append(node);
+      });
 
 
-      for(var c = 0; c < medArr.length; c++){
-        var medKey = medArr[c].key;
 
-        Medicine[medKey] = medArr[c];
-      }
-
-      data.Medicine = Medicine;
     }
 
     if($scope.formData.RecipeInfo){
+      RecipeService.getRecipe(function(data){
+        var recipeArray = data;
 
-      var recipeArray = RecipeService.getRecipe();
-      console.log(recipeArray);
+        console.log(recipeArray);
 
-      for(var a = 0; a < recipeArray.length; a++){
+        for(var a = 0; a < recipeArray.length; a++){
 
-        var recipeKey = recipeArray[a].key;
+          var recipeKey = recipeArray[a].key;
 
-        Recipe[recipeKey] = recipeArray[a];
+          Recipe[recipeKey] = recipeArray[a];
 
-      }
+        }
 
-      data.Recipe = Recipe;
+        Data.Recipe = Recipe;
+        console.log(Data.Recipe);
+        var node = JsonHuman.format(Recipe);
+        //table.append(node);
+      });
+
     }
 
-    console.log(data);
-    var node = JsonHuman.format(data);
+    //console.log(data);
+    //var node = JsonHuman.format(Data);
     //var output = output.appendChild(node);
-    console.log(node);
+    //console.log(node);
     //
     //$cordovaSocialSharing.shareViaEmail(data, subject, recipient, ccArr, bccArr, file)
     //  //.canShareViaEmail()
@@ -536,6 +559,22 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
     //});
 
     //$state.go("main.settings");
+  };
+
+  $scope.addData = function(nutArr){
+
+    console.log(nutArr);
+
+    var Nutrition = {};
+
+    for(var i = 0; i < nutArr.length; i++){
+      var nutKey = nutArr[i].key;
+
+      Nutrition[nutKey] = nutArr[i];
+    }
+    $scope.data.Nutrition = Nutrition;
+
+    //var node = JsonHuman.format(data);
   }
 
 

@@ -311,7 +311,7 @@ app.service("RecipeService", function ($q,$ionicPopup, $firebaseObject, addIngre
 
       },
 
-      getRecipe: function(){
+      getRecipe: function(callBack){
         var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/recipe/";
         var fbObj = new Firebase(url);
         var allRecipes = [];
@@ -338,8 +338,9 @@ app.service("RecipeService", function ($q,$ionicPopup, $firebaseObject, addIngre
             allRecipes[num] = currentRecipe;
             num++;
           }
+          callBack(allRecipes);
         });
-        return allRecipes
+
       }
 
     };
@@ -617,13 +618,13 @@ app.service("medicineService", function ($q, $firebaseObject) {
 
         },
 
-      getMeds: function(){
+      getMeds: function(callBack){
         var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/medicine/";
         var fbObj = new Firebase(url);
         var allMeds = [];
         var num = 0;
 
-        fbObj.orderByChild("date").on("value", function(snapshot){
+        fbObj.orderByChild("date").once("value", function(snapshot){
           for (var p in snapshot.val()) {
             if (snapshot.val().hasOwnProperty(p)) {
               var currentMed = snapshot.val()[p];
@@ -644,26 +645,54 @@ app.service("medicineService", function ($q, $firebaseObject) {
           //
           //allMeds[num] = currentMed;
           //num++;
-
+          console.log(allMeds);
+          callBack(allMeds);
         });
 
-        return allMeds
+
       }
     };
 })
 
-app.service("NutritionService", function(){
+app.service("NutritionService", function($firebaseArray){
   return{
-    getNutrition: function(startDate, endDate){
+    getNutrition: function(startDate, endDate, callBack){
       var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutrition/";
       var fbObj = new Firebase(url);
       var allMeals = [];
       //var currMeal = {};
       var num = 0;
+      var key;
+      var test;
 
-      fbObj.orderByChild("date").on("value", function(snapshot){
+     // var allMeals = $firebaseArray(fbObj);
+     //
+     // allMeals.$loaded().then(function () {
+     //   console.log(allMeals);
+     // }).catch(function (err) {
+     //   console.log(err);
+     // });
+     //  test = allMeals[0];
+     // // var meals = allMeals[0].$id;
+     //  allMeals.$loaded()
+     //    .then(function(){
+     //      angular.forEach(allMeals, function(user) {
+     //        console.log(user);
+     //      })
+     //    });
+
+      // var query = fbObj.orderByChild("date");
+      // test = $firebaseArray(query);
+      // console.log(query);
+
+      // for(key in allMeals){
+      //   test = allMeals[key];
+      //   console.log(key);
+      //   //if(new Date(snapshot.val()[p].date) >= startDate &&  new Date(allMeals[i].date) <= endDate) {
+      // }
+
+      fbObj.orderByChild("date").once("value", function(snapshot){
         //console.log(snapshot.val());
-
 
         for (var p in snapshot.val()) {
           if (snapshot.val().hasOwnProperty(p)) {
@@ -684,12 +713,14 @@ app.service("NutritionService", function(){
         }
 
         console.log(allMeals);
+        callBack(allMeals);
       });
 
 
-      //console.log(allMeals);
+      //console.log(meals);
 
-      return allMeals;
+     // return allMeals;
+      //return meals;
     }
   }
 })
