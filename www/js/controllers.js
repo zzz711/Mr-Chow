@@ -280,18 +280,6 @@ app.controller('viewRecipeCtrl', function ($scope, $http, $state, $window, $ioni
     $scope.height = "200px";
     $scope.width = "200px";
 
-    $scope.setFill = function (value) {
-        addIngredientService.setSpecificIngredient(value);
-        addIngredientService.setPageCalled('main.addARecipe');
-        $state.go('addAnIngredientRecipe', {}, { reload: true });
-    };
-
-    $scope.setNew = function () {
-        addIngredientService.setEmpty();
-        addIngredientService.setPageCalled('main.addARecipe');
-        $state.go('addAnIngredientRecipe', {}, { reload: true });
-    };
-
     $scope.$on('$ionicView.enter', function () {
         $scope.recipe = RecipeService.viewingRecipe;
         pullRecipeIngredientFirebaseService.pullRecipeIngredients().then(function (result) {
