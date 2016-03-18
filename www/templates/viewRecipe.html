@@ -1,0 +1,61 @@
+﻿<ion-view title="View Recipe">
+<ion-content overflow-scroll="true" padding="true" class="has-header">
+    <form name="addRecipeForm"
+          novalidate="novalidate"
+          class="create-form">
+
+        <section>
+            <label class="item item-input">
+                <span class="input-label">Recipe Title</span>
+                <span type="text">{{recipe.recipeName}}</span>
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Prep Time</span>
+                <span type="text">{{recipe.prepTime}}</span>
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Cooking Time</span>
+                <span type="text">{{recipe.cookingTime}}</span>
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Serves how many?</span>
+                <span type="number">{{recipe.servesNMany}}</span>
+            </label>
+        </section>
+        <br />
+        <section>
+            <label class="item item-input">
+                <span class="input-label  item-text-wrap">Describe Your Recipe</span>
+                <span type="text">{{recipe.recipeDesc}}</span>
+            </label>
+        </section>
+        <br />
+        <ion-list>
+            <img ng-src="data:image/jpeg;base64,{{recipe.picture}}" height={{height}} width={{width}} alt="" />
+        </ion-list>
+        <br />
+        <ion-list class="item-icon-right" ng-controller="addARecipeCtrl" ng-init="ingredient()">
+            <ion-item ng-class="balanced" ng-repeat="i in recipeIngredients">
+                <p>Name: {{i.ingName}}</p>
+                <p>Calories : {{i.calories}} &nbsp;&nbsp;    Protein : {{i.protein}}</p>
+                <p>Sugars : {{i.sugars}}   &nbsp;&nbsp;  Sodium : {{i.sodium}}</p>
+                <p>Fat Content:  {{i.fatContent}} &nbsp;&nbsp; Food Color:  {{i.foodColor}} </p>
+                <p>Freshness:  {{i.freshness}}  &nbsp;&nbsp; Quantity:  {{i.quantity}}</p>
+                <p>Comments:  {{i.comments}}</p>
+            </ion-item>
+        </ion-list>
+        <p></p>
+        <p></p>
+        <ion-list class="item-icon-right">
+            <ion-item>
+                <p>Totals for Meal</p>
+                <p>Calories : {{recipe.totalCal}} &nbsp;&nbsp;    Protein : {{recipe.totalProtein}}</p>
+                <p>Sugars : {{recipe.totalSugars}}   &nbsp;&nbsp;  Sodium : {{recipe.totalSodium}}</p>
+                <p>Fat Content : {{recipe.totalFat}}</p>
+            </ion-item>
+        </ion-list>
+
+        <button class="button button-balanced button-block" type="submit">Edit Recipe</button>
+    </form>
+</ion-content>
+</ion-view>
