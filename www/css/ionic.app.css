@@ -4131,7 +4131,7 @@ a.subdued {
       margin-right: 5px;
       padding: 0;
       white-space: nowrap;
-      font-weight: 400; }
+      font-weight: 200; }
     .bar .button.back-button.active, .bar .button.back-button.activated, .bar button.back-button.active, .bar button.back-button.activated {
       opacity: 0.2; }
   .bar .button-bar > .button,
@@ -4167,7 +4167,7 @@ a.subdued {
   background-image: none; }
 
 .platform-android .bar .back-button .icon:before {
-  font-size: 24px; }
+  font-size: 15px; }
 
 .platform-android .bar .title {
   font-size: 19px;

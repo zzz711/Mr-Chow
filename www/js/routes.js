@@ -36,15 +36,11 @@ angular.module('app.routes', [])
           }
       })
 
-      .state('main.addARecipe', {
+      .state('addARecipe', {
           url: '/page13',
-          views: {
-              'tab2': {
-                  templateUrl: 'templates/addARecipe.html',
-                  controller: 'addARecipeCtrl'
-              }
-          }
-      })
+          templateUrl: 'templates/addARecipe.html',
+          controller: 'addARecipeCtrl'
+           })
 
        .state('main.dailyNutrition', {
            url: '/page14',
@@ -107,11 +103,15 @@ angular.module('app.routes', [])
           controller: 'myAccountCtrl'
       })
 
-      .state('shareMyData', {
+      .state('main.shareMyData', {
           url: '/page19',
-          templateUrl: 'templates/shareMyData.html',
-          controller: 'shareMyDataCtrl'
-      })
+          views: {
+              'tab2': {
+                  templateUrl: 'templates/shareMyData.html',
+                  controller: 'shareMyDataCtrl'
+              }
+          }
+       })
 
       .state('changePW', {
           url: '/page30',

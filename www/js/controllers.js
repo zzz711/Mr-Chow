@@ -82,7 +82,10 @@ app.controller('signupCtrl', function ($scope, $state, $ionicPopup, AuthService)
 
 
 app.controller('addIngredientRecipeCtrl', function ($scope, $ionicPlatform, $cordovaBarcodeScanner, $rootScope, $state, $http, nixApi, addIngredientService, pullRecipeIngredientFirebaseService, pullRecipeFirebaseService) {
-    
+    $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        viewData.enableBack = true;
+    });
+
     $scope.vm = "";
     $scope.scanResults = '';
 
@@ -198,6 +201,10 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $ionicPlatform, $cor
 
 
 app.controller('addARecipeCtrl', function ($scope, $cordovaCamera, nixApi, $q, $http, $state, $window, $ionicPopover, addIngredientService, addToFirebaseService) {
+    $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        viewData.enableBack = true;
+    });
+
     $scope.retVals = "";
     $scope.totalVal = addIngredientService.getTotalContents($http);
     $scope.picture = "";
@@ -276,25 +283,40 @@ app.controller('addARecipeCtrl', function ($scope, $cordovaCamera, nixApi, $q, $
 
 
 
-.controller('myMedsCtrl', function ($scope, $state, medicineService) {
+app.controller('addMedicineCtrl', function ($scope, $ionicPopup,  medicineService, $state) {
+    $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        viewData.enableBack = true;
+    });
 
-})
-
-app.controller('addMedicineCtrl', function ($scope, medicineService, $state) {
     $scope.addMed = {
         medicineName: "",
         amount: "",
         taken: "",
         extra: ""
     };
-
     $scope.addMedication = function () {
-        medicineService.add($scope.addMed);
-        $state.go("main.myMeds");
+        if ($scope.addMed.medicineName== "") {
+             $ionicPopup.alert({
+                title: 'Oh No! You missed something.',
+                template: 'Please add a medicine name.'
+            });
+        }
+        else {
+            $scope.medicineName= "";
+            $scope.amount= "";
+            $scope.taken= "";
+            $scope.extra=  "";
+            medicineService.add($scope.addMed);
+            $state.go("main.myMeds");
+        }
     }
 })
 
 .controller('addNutritionCtrl', function ($scope, $http, $state, $cordovaCamera, addIngredientService, addToFirebaseService) {
+    $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        viewData.enableBack = true;
+    });
+
     $scope.formData = {
         mealName: "",
         mealContents: "",
@@ -400,6 +422,10 @@ app.controller('settingsCtrl', function ($scope, $state, AuthService) {
 })
 
 app.controller('myAccountCtrl', function ($scope, $ionicPopup, AuthService, $state) {
+    $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        viewData.enableBack = true;
+    });
+
     $scope.formData = {
         email: ""
     };

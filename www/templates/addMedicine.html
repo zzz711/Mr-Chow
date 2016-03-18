@@ -1,26 +1,26 @@
-<ion-view title="Add Medicine">
-    <ion-content overflow-scroll="true" padding="true" class="has-header">
-        <h4>Medicine Name</h4>
-        <label class="item item-input">
-            <input type="text" placeholder="Aspirin" ng-model="addMed.medicineName" required>
-        </label>
+    <ion-view title="Add Medicine">
+        <ion-nav-back-button class="button-icon button-clear ion-ios7-arrow-back"></ion-nav-back-button>
+        <ion-content overflow-scroll="true" padding="true" class="has-header">
+            <h4>Medicine Name</h4>
+            <label class="item item-input">
+                <input type="text" placeholder="Aspirin" ng-model="addMed.medicineName">
+            </label>
+            <h4>Amount Per Serving</h4>
 
-        <h4>Amount Per Serving</h4>
+            <label class="item item-input">
+                <input type="number" placeholder="2, 3, 4" ng-model="addMed.amount">
+            </label>
 
-        <label class="item item-input">
-            <input type="number" placeholder="2, 3, 4" ng-model="addMed.amount">
-        </label>
+            <h4>Taken</h4>
+            <label class="item item-input">
+                <input type="text" placeholder="Daily, Monthly, etc" ng-model="addMed.taken">
+            </label>
 
-        <h4>Taken</h4>
-        <label class="item item-input">
-            <input type="text" placeholder="Daily, Monthly, etc" ng-model="addMed.taken">
-        </label>
+            <h4>Extra</h4>
+            <label class="item item-input">
+                <input type="text" placeholder="Take one at night with food." ng-model="addMed.extra">
+            </label>
 
-        <h4>Extra</h4>
-        <label class="item item-input">
-            <input type="text" placeholder="Take one at night with food." ng-model="addMed.extra">
-        </label>
-
-        <button class="button button-balanced button-block" type="submit" ng-click="addMedication()">Submit</button>
-    </ion-content>
-</ion-view>
+            <button class="button button-balanced button-block" type="submit" ng-click="addMedication()">Submit</button>
+        </ion-content>
+    </ion-view>
