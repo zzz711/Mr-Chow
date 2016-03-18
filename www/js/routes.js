@@ -42,7 +42,7 @@ angular.module('app.routes', [])
             controller: 'viewRecipeCtrl'
         })
 
-      .state('main.addARecipe', {
+      .state('addARecipe', {
           url: '/page13',
                   templateUrl: 'templates/addARecipe.html',
                   controller: 'addARecipeCtrl'
