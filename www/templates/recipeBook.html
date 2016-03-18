@@ -11,10 +11,10 @@
         </ion-list>
         <div class="spacer" style="width: 300px; height: 23px;"></div>
         <ion-list ng-controller="recipeBookCtrl">
-            <ion-item ng-repeat="i in retVals2 | orderBy:'recipeName'">
+            <ion-item ng-repeat="i in retVals2 | orderBy:'recipeName'" ng-click="viewRecipe(i)">
                 <img ng-src="data:image/jpeg;base64,{{i.picture}}"  height="100px" width="100px" alt="" />
                 <p>Name:  {{i.recipeName}}</p>
-                <p>Preperation Time:  {{i.prepTime}}</p>
+                <p>Preparation Time:  {{i.prepTime}}</p>
                 <p>Cooking Time:  {{i.cookingTime}}</p>
                 <p>Serves:  {{i.servesNMany}}</p>
                 <p>Description:  {{i.recipeDesc}}</p>

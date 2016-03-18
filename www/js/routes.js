@@ -36,6 +36,12 @@ angular.module('app.routes', [])
           }
       })
 
+        .state('viewRecipe', {
+            url: '/ViewRecipe',
+            templateUrl: 'templates/viewRecipe.html',
+            controller: 'viewRecipeCtrl'
+        })
+
       .state('main.addARecipe', {
           url: '/page13',
           views: {

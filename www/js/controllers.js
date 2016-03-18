@@ -274,6 +274,33 @@ app.controller('addARecipeCtrl', function ($scope, $cordovaCamera, nixApi, $q, $
 })
 
 
+app.controller('viewRecipeCtrl', function ($scope, $http, $state, $window, $ionicPopover, RecipeService, pullRecipeIngredientFirebaseService) {
+    $scope.recipe = null;
+    $scope.recipeIngredients = [];
+    $scope.height = "200px";
+    $scope.width = "200px";
+
+    $scope.setFill = function (value) {
+        addIngredientService.setSpecificIngredient(value);
+        addIngredientService.setPageCalled('main.addARecipe');
+        $state.go('addAnIngredientRecipe', {}, { reload: true });
+    };
+
+    $scope.setNew = function () {
+        addIngredientService.setEmpty();
+        addIngredientService.setPageCalled('main.addARecipe');
+        $state.go('addAnIngredientRecipe', {}, { reload: true });
+    };
+
+    $scope.$on('$ionicView.enter', function () {
+        $scope.recipe = RecipeService.viewingRecipe;
+        pullRecipeIngredientFirebaseService.pullRecipeIngredients().then(function (result) {
+            $scope.recipeIngredients = result.filter(function (recipeIngredient) {
+                return recipeIngredient.recipeGuid === $scope.recipe.recipeGuid;
+            });
+        });
+    });
+})
 
 
 .controller('myMedsCtrl', function ($scope, $state, medicineService) {
@@ -527,7 +554,7 @@ app.controller('changePWCtrl', function ($scope, $ionicPopup, $state, AuthServic
 
 })
 
-app.controller('recipeBookCtrl', function ($scope, pullRecipeFirebaseService, RecipeService) {
+app.controller('recipeBookCtrl', function ($scope, $state, pullRecipeFirebaseService, RecipeService) {
     $scope.retVals2 = pullRecipeFirebaseService.pullRecipe().then(function (result) {
         $scope.retVals2 = $scope.retVals = result;
     });
@@ -542,6 +569,11 @@ app.controller('recipeBookCtrl', function ($scope, pullRecipeFirebaseService, Re
 
     $scope.deleteRecipe = function (obj) {
         RecipeService.deleteRecipe(obj);
+    }
+
+    $scope.viewRecipe = function (recipe) {
+        RecipeService.setViewingRecipe(recipe);
+        $state.go('viewRecipe', {}, { reload: true });
     }
 })
 
