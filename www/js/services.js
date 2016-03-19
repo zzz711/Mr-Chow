@@ -389,12 +389,17 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
             },
 
             //returns every saved ingredient for list
-            getAllIngredient: function () {
+          getAllIngredient: function () {
+
                 return (x);
             },
-
+            
             getPageVals: function () {
                 return passedPage;
+            },
+             
+            setAllIngredient: function (val) {
+               x = val;
             },
 
             setPageVals: function (item) {
@@ -452,6 +457,7 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
                 passedPage.fatContent = "";
                 passedPage.quantity = "";
                 passedPage.comments = "";
+                return passedPage;
             },
             setTotalEmpty: function(){
                 totalContents.fatContent =0;
@@ -462,7 +468,7 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
             },
            //empties service array
             resetArray: function () {
-                x = [];
+                x.splice(0, x.length);
                 return x;
             },
 

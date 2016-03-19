@@ -150,7 +150,6 @@ app.controller('addIngredientRecipeCtrl', function ($scope,  $ionicPopup, $cordo
                 $scope.retArray.items = $scope.retArray.items.concat(dataArray);
             });
         }
-        console.log($scope.retArray);
         return $scope.retArray;
     };
 
@@ -190,7 +189,7 @@ app.controller('addIngredientRecipeCtrl', function ($scope,  $ionicPopup, $cordo
     });
 
     $scope.doStuff = function () {
-        // $ionicLoading.show();
+        // $ionicLoading.show`
         if (angular.isUndefined($scope.initialize.ingName) || $scope.initialize.ingName == "") {
             $ionicPopup.alert({
                 title: 'Oh No! You missed something.',
@@ -208,10 +207,14 @@ app.controller('addIngredientRecipeCtrl', function ($scope,  $ionicPopup, $cordo
 
 
 
-app.controller('addARecipeCtrl', function ($scope, $cordovaCamera, nixApi, $q, $http, $state, $window, $ionicPopup, $ionicPopover, addIngredientService, addToFirebaseService) {
-    $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
-        viewData.enableBack = true;
-    });
+app.controller('addARecipeCtrl', function ($scope,pullRecipeIngredientFirebaseService, RecipeService, $cordovaCamera, nixApi, $q, $http, $state, $window, $ionicPopup, $ionicPopover, addIngredientService, addToFirebaseService) {
+    $scope.addRecipeForm = {
+        recipeName: "",
+        prepTime: "",
+        cookingTime: "",
+        servesNMany: null,
+        recipeDesc: ""
+    };
 
     $scope.retVals = "";
     $scope.totalVal = addIngredientService.getTotalContents($http);
@@ -219,16 +222,36 @@ app.controller('addARecipeCtrl', function ($scope, $cordovaCamera, nixApi, $q, $
     $scope.height = "0px";
     $scope.width = "0px";
 
+    $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        $scope.ingredient = function () {
+            $scope.retVals = addIngredientService.getAllIngredient();
+            $scope.totalVal = addIngredientService.getTotalContents($http);
+
+        };
+        viewData.enableBack = true;
+    });
+    $scope.$on('$ionicView.enter', function () {
+        if (RecipeService.viewingRecipe != null) {
+            $scope.addRecipeForm = RecipeService.viewingRecipe;
+            $scope.totalVal = RecipeService.viewingRecipe;
+            pullRecipeIngredientFirebaseService.pullRecipeIngredients().then(function (result) {
+                    addIngredientService.setAllIngredient(result.filter(function (recipeIngredient) {
+                         return recipeIngredient.recipeGuid === $scope.addRecipeForm.recipeGuid;
+                    }));
+               });
+        }
+    });
+
     $scope.ingredient = function () {
-        $scope.retVals = addIngredientService.getAllIngredient();
-        $scope.totalVal = addIngredientService.getTotalContents($http);
+            $scope.retVals = addIngredientService.getAllIngredient();
+            $scope.totalVal = addIngredientService.getTotalContents($http);
+        
     };
 
     $scope.setRemove = function (value) {
         $scope.retVals = addIngredientService.deleteSpecificIngredient(value);
         $scope.totalVal = addIngredientService.totalContentsSub(value);
-    };
-
+  };
 
     $scope.setFill = function (value) {
         addIngredientService.setSpecificIngredient(value);
@@ -242,9 +265,8 @@ app.controller('addARecipeCtrl', function ($scope, $cordovaCamera, nixApi, $q, $
         $state.go('addAnIngredientRecipe', {}, { reload: true });
     };
 
-    $scope.trackMeal = function (form) {
-        if (form.$valid) {
-            if (angular.isUndefined(form.recipeName)) {
+    $scope.trackMeal = function () {
+            if (angular.isUndefined($scope.addRecipeForm.recipeName)) {
                 $ionicPopup.alert({
                     title: 'Oh No! You missed something.',
                     template: 'Please add a recipe title.'
@@ -252,23 +274,22 @@ app.controller('addARecipeCtrl', function ($scope, $cordovaCamera, nixApi, $q, $
             }
             else {
                 $scope.retVals = addIngredientService.getAllIngredient();
-                addToFirebaseService.saveRecipe(form, $scope.retVals, $scope.totalVal, $scope.picture);
-
-                form.recipeName = "";
-                form.recipeDesc = "";
-                form.servesNMany = "";
-                form.prepTime = "";
-                form.cookingTime = "";
+                addToFirebaseService.saveRecipe( $scope.addRecipeForm, $scope.retVals, $scope.totalVal, $scope.picture);
+                $scope.addRecipeForm.recipeName = "";
+                $scope.addRecipeForm.recipeDesc = "";
+                $scope.addRecipeForm.servesNMany = "";
+                $scope.addRecipeForm.prepTime = "";
+                $scope.addRecipeForm.cookingTime = "";
                 $scope.initialize = {};
                 $scope.picture = "";
                 $scope.height = "0px";
                 $scope.width = "0px";
                 addIngredientService.setEmpty();
-                addIngredientService.resetArray();
                 addIngredientService.setTotalEmpty();
-                $state.go('main.recipeBook', {}, { reload: true });
+                $scope.retVals = addIngredientService.resetArray();
+               // $state.go('main.recipeBook', {}, { reload: true });
             }
-        }
+        
     };
 
     $scope.addPicture = function () {
@@ -311,6 +332,11 @@ app.controller('viewRecipeCtrl', function ($scope, $http, $state, $window, $ioni
             });
         });
     });
+
+
+    $scope.editRecipe = function () {
+            $state.go("addARecipe");       
+    }
 })
 
 
@@ -400,6 +426,8 @@ app.controller('addMedicineCtrl', function ($scope, $ionicPopup,  medicineServic
                     $scope.picture = "";
                     $scope.height = "0px";
                     $scope.width = "0px";
+
+                    $scope.returnVals = addIngredientService.resetArray();
                     $state.go("main.dailyNutrition", {}, { reload: true });
                 }
             }
@@ -600,6 +628,7 @@ app.controller('addMedicineCtrl', function ($scope, $ionicPopup,  medicineServic
         });
         $scope.$watch('search', function (newValue) {
             if (newValue) {
+                console.log(newValue);
                 $scope.retVals2 = $scope.retVals.filter(function (recipe) { return recipe.recipeName.toLowerCase().indexOf(newValue.toLowerCase()) != -1; });
             }
             else {
@@ -609,6 +638,11 @@ app.controller('addMedicineCtrl', function ($scope, $ionicPopup,  medicineServic
 
         $scope.deleteRecipe = function (obj) {
             RecipeService.deleteRecipe(obj);
+         }
+
+        $scope.editRecipe = function (obj) {
+            RecipeService.setViewingRecipe(obj);
+            $state.go("addARecipe");
         }
 
         $scope.viewRecipe = function (recipe) {

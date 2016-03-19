@@ -1,19 +1,16 @@
 <ion-view title="Add A Recipe">
     <ion-content overflow-scroll="true" padding="true"  class="has-header">
-        <form name="addRecipeForm"
+    <!--  <form name="addRecipeForm"
               novalidate="novalidate"
               ng-submit="trackMeal(addRecipeForm)"
-              class="create-form">
+              class="create-form">-->
 
             <section>
-                <div class="form-errors"
-                     ng-messages="addRecipeForm.recipeName.$error"
-                     ng-show="addRecipeForm.myName.$touched || addRecipeForm.$submitted"
-                     ng-messages-include="templates/form-errors.html"></div>
                 <label class="item item-input">
                     <span class="input-label">Recipe Title</span>
                     <input type="text"
                            ng-model="addRecipeForm.recipeName"
+                           ng-init="recipeName"
                            placeholder="Recipe Title">
                 </label>
                 <label class="item item-input">
@@ -50,7 +47,7 @@
             </ion-list>
             <a class="button button-stable" ng-click="addPicture()">Add a Picture</a>
             <br />
-            <ion-list class="item-icon-right" ng-controller="addARecipeCtrl" ng-init="ingredient()">
+            <ion-list class="item-icon-right" ng-controller="addARecipeCtrl" ng-model = "retVals" ng-init="ingredient()">
                 <ion-item  ng-class= "balanced" ng-repeat="i in retVals">
                     <p>Name: {{i.ingName}}</p>
                     <p>Calories : {{i.calories}} &nbsp;&nbsp;    Protein : {{i.protein}}</p>
@@ -75,7 +72,7 @@
             </ion-list>
 
             <a href="#/page24" class="button button-stable button-block" ng-click="setNew()">Add Ingredient</a>
-            <button class="button button-balanced button-block" type="submit">Submit Recipe</button>
-        </form>
+            <button class="button button-balanced button-block" ng-click ="trackMeal(addRecipeForm)" >Submit Recipe</button>
+        <!--</form>-->
     </ion-content>
 </ion-view>
