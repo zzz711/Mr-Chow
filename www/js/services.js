@@ -170,7 +170,7 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
 app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
 
     return {
-        saveNutrition: function (data, ingredients, pic) {
+        saveNutrition: function (data, ingredients, pic, totals) {
             var nutritionGuid = guid();
             nutritionTable = new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutrition/");
             nutritionTable = $firebaseArray(nutritionTable);
@@ -182,7 +182,12 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
                 date: isUndefined( Date.parse(data.date)).toString(),
                 time: isUndefined( Date.parse(data.time)).toString(),
                 comments: isUndefined(data.comments),
-                picture: isUndefined(pic)
+                picture: isUndefined(pic),
+                totalCal: isUndefined(totals.calories),
+                totalProtein: isUndefined(totals.protein),
+                totalSugars: isUndefined(totals.sugars),
+                totalSodium: isUndefined(totals.sodium),
+                totalFat: isUndefined(totals.fatContent),
             });
 
             var x = 1;
@@ -558,7 +563,11 @@ app.service("medicineService", function ($q, $firebaseObject) {
 })
 
 app.service("NutritionService", function(){
-  return{
+    return {
+    viewingNutrition: null,
+    setViewingNutrition: function (nutrition) {
+        this.viewingNutrition = nutrition;
+    },
     getNutrition: function(){
       var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutrition/";
       var fbObj = new Firebase(url);
@@ -634,6 +643,14 @@ app.service("pullNutritionFirebaseService", function ($firebaseArray) {
     return {
         pullNutrition: function () {
             return $firebaseArray(new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutrition/")).$loaded();
+        }
+    };
+})
+
+app.service("pullNutritionIngredientFirebaseService", function ($firebaseArray) {
+    return {
+        pullNutritionIngredients: function () {
+            return $firebaseArray(new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutritionIngredient/")).$loaded();
         }
     };
 })

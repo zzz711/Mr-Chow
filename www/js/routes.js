@@ -58,6 +58,12 @@ angular.module('app.routes', [])
            }
        })
 
+      .state('viewNutrition', {
+          url: '/ViewNutrition',
+          templateUrl: 'templates/viewNutrition.html',
+          controller: 'viewNutritionCtrl'
+      })
+
       .state('main.myMeds', {
           url: '/page15',
           views: {

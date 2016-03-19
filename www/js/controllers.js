@@ -421,7 +421,7 @@ app.controller('addMedicineCtrl', function ($scope, $ionicPopup,  medicineServic
                     });
                 }
                 else {
-                    addToFirebaseService.saveNutrition($scope.formData, addIngredientService.getAllIngredient(), $scope.picture);
+                    addToFirebaseService.saveNutrition($scope.formData, addIngredientService.getAllIngredient(), $scope.picture, $scope.totalVal);
                     addIngredientService.setTotalEmpty();
                     $scope.picture = "";
                     $scope.height = "0px";
@@ -476,6 +476,26 @@ app.controller('addMedicineCtrl', function ($scope, $ionicPopup,  medicineServic
         };
     })
 
+app.controller('viewNutritionCtrl', function ($scope, $state, NutritionService, pullNutritionIngredientFirebaseService) {
+    $scope.nutrition = null;
+    $scope.nutritionIngredients = [];
+    $scope.totalVal = {};
+    $scope.height = "200px";
+    $scope.width = "200px";
+
+    $scope.$on('$ionicView.enter', function () {
+        $scope.nutrition = NutritionService.viewingNutrition;
+        pullNutritionIngredientFirebaseService.pullNutritionIngredients().then(function (result) {
+            $scope.nutritionIngredients = result.filter(function (nutritionIngredient) {
+                return nutritionIngredient.nutritionGuid === $scope.nutrition.nutritionGuid;
+            });
+        });
+    });
+
+    $scope.editNutrition = function () {
+        $state.go("addNutrition");
+    }
+})
 
 
     app.controller('settingsCtrl', function ($scope, $state, AuthService) {
@@ -675,8 +695,13 @@ app.controller('addMedicineCtrl', function ($scope, $ionicPopup,  medicineServic
         }
     })
 
-    app.controller('nutritionCtrl', function ($scope, pullNutritionFirebaseService) {
+    app.controller('nutritionCtrl', function ($scope, $state, NutritionService, pullNutritionFirebaseService) {
         $scope.retVals2 = pullNutritionFirebaseService.pullNutrition().then(function (result) {
             $scope.retVals = result;
         });
+
+        $scope.viewNutrition = function (nutrition) {
+            NutritionService.setViewingNutrition(nutrition);
+            $state.go('viewNutrition', {}, { reload: true });
+        }
     })
