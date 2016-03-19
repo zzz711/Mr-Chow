@@ -266,7 +266,7 @@ app.controller('addARecipeCtrl', function ($scope,pullRecipeIngredientFirebaseSe
     };
 
     $scope.trackMeal = function () {
-            if (angular.isUndefined($scope.addRecipeForm.recipeName)) {
+            if ($scope.addRecipeForm.recipeName=="") {
                 $ionicPopup.alert({
                     title: 'Oh No! You missed something.',
                     template: 'Please add a recipe title.'
@@ -287,7 +287,7 @@ app.controller('addARecipeCtrl', function ($scope,pullRecipeIngredientFirebaseSe
                 addIngredientService.setEmpty();
                 addIngredientService.setTotalEmpty();
                 $scope.retVals = addIngredientService.resetArray();
-               // $state.go('main.recipeBook', {}, { reload: true });
+                $state.go('main.recipeBook', {}, { reload: true });
             }
         
     };
