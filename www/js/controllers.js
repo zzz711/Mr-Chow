@@ -81,7 +81,10 @@ app.controller('signupCtrl', function ($scope, $state, $ionicPopup, AuthService)
 })
 
 
-app.controller('addIngredientRecipeCtrl', function ($scope, $ionicPlatform, $cordovaBarcodeScanner, $rootScope, $state, $http, nixApi, addIngredientService, pullRecipeIngredientFirebaseService, pullRecipeFirebaseService) {
+app.controller('addIngredientRecipeCtrl', function ($scope,  $ionicPopup, $cordovaBarcodeScanner, $rootScope, $state, $http, nixApi, addIngredientService, pullRecipeIngredientFirebaseService, pullRecipeFirebaseService) {
+    $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        viewData.enableBack = true;
+    });
 
     $scope.vm = "";
     $scope.scanResults = '';
@@ -188,16 +191,28 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $ionicPlatform, $cor
 
     $scope.doStuff = function () {
         // $ionicLoading.show();
-        addIngredientService.setIngredient($scope.initialize, $http);
-        addIngredientService.totalContentsAdd($scope.initialize, $http);
-        $scope.initialize = addIngredientService.setEmpty();
-        $state.go(addIngredientService.getPageCalled(), {}, { reload: true });
+        if (angular.isUndefined($scope.initialize.ingName) || $scope.initialize.ingName == "") {
+            $ionicPopup.alert({
+                title: 'Oh No! You missed something.',
+                template: 'Please check and fill out the food name.'
+            });
+        }
+        else {
+            addIngredientService.setIngredient($scope.initialize, $http);
+            addIngredientService.totalContentsAdd($scope.initialize, $http);
+            $scope.initialize = addIngredientService.setEmpty();
+            $state.go(addIngredientService.getPageCalled(), {}, { reload: true });
+        }
     };
 })
 
 
 
-app.controller('addARecipeCtrl', function ($scope, $cordovaCamera, nixApi, $q, $http, $state, $window, $ionicPopover, addIngredientService, addToFirebaseService) {
+app.controller('addARecipeCtrl', function ($scope, $cordovaCamera, nixApi, $q, $http, $state, $window, $ionicPopup, $ionicPopover, addIngredientService, addToFirebaseService) {
+    $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        viewData.enableBack = true;
+    });
+
     $scope.retVals = "";
     $scope.totalVal = addIngredientService.getTotalContents($http);
     $scope.picture = "";
@@ -217,34 +232,42 @@ app.controller('addARecipeCtrl', function ($scope, $cordovaCamera, nixApi, $q, $
 
     $scope.setFill = function (value) {
         addIngredientService.setSpecificIngredient(value);
-        addIngredientService.setPageCalled('main.addARecipe');
+        addIngredientService.setPageCalled('addARecipe');
         $state.go('addAnIngredientRecipe', {}, { reload: true });
     };
 
     $scope.setNew = function () {
         addIngredientService.setEmpty();
-        addIngredientService.setPageCalled('main.addARecipe');
+        addIngredientService.setPageCalled('addARecipe');
         $state.go('addAnIngredientRecipe', {}, { reload: true });
     };
 
     $scope.trackMeal = function (form) {
         if (form.$valid) {
-            $scope.retVals = addIngredientService.getAllIngredient();
-            addToFirebaseService.saveRecipe(form, $scope.retVals, $scope.totalVal, $scope.picture);
+            if (angular.isUndefined(form.recipeName)) {
+                $ionicPopup.alert({
+                    title: 'Oh No! You missed something.',
+                    template: 'Please add a recipe title.'
+                });
+            }
+            else {
+                $scope.retVals = addIngredientService.getAllIngredient();
+                addToFirebaseService.saveRecipe(form, $scope.retVals, $scope.totalVal, $scope.picture);
 
-            form.recipeName = "";
-            form.recipeDesc = "";
-            form.servesNMany = "";
-            form.prepTime = "";
-            form.cookingTime = "";
-            $scope.initialize = {};
-            $scope.picture = "";
-            $scope.height = "0px";
-            $scope.width = "0px";
-            addIngredientService.setEmpty();
-            addIngredientService.resetArray();
-            addIngredientService.setTotalEmpty();
-            $state.go('main.recipeBook', {}, { reload: true });
+                form.recipeName = "";
+                form.recipeDesc = "";
+                form.servesNMany = "";
+                form.prepTime = "";
+                form.cookingTime = "";
+                $scope.initialize = {};
+                $scope.picture = "";
+                $scope.height = "0px";
+                $scope.width = "0px";
+                addIngredientService.setEmpty();
+                addIngredientService.resetArray();
+                addIngredientService.setTotalEmpty();
+                $state.go('main.recipeBook', {}, { reload: true });
+            }
         }
     };
 
@@ -274,27 +297,57 @@ app.controller('addARecipeCtrl', function ($scope, $cordovaCamera, nixApi, $q, $
 })
 
 
+app.controller('viewRecipeCtrl', function ($scope, $http, $state, $window, $ionicPopover, RecipeService, pullRecipeIngredientFirebaseService) {
+    $scope.recipe = null;
+    $scope.recipeIngredients = [];
+    $scope.height = "200px";
+    $scope.width = "200px";
 
-
-.controller('myMedsCtrl', function ($scope, $state, medicineService) {
-
+    $scope.$on('$ionicView.enter', function () {
+        $scope.recipe = RecipeService.viewingRecipe;
+        pullRecipeIngredientFirebaseService.pullRecipeIngredients().then(function (result) {
+            $scope.recipeIngredients = result.filter(function (recipeIngredient) {
+                return recipeIngredient.recipeGuid === $scope.recipe.recipeGuid;
+            });
+        });
+    });
 })
 
-app.controller('addMedicineCtrl', function ($scope, medicineService, $state) {
+
+app.controller('addMedicineCtrl', function ($scope, $ionicPopup,  medicineService, $state) {
+    $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        viewData.enableBack = true;
+    });
+
     $scope.addMed = {
         medicineName: "",
         amount: "",
         taken: "",
         extra: ""
     };
-
     $scope.addMedication = function () {
-        medicineService.add($scope.addMed);
-        $state.go("main.myMeds");
+        if ($scope.addMed.medicineName== "") {
+            $ionicPopup.alert({
+                title: 'Oh No! You missed something.',
+                template: 'Please add a medicine name.'
+            });
+        }
+        else {
+            $scope.medicineName= "";
+            $scope.amount= "";
+            $scope.taken= "";
+            $scope.extra=  "";
+            medicineService.add($scope.addMed);
+            $state.go("main.myMeds");
+        }
     }
 })
 
-.controller('addNutritionCtrl', function ($scope, $http, $state, $cordovaCamera, addIngredientService, addToFirebaseService) {
+.controller('addNutritionCtrl', function ($scope, $http, $state, $cordovaCamera, $ionicPopup, addIngredientService, addToFirebaseService) {
+    $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+        viewData.enableBack = true;
+    });
+
     $scope.formData = {
         mealName: "",
         mealContents: "",
@@ -334,118 +387,132 @@ app.controller('addMedicineCtrl', function ($scope, medicineService, $state) {
 
     $scope.addNewDailyNutrition = function (form) {
         if (form.$valid) {
-            addToFirebaseService.saveNutrition($scope.formData, addIngredientService.getAllIngredient(), $scope.picture);
-            addIngredientService.setTotalEmpty();
-            $scope.picture = "";
-            $scope.height = "0px";
-            $scope.width = "0px";
-            $state.go("main.dailyNutrition", {}, { reload: true });
-        }
-        else {
-            console.log("Form is not valid")
+            if (form.$valid) {
+                if ($scope.formData.mealName == "" || $scope.formData.date== ""){
+                    $ionicPopup.alert({
+                        title: 'Oh No! You missed something.',
+                        template: 'Please check and fill in the meal name and date.'
+                    });
+                }
+                else {
+                    addToFirebaseService.saveNutrition($scope.formData, addIngredientService.getAllIngredient(), $scope.picture);
+                    addIngredientService.setTotalEmpty();
+                    $scope.picture = "";
+                    $scope.height = "0px";
+                    $scope.width = "0px";
+                    $state.go("main.dailyNutrition", {}, { reload: true });
+                }
+            }
+            else {
+                console.log("Form is not valid")
+            }
         }
     };
 
-    $scope.addIngredient = function (form) {
-        addIngredientService.setEmpty();
-        addIngredientService.setPageCalled("addNutrition");
-        $state.go('addAnIngredientRecipe', {}, { reload: true });
-    };
-
-
-    function clear(form) {
-        form.mealName = "";
-        form.mealContents = "";
-        form.foodType = "";
-        form.date = "";
-        form.time = "";
-        form.comments = "";
-    }
-
-    $scope.addPicture = function () {
-        var options = {
-            quality: 50,
-            destinationType: Camera.DestinationType.DATA_URL,
-            //IN PROD - sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-            sourceType: Camera.PictureSourceType.CAMERA,
-            allowEdit: true,
-            encodingType: Camera.EncodingType.JPEG,
-            targetWidth: 480,
-            popoverOptions: CameraPopoverOptions,
-            saveToPhotoAlbum: false
+        $scope.addIngredient = function (form) {
+            addIngredientService.setEmpty();
+            addIngredientService.setPageCalled("addNutrition");
+            $state.go('addAnIngredientRecipe', {}, { reload: true });
         };
-        $cordovaCamera.getPicture(options).then(function (imageData) {
-            $scope.picture = imageData;
-            $scope.height = "200px";
-            $scope.width = "200px";
-            //   $state.go('main.addARecipe');
-        }, function (err) {
-            console.error("yolo ", err);
-        });
-    };
-})
 
 
-
-app.controller('settingsCtrl', function ($scope, $state, AuthService) {
-    $scope.changePW = function () {
-        $state.go("changePW");
-    };
-
-    $scope.logOut = function () {
-        AuthService.logOut();
-        $state.go("recipeCardHolder");
-    };
-
-})
-
-app.controller('myAccountCtrl', function ($scope, $ionicPopup, AuthService, $state) {
-    $scope.formData = {
-        email: ""
-    };
-
-    $scope.$on('$ionicView.enter', function () {
-        $scope.setEmail = function () {
-            console.log("current email");
-            //$document.getElementById("currentEmail").textContent = AuthService.getEmail();
-            $scope.currentEmail = AuthService.getEmail();
-
+        function clear(form) {
+            form.mealName = "";
+            form.mealContents = "";
+            form.foodType = "";
+            form.date = "";
+            form.time = "";
+            form.comments = "";
         }
-    });
 
-    $scope.submit = function (form) {
-        $scope.data = {};
-        //TODO: use an ionic popup show to get password
-        var passwrd = $ionicPopup.show({
-            template: '<input type="password" ng-model="data.password">',
-            title: "Please Enter Your Password",
-            scope: $scope,
-            buttons: [
-              { text: 'Cancel' },
-              {
-                  text: '<b>Enter</b>',
-                  type: 'button-positive',
-                  onTap: function (e) {
-                      if (!$scope.data.password) {
-                          e.preventDefault();
-                      }
-                      else {
-                          //TODO clear form
-                          //            form.email = "";
-                          AuthService.changeEmail($scope.formData.email, $scope.data.password);
+        $scope.addPicture = function () {
+            var options = {
+                quality: 50,
+                destinationType: Camera.DestinationType.DATA_URL,
+                //IN PROD - sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+                sourceType: Camera.PictureSourceType.CAMERA,
+                allowEdit: true,
+                encodingType: Camera.EncodingType.JPEG,
+                targetWidth: 480,
+                popoverOptions: CameraPopoverOptions,
+                saveToPhotoAlbum: false
+            };
+            $cordovaCamera.getPicture(options).then(function (imageData) {
+                $scope.picture = imageData;
+                $scope.height = "200px";
+                $scope.width = "200px";
+                //   $state.go('main.addARecipe');
+            }, function (err) {
+                console.error("yolo ", err);
+            });
+        };
+    })
 
-                      }
 
-                  }
-              }
-            ]
+
+    app.controller('settingsCtrl', function ($scope, $state, AuthService) {
+        $scope.changePW = function () {
+            $state.go("changePW");
+        };
+
+        $scope.logOut = function () {
+            AuthService.logOut();
+            $state.go("recipeCardHolder");
+        };
+
+    })
+
+    app.controller('myAccountCtrl', function ($scope, $ionicPopup, AuthService, $state) {
+        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+            viewData.enableBack = true;
         });
-    }
+
+        $scope.formData = {
+            email: ""
+        };
+
+        $scope.$on('$ionicView.enter', function () {
+            $scope.setEmail = function () {
+                console.log("current email");
+                //$document.getElementById("currentEmail").textContent = AuthService.getEmail();
+                $scope.currentEmail = AuthService.getEmail();
+
+            }
+        });
+
+        $scope.submit = function (form) {
+            $scope.data = {};
+            //TODO: use an ionic popup show to get password
+            var passwrd = $ionicPopup.show({
+                template: '<input type="password" ng-model="data.password">',
+                title: "Please Enter Your Password",
+                scope: $scope,
+                buttons: [
+                  { text: 'Cancel' },
+                  {
+                      text: '<b>Enter</b>',
+                      type: 'button-positive',
+                      onTap: function (e) {
+                          if (!$scope.data.password) {
+                              e.preventDefault();
+                          }
+                          else {
+                              //TODO clear form
+                              //            form.email = "";
+                              AuthService.changeEmail($scope.formData.email, $scope.data.password);
+
+                          }
+
+                      }
+                  }
+                ]
+            });
+        }
 
 
-})
+    })
 
-app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, NutritionService, medicineService, RecipeService, $state) {
+app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, NutritionService, medicineService, RecipeService, $state, $cordovaEmailComposer) {
   $scope.formData = {
     NutritionInfo: false,
     MedInfo: false,
@@ -460,15 +527,21 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
 
   $scope.shareData = function(){
     var Data = {}; //do I want to put the retrieved information in the email body or as an attachment?
-    var subject = "Test";
-    var recipient = [$scope.formData.recipient];
-    var ccArr = null;
-    var bccArr = null;
-    var file = null;
+
     var Nutrition = {};
     var Medicine = {};
     var Recipe = {};
-    var table;
+    var table = null;
+
+    // var email = {
+    //   to: recipient,
+    //   cc: ccArr,
+    //   bcc: bccArr,
+    //   attachments: null,
+    //   subject: subject,
+    //   body: '',
+    //   isHtml: true
+    // };
 
 
 
@@ -484,7 +557,8 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
 
         console.log(Data);
         var node = JsonHuman.format(Nutrition);
-        //table.append(node);
+        table = node;
+       // email.body =table;
       });
 
     }
@@ -503,7 +577,16 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
         Data.Medicine = Medicine;
         console.log(Data);
         var node = JsonHuman.format(Medicine);
-        console.log(node);;
+        console.log(node);
+
+        if(table != null){
+          table.append(node);
+         // email.body =table;
+        }
+        else{
+          table = node;
+          //email.body =table;
+        }
         //table.append(node);
       });
 
@@ -526,56 +609,59 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
         }
 
         Data.Recipe = Recipe;
-        console.log(Data.Recipe);
+        //console.log(Data.Recipe);
         var node = JsonHuman.format(Recipe);
+        if(table === null){
+          table = node;
+         // email.body =table;
+        }
+        else{
+          table.append(node);
+          //email.body =table;
+        }
         //table.append(node);
+        console.log(table);
+        // cordova.plugins.email.isAvailable(
+        //   function (isAvailable) {
+        //     console.log('Service is not available') //unless isAvailable;
+        //     $scope.sendEmail(table)
+        //   }
+        //);
+        $scope.sendEmail(table)
       });
 
     }
 
-    //console.log(data);
-    //var node = JsonHuman.format(Data);
-    //var output = output.appendChild(node);
-    //console.log(node);
-    //
-    //$cordovaSocialSharing.shareViaEmail(data, subject, recipient, ccArr, bccArr, file)
-    //  //.canShareViaEmail()
-    //  .then(function(result) {
-    //    console.log("Success!");
-    //  }, function(err) {
-    //    // An error occurred. Show a message to the user
-    //    console.log(err);
-    //
-    //  });
+  };
 
-    //cordova.plugins.email.open({
+  $scope.sendEmail = function(message){
+    var subject = "Test";
+    var recipient = $scope.formData.recipient;
+    var ccArr = null;
+    var bccArr = null;
+    var file = null;
+
+    $cordovaSocialSharing.shareViaEmail(message, subject, recipient, ccArr, bccArr, file)
+      .canShareViaEmail()
+      .then(function(result) {
+        console.log("Success!");
+      }, function(err) {
+        // An error occurred. Show a message to the user
+        console.log(err);
+
+      });
+
+    // cordova.plugins.email.open({
     //  to:          recipient, // email addresses for TO field
     //  cc:          ccArr, // email addresses for CC field
     //  bcc:         bccArr, // email addresses for BCC field
     //  attachments: file, // file paths or base64 data streams
     //  subject:    subject, // subject of the email
-    //  body:       data // email body (for HTML, set isHtml to true)
-    //  //isHtml:    true, // indicats if the body is HTML or plain text
-    //});
-
-    //$state.go("main.settings");
-  };
-
-  $scope.addData = function(nutArr){
-
-    console.log(nutArr);
-
-    var Nutrition = {};
-
-    for(var i = 0; i < nutArr.length; i++){
-      var nutKey = nutArr[i].key;
-
-      Nutrition[nutKey] = nutArr[i];
-    }
-    $scope.data.Nutrition = Nutrition;
-
-    //var node = JsonHuman.format(data);
+    //  body:       message, // email body (for HTML, set isHtml to true)
+    //  isHtml:    false // indicates if the body is HTML or plain text
+    // });
   }
+
 
 
 
