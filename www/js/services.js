@@ -454,7 +454,7 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
             getPageVals: function () {
                 return passedPage;
             },
-             
+
             setAllIngredient: function (val) {
             angular.forEach(val, function (obj) {
                 localSetIngredients(obj);
@@ -682,14 +682,13 @@ app.service("medicineService", function ($q, $firebaseObject) {
 
 app.service("NutritionService", function($firebaseArray){
   return{
-    getNutrition: function(startDate, endDate, callBack){
-app.service("NutritionService", function(){
-    return {
+
     viewingNutrition: null,
     setViewingNutrition: function (nutrition) {
         this.viewingNutrition = nutrition;
     },
-    getNutrition: function(){
+
+    getNutrition: function(startDate, endDate, callBack){
       var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutrition/";
       var fbObj = new Firebase(url);
       var allMeals = [];
