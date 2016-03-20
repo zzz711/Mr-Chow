@@ -299,15 +299,16 @@ app.service("RecipeService", function ($q,$ionicPopup, $firebaseObject, addIngre
             var fullURL = partURL.concat("/recipe/" + guid.$id);
             var fbMeal = new Firebase(fullURL);
             var mealObj = $firebaseObject(fbMeal);
-            var recipeGUID = guid.$id;
+            var recipeGUID = guid.recipeGuid;
 
+            //TODO: fix
             addIngredientService.getIng(recipeGUID);
 
             mealObj.$remove().then(function(ref){
               console.log("item deleted");
             }, function(error){
               console.log(error);
-            })
+            });
 
       },
 
@@ -511,25 +512,31 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
                 return x;
             },
 
-            getIng: function(recipeGUID){
+            getIng: function(recipeGUID, callBack){
               var url = "https://boiling-fire-9023.firebaseio.com/";
               var partURL = url.concat(getUID());
               var fullURL = partURL.concat("/recipeIngredient/");
               var fbjObj = new Firebase(fullURL);
-              var mealObj = $firebaseObject(fbjObj);
+
+
 
               fbjObj.orderByChild("ingName").on("value", function(snapshot){
                 //TODO add the rest of the query code
                 for (var p in snapshot.val()) {
-                  console.log(snapshot.val()[p].recipeGuid);
                   console.log(recipeGUID);
-                  if (snapshot.val()[p].recipeGuid === recipeGUID) {
-                    mealObj.$remove().then(function (ref) {
-                      console.log("item deleted");
-                    }, function (error) {
-                      console.log(error);
-                    })
+                  console.log(snapshot.val()[p].recipeGuid);
+                  if(recipeGUID === snapshot.val()[p].recipeGuid){
+                    console.log("match");
+                    var ingObj = new Firebase(fullURL + p + "/");
+                    var mealObj = $firebaseObject(fbjObj);
+
+                    mealObj.$remove().then(function () {
+                      console.log("deletion successful");
+                    }, function (err) {
+                      console.log(err);
+                    });
                   }
+
                 }
               });
 

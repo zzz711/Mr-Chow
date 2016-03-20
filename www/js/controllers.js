@@ -531,7 +531,7 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
     var Nutrition = {};
     var Medicine = {};
     var Recipe = {};
-    var table = null;
+    var outPut = null;
 
     // var email = {
     //   to: recipient,
@@ -556,8 +556,9 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
         Data.Nutrition = Nutrition;
 
         console.log(Data);
-        var node = JsonHuman.format(Nutrition);
-        table = node;
+        outPut= JsonHuman.format(Nutrition);
+        //outPut = prettyPrint(Nutrition);
+
        // email.body =table;
       });
 
@@ -577,14 +578,15 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
         Data.Medicine = Medicine;
         console.log(Data);
         var node = JsonHuman.format(Medicine);
+       // var node = prettyPrint(Medicine);
         console.log(node);
 
-        if(table != null){
-          table.append(node);
+        if(outPut != null){
+          outPut.appendChild(node);
          // email.body =table;
         }
         else{
-          table = node;
+          outPut = node;
           //email.body =table;
         }
         //table.append(node);
@@ -611,23 +613,19 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
         Data.Recipe = Recipe;
         //console.log(Data.Recipe);
         var node = JsonHuman.format(Recipe);
-        if(table === null){
-          table = node;
+        //var node = prettyPrint(Recipe);
+        if(outPut === null){
+          outPut = node;
          // email.body =table;
         }
         else{
-          table.append(node);
+          outPut.appendChild(node);
           //email.body =table;
         }
         //table.append(node);
-        console.log(table);
-        // cordova.plugins.email.isAvailable(
-        //   function (isAvailable) {
-        //     console.log('Service is not available') //unless isAvailable;
-        //     $scope.sendEmail(table)
-        //   }
-        //);
-        $scope.sendEmail(table)
+        console.log(outPut);
+
+        $scope.sendEmail(outPut)
       });
 
     }
@@ -641,6 +639,7 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
     var bccArr = null;
     var file = null;
 
+    console.log(message);
     $cordovaSocialSharing.shareViaEmail(message, subject, recipient, ccArr, bccArr, file)
       .canShareViaEmail()
       .then(function(result) {
@@ -650,17 +649,30 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
         console.log(err);
 
       });
-
-    // cordova.plugins.email.open({
+    //
+    // window.plugins.email.open({
     //  to:          recipient, // email addresses for TO field
     //  cc:          ccArr, // email addresses for CC field
     //  bcc:         bccArr, // email addresses for BCC field
     //  attachments: file, // file paths or base64 data streams
     //  subject:    subject, // subject of the email
     //  body:       message, // email body (for HTML, set isHtml to true)
-    //  isHtml:    false // indicates if the body is HTML or plain text
+    //  isHtml:    true // indicates if the body is HTML or plain text
     // });
+
+    // window.plugins.emailComposer.showEmailComposerWithCallback(function(result) {
+    //     console.log("Response -> " + result);
+    //   },
+    //   subject, // Subject
+    //   message,                      // Body
+    //   [recipient],    // To
+    //   null,                    // CC
+    //   null,                    // BCC
+    //   false,                   // isHTML
+    //   null,                    // Attachments
+    //  null);                   // Attachment Data
   }
+
 
 
 
