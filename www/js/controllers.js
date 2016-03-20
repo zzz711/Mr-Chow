@@ -450,67 +450,63 @@ app.controller('addMedicineCtrl', function ($scope, $ionicPopup,  medicineServic
 
 
 
-    app.controller('settingsCtrl', function ($scope, $state, AuthService) {
-        $scope.changePW = function () {
-            $state.go("changePW");
-        };
+app.controller('settingsCtrl', function ($scope, $state, AuthService) {
+    $scope.changePW = function () {
+        $state.go("changePW");
+    };
 
-        $scope.logOut = function () {
-            AuthService.logOut();
-            $state.go("recipeCardHolder");
-        };
+    $scope.logOut = function () {
+        AuthService.logOut();
+        $state.go("recipeCardHolder");
+    };
 
-    })
+})
 
-    app.controller('myAccountCtrl', function ($scope, $ionicPopup, AuthService, $state) {
-        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
-            viewData.enableBack = true;
-        });
+app.controller('myAccountCtrl', function ($scope, $ionicPopup, AuthService, $state) {
+    $scope.formData = {
+        email: ""
+    };
 
-        $scope.formData = {
-            email: ""
-        };
+    $scope.$on('$ionicView.enter', function () {
+        $scope.setEmail = function () {
+            console.log("current email");
+            //$document.getElementById("currentEmail").textContent = AuthService.getEmail();
+            $scope.currentEmail = AuthService.getEmail();
 
-        $scope.$on('$ionicView.enter', function () {
-            $scope.setEmail = function () {
-                console.log("current email");
-                //$document.getElementById("currentEmail").textContent = AuthService.getEmail();
-                $scope.currentEmail = AuthService.getEmail();
+        }
+    });
 
-            }
-        });
-
-        $scope.submit = function (form) {
-            $scope.data = {};
-            //TODO: use an ionic popup show to get password
-            var passwrd = $ionicPopup.show({
-                template: '<input type="password" ng-model="data.password">',
-                title: "Please Enter Your Password",
-                scope: $scope,
-                buttons: [
-                  { text: 'Cancel' },
-                  {
-                      text: '<b>Enter</b>',
-                      type: 'button-positive',
-                      onTap: function (e) {
-                          if (!$scope.data.password) {
-                              e.preventDefault();
-                          }
-                          else {
-                              //TODO clear form
-                              //            form.email = "";
-                              AuthService.changeEmail($scope.formData.email, $scope.data.password);
-
-                          }
+    $scope.submit = function (form) {
+        $scope.data = {};
+        //TODO: use an ionic popup show to get password
+        var passwrd = $ionicPopup.show({
+            template: '<input type="password" ng-model="data.password">',
+            title: "Please Enter Your Password",
+            scope: $scope,
+            buttons: [
+              { text: 'Cancel' },
+              {
+                  text: '<b>Enter</b>',
+                  type: 'button-positive',
+                  onTap: function (e) {
+                      if (!$scope.data.password) {
+                          e.preventDefault();
+                      }
+                      else {
+                          //TODO clear form
+                          //            form.email = "";
+                          AuthService.changeEmail($scope.formData.email, $scope.data.password);
 
                       }
+
                   }
-                ]
-            });
-        }
+              }
+            ]
+        });
+    }
 
 
-    })
+})
 
 app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, NutritionService, medicineService, RecipeService, $state, $cordovaEmailComposer) {
   $scope.formData = {
@@ -639,14 +635,20 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
     var bccArr = null;
     var file = null;
 
-    console.log(message);
-    $cordovaSocialSharing.shareViaEmail(message, subject, recipient, ccArr, bccArr, file)
-      .canShareViaEmail()
-      .then(function(result) {
-        console.log("Success!");
-      }, function(err) {
-        // An error occurred. Show a message to the user
-        console.log(err);
+        //TODO: get data form a service
+        if ($scope.formData.NutritionInfo) {
+            data.nutrion = NutritionService.getNutrition();
+        }
+
+        console.log(data);
+
+        $cordovaSocialSharing.shareViaEmail(data, subject, recipient, ccArr, bccArr, file)
+          //.canShareViaEmail()
+          .then(function (result) {
+              console.log("Success!");
+          }, function (err) {
+              // An error occurred. Show a message to the user
+              console.log(err);
 
       });
     //

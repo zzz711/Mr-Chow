@@ -230,7 +230,8 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
                  recipeName:  isUndefined(data.recipeName),
                  prepTime:  isUndefined(data.prepTime),
                  cookingTime:  isUndefined(data.cookingTime),
-                 servesNMany:  isUndefined(data.servesNMany),
+                 servesNMany: isUndefined(data.servesNMany),
+                 recipeDesc: isUndefined(data.recipeDesc),
                  totalCal: isUndefined(totals.calories),
                  totalProtein: isUndefined(totals.protein),
                  totalSugars: isUndefined(totals.sugars),
@@ -292,6 +293,10 @@ app.service("RecipeService", function ($q,$ionicPopup, $firebaseObject, addIngre
             //stuff here
 
             return d.promise;
+        },
+        viewingRecipe: null,
+        setViewingRecipe: function (recipe) {
+            self.viewingRecipe = recipe;
         },
         deleteRecipe: function (guid) {
             var url = "https://boiling-fire-9023.firebaseio.com/";
