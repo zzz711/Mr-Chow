@@ -31,13 +31,27 @@ function getUID() {
     var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
     var user = fbUser.getAuth();
 
+  if(user.uid === null){
+    $ionicPopup.show({
+      title: "Your login cookie has expired. You will now be logged out"
+    });
+    user.unauth();
+    $state.go("login");
+  }
+
+  else {
     var userGUID = user.uid;
-    return userGUID;
+    return userGUID
+  }
+
+    //console.log(userGUID);
+   // else{return userGUID}
+  //return userGUID;
 }
 
 
 app.service('AuthService', function ($q, $ionicPopup, $state) {
-    function logOutUser() {
+  function logOutUser(){
     var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
 
     fbUser.unauth();
@@ -52,10 +66,10 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
           fbUser.authWithPassword({
             "email": email,
             "password": password
-            }).then(function (authData) {
+          }).then (function(authData) {
                     console.log("login successful");
                     $state.go("main.recipeBook");
-            }).catch(function (error) {
+          }).catch(function(error){
                     $ionicPopup.alert({
                         title: "Login Error"
                         //subtitle: error.message
@@ -79,24 +93,24 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
             fbUser.createUser({
               email: email,
               password: password
-            }).then(function (userData) {
+            }).then( function(userData) {
               console.log("User created successfully!");
                     $state.go("login");
               return d.promise;
-            }).catch(function (error) {
+            }).catch(function(error){
                     console.log(error);
             });
 
         },
 
-        getUser: function () {
+        getUser: function(){
           var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
 
           return fbUser.getAuth();
         },
 
 
-        changePW: function (data) {
+        changePW: function(data){
           var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
           var user = fbUser.getAuth();
 
@@ -115,7 +129,7 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
           })
         },
 
-        changeEmail: function (newEmail, passwrd) {
+        changeEmail: function(newEmail, passwrd){
           var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
           var user = fbUser.getAuth();
 
@@ -123,7 +137,7 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
             oldEmail: fbUser.getAuth().password.email,
             newEmail: newEmail,
             password: passwrd
-            }, function (error) {
+          }, function(error) {
             if (error) {
               switch (error.code) {
                 //TODO change these to popups
@@ -138,7 +152,7 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
                   console.log("Error updating user:", error);
               }
             }
-                else {
+              else{
                 $ionicPopup.alert({
                   title: "Email Updated"
                 });
@@ -150,12 +164,12 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
         logOutUser();
         },
 
-        getEmail: function () {
+      getEmail: function (){
         var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
         return fbUser.password.email;
       },
 
-        logOut: function () {
+      logOut: function (){
         var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
 
         fbUser.unauth();
@@ -257,7 +271,7 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
     };
  })
 
-app.service("RecipeService", function ($q, $ionicPopup, $firebaseObject) {
+app.service("RecipeService", function ($q,$ionicPopup, $firebaseObject, addIngredientService) {
     var self = {
         'page': 0,
         'page_size': '20',
@@ -295,16 +309,53 @@ app.service("RecipeService", function ($q, $ionicPopup, $firebaseObject) {
             var fullURL = partURL.concat("/recipe/" + guid.$id);
             var fbMeal = new Firebase(fullURL);
             var mealObj = $firebaseObject(fbMeal);
+            var recipeGUID = guid.recipeGuid;
 
-            mealObj.$remove().then(function (ref) {
+            //TODO: fix
+            addIngredientService.getIng(recipeGUID);
+
+            mealObj.$remove().then(function(ref){
               console.log("item deleted");
-            }, function (error) {
+            }, function(error){
               console.log(error);
-            })
+            });
+
+      },
+
+      getRecipe: function(callBack){
+        var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/recipe/";
+        var fbObj = new Firebase(url);
+        var allRecipes = [];
+        var num = 0;
+
+        fbObj.orderByChild("recipeName").on("value", function(snapshot){
+          for (var p in snapshot.val()) {
+            var currentRecipe = snapshot.val()[p];
+            currentRecipe.key = p;
+
+
+            //currentRecipe.recipeName = snapshot.val().recipeName;
+            //currentRecipe.picture = snapshot.val().picture;
+            //currentRecipe.cookingTime = snapshot.val().cookingTime;
+            //currentRecipe.prepTime = snapshot.val().prepTime;
+            //currentRecipe.servesNMany = snapshot.val().servesNMany;
+            //currentRecipe.totalCal = snapshot.val().totalCal;
+            //currentRecipe.totalFat = snapshot.val().totalFat;
+            //currentRecipe.totalProtein = snapshot.val().totalProtein;
+            //currentRecipe.totalSodium = snapshot.val().totalSodium;
+            //currentRecipe.totalSugars = snapshot.val().totalSugars;
+
+
+            allRecipes[num] = currentRecipe;
+            num++;
+          }
+          callBack(allRecipes);
+        });
 
       }
 
     };
+
 
     return self;
 });
@@ -335,10 +386,10 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
             id: "",
             foodColor: "",
             fatContent: "",
-        calories: "",
-        protein: "",
-        sugars: "",
-        sodium: "",
+            calories :  "",
+            protein :  "",
+            sugars :  "",
+            sodium :"",
             freshness: "",
             quantity: "",
             comments: ""
@@ -358,15 +409,15 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
               totalContents.fatContent = totalContents.fatContent + isBlank(isUndefined(data.fatContent));
               totalContents.calories = totalContents.calories + isBlank(isUndefined(data.calories));
               totalContents.protein = totalContents.protein + isBlank(isUndefined(data.protein));
-            totalContents.sugars = totalContents.sugars + isBlank(isUndefined(data.sugars));
+              totalContents.sugars =   totalContents.sugars + isBlank(isUndefined(data.sugars));
               totalContents.sodium = totalContents.sodium + isBlank(isUndefined(data.sodium));
           },
 
           totalContentsSub: function (data, $http) {
               totalContents.fatContent = totalContents.fatContent - isBlank(isUndefined(data.fatContent));
-            totalContents.calories = totalContents.calories - isBlank(isUndefined(data.calories));
-            totalContents.protein = totalContents.protein - isBlank(isUndefined(data.protein));
-            totalContents.sugars = totalContents.sugars - isBlank(isUndefined(data.sugars));
+              totalContents.calories =  totalContents.calories - isBlank(isUndefined(data.calories));
+              totalContents.protein =  totalContents.protein - isBlank(isUndefined(data.protein));
+              totalContents.sugars =  totalContents.sugars - isBlank(isUndefined(data.sugars));
               totalContents.sodium = totalContents.sodium - isBlank(isUndefined(data.sodium));
               return totalContents;
           },
@@ -399,11 +450,11 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
           getAllIngredient: function () {
                 return (x);
             },
-            
+
             getPageVals: function () {
                 return passedPage;
             },
-             
+
             setAllIngredient: function (val) {
             angular.forEach(val, function (obj) {
                 localSetIngredients(obj);
@@ -478,6 +529,36 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
             resetArray: function () {
                 x.splice(0, x.length);
                 return x;
+            },
+
+            getIng: function(recipeGUID, callBack){
+              var url = "https://boiling-fire-9023.firebaseio.com/";
+              var partURL = url.concat(getUID());
+              var fullURL = partURL.concat("/recipeIngredient/");
+              var fbjObj = new Firebase(fullURL);
+
+
+
+              fbjObj.orderByChild("ingName").on("value", function(snapshot){
+                //TODO add the rest of the query code
+                for (var p in snapshot.val()) {
+                  console.log(recipeGUID);
+                  console.log(snapshot.val()[p].recipeGuid);
+                  if(recipeGUID === snapshot.val()[p].recipeGuid){
+                    console.log("match");
+                    var ingObj = new Firebase(fullURL + p + "/");
+                    var mealObj = $firebaseObject(fbjObj);
+
+                    mealObj.$remove().then(function () {
+                      console.log("deletion successful");
+                    }, function (err) {
+                      console.log(err);
+                    });
+                  }
+
+                }
+              });
+
             },
 
             deleteMeal: function (guid) {
@@ -561,55 +642,120 @@ app.service("medicineService", function ($q, $firebaseObject) {
                 console.log(error);
             })
 
-        }
+        },
+
+      getMeds: function(callBack){
+        var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/medicine/";
+        var fbObj = new Firebase(url);
+        var allMeds = [];
+        var num = 0;
+
+        fbObj.orderByChild("date").once("value", function(snapshot){
+          for (var p in snapshot.val()) {
+            if (snapshot.val().hasOwnProperty(p)) {
+              var currentMed = snapshot.val()[p];
+              currentMed.key = p;
+              allMeds[num] = currentMed;
+              num++;
+            }
+          }
+          //var currentMed = {};
+          //currentMed.key = snapshot.key();
+          //var key = currentMed.key; //do I need this?
+          //
+          //currentMed.name = snapshot.val().name;
+          //currentMed.taken = snapshot.val().taken;
+          //currentMed.amount = snapshot.val().amount;
+          //currentMed.extra = snapshot.val().extra;
+          //currentMed.date = snapshot.val().date;
+          //
+          //allMeds[num] = currentMed;
+          //num++;
+          console.log(allMeds);
+          callBack(allMeds);
+        });
+
+
+      }
     };
 })
 
-app.service("NutritionService", function(){
-    return {
+app.service("NutritionService", function($firebaseArray){
+  return{
+
     viewingNutrition: null,
     setViewingNutrition: function (nutrition) {
         this.viewingNutrition = nutrition;
     },
-    getNutrition: function(){
+
+    getNutrition: function(startDate, endDate, callBack){
       var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutrition/";
       var fbObj = new Firebase(url);
       var allMeals = [];
       //var currMeal = {};
       var num = 0;
+      var key;
+      var test;
 
-            fbObj.orderByChild("date").on("child_added", function (snapshot) {
-        //TODO create an object and then add the datq for each key to the object
-        //This is basically a for each loop. It will go through and get
-        var currMeal = {};
-        currMeal.key = snapshot.key();
-        var key = currMeal.key;
+     // var allMeals = $firebaseArray(fbObj);
+     //
+     // allMeals.$loaded().then(function () {
+     //   console.log(allMeals);
+     // }).catch(function (err) {
+     //   console.log(err);
+     // });
+     //  test = allMeals[0];
+     // // var meals = allMeals[0].$id;
+     //  allMeals.$loaded()
+     //    .then(function(){
+     //      angular.forEach(allMeals, function(user) {
+     //        console.log(user);
+     //      })
+     //    });
 
-        currMeal.mealName = snapshot.val().mealName;
-        currMeal.meal = snapshot.val().meal;
-        currMeal.date = snapshot.val().date;
-        currMeal.time = snapshot.val().time;
-        currMeal.comments = snapshot.val().comments;
-        allMeals[num] = currMeal;
+      // var query = fbObj.orderByChild("date");
+      // test = $firebaseArray(query);
+      // console.log(query);
 
-        num++;
+      // for(key in allMeals){
+      //   test = allMeals[key];
+      //   console.log(key);
+      //   //if(new Date(snapshot.val()[p].date) >= startDate &&  new Date(allMeals[i].date) <= endDate) {
+      // }
 
-        //currMeal.key = snapshot.key();
-        //currMeal.mealName = snapshot.val().mealName;
-        //allMeals.meal = currMeal;
-        //console.log(snapshot.key());
-        //console.log(snapshot.val().mealName);
-        //console.log(snapshot.val().time);
-        //console.log(allMeals);
-        //console.log(currMeal);
-        //console.log(allMeals);
+      fbObj.orderByChild("date").once("value", function(snapshot){
+        //console.log(snapshot.val());
+
+        for (var p in snapshot.val()) {
+          if (snapshot.val().hasOwnProperty(p)) {
+            //console.log(p);
+            if(new Date(snapshot.val()[p].date) >= startDate &&  new Date(snapshot.val()[p].date) <= endDate) {
+              var currMeal = snapshot.val()[p];
+              currMeal.key = p;
+              //currMeal.mealName = snapshot.val()[p].mealName;
+              //currMeal.meal = snapshot.val()[p].meal;
+              //currMeal.date = snapshot.val()[p].date;
+              //currMeal.time = snapshot.val().time;
+              //currMeal.comments = snapshot.val().comments;
+              allMeals[num] = currMeal;
+
+              num++;
+            }
+          }
+        }
+
+        console.log(allMeals);
+        callBack(allMeals);
       });
 
-      return allMeals;
+
+      //console.log(meals);
+
+     // return allMeals;
+      //return meals;
     }
   }
 })
-
 
 app.service("pullRecipeFirebaseService", function ($firebaseArray) {
     return {
