@@ -1,0 +1,55 @@
+﻿<ion-view title="View Nutrition">
+    <ion-content overflow-scroll="true" padding="true" class="has-header">
+        <form class="list">
+            <section>
+                <label class="item item-input">
+                    <span class="input-label">Meal Name</span>
+                    <span type="text">{{nutrition.mealName}}</span>
+                </label>
+                <label class="item item-input">
+                    <span class="input-label">Meal Type</span>
+                    <span typeof="text">{{nutrition.meal}}</span>
+                </label>
+                <label class="item item-input">
+                    <div class="input-label">
+                        Date :
+                    </div>
+                    <span type="date">{{nutrition.date  | date:'MM/dd/yyyy'}}</span>
+                </label>
+                <label class="item item-input">
+                    <div class="input-label">
+                        Time :
+                    </div>
+                    <span type="date">{{nutrition.time  | date:'h:mm a'}}</span>
+                </label>
+                <br />
+                <ion-list>
+                    <img ng-src="data:image/jpeg;base64,{{nutrition.picture}}" height={{height}} width={{width}} alt="" />
+                </ion-list>
+                <ion-list class="item-icon-right">
+                    <ion-item ng-repeat="i in nutritionIngredients">
+                        <p>Name: {{i.ingName}}</p>
+                        <p>Calories : {{i.calories}} &nbsp;&nbsp;    Protein : {{i.protein}}</p>
+                        <p>Sugars : {{i.sugars}}   &nbsp;&nbsp;  Sodium : {{i.sodium}}</p>
+                        <p>Fat Content:  {{i.fatContent}} &nbsp;&nbsp; Food Color:  {{i.foodColor}} </p>
+                        <p>Freshness:  {{i.freshness}}  &nbsp;&nbsp; Quantity:  {{i.quantity}}</p>
+                        <p>Comments:  {{i.comments}}</p>
+                    </ion-item>
+                    <p></p>
+                    <p></p>
+                    <ion-item>
+                        <p>Totals for Meal</p>
+                        <p>Calories : {{nutrition.totalCal}} &nbsp;&nbsp;    Protein : {{nutrition.totalProtein}}</p>
+                        <p>Sugars : {{nutrition.totalSugars}}   &nbsp;&nbsp;  Sodium : {{nutrition.totalSodium}}</p>
+                        <p>Fat Content : {{nutrition.totalFat}}</p>
+                    </ion-item>
+                </ion-list>
+                <h4></h4>
+                <label class="item item-input item-floating-label">
+                    <span type="text">{{nutrition.comments}}</span>
+                </label>
+            </section>
+        </form>
+        <button class="button button-balanced button-block" type="submit">Edit Nutrition</button>
+    </ion-content>
+</ion-view>

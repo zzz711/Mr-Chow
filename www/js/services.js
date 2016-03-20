@@ -184,7 +184,7 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
 app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
 
     return {
-        saveNutrition: function (data, ingredients, pic) {
+        saveNutrition: function (data, ingredients, pic, totals) {
             var nutritionGuid = guid();
             nutritionTable = new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutrition/");
             nutritionTable = $firebaseArray(nutritionTable);
@@ -193,10 +193,15 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
                 nutritionGuid: nutritionGuid,
                 mealName: isUndefined(data.mealName),
                 meal: isUndefined(data.meal),
-                date: isUndefined( Date.parse(data.date)).toString(),
-                time: isUndefined( Date.parse(data.time)).toString(),
+                date: isUndefined(Date.parse(data.date)).toString(),
+                time: isUndefined(Date.parse(data.time)).toString(),
                 comments: isUndefined(data.comments),
-                picture: isUndefined(pic)
+                picture: isUndefined(pic),
+                totalCal: isUndefined(totals.calories),
+                totalProtein: isUndefined(totals.protein),
+                totalSugars: isUndefined(totals.sugars),
+                totalSodium: isUndefined(totals.sodium),
+                totalFat: isUndefined(totals.fatContent),
             });
 
             var x = 1;
@@ -227,9 +232,9 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
 
             recipeTable.$add({
                  recipeGuid: recipeGuid,
-                 recipeName:  isUndefined(data.recipeName),
-                 prepTime:  isUndefined(data.prepTime),
-                 cookingTime:  isUndefined(data.cookingTime),
+                recipeName: isUndefined(data.recipeName),
+                prepTime: isUndefined(data.prepTime),
+                cookingTime: isUndefined(data.cookingTime),
                  servesNMany: isUndefined(data.servesNMany),
                  recipeDesc: isUndefined(data.recipeDesc),
                  totalCal: isUndefined(totals.calories),
@@ -237,13 +242,13 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
                  totalSugars: isUndefined(totals.sugars),
                  totalSodium: isUndefined(totals.sodium),
                  totalFat: isUndefined(totals.fatContent),
-                 picture : isUndefined(pic)
+                picture: isUndefined(pic)
 
              });
             var x = 1;
 
             angular.forEach(ingredients, function (ing, index) {
-                var ingredientTable = new Firebase("https://boiling-fire-9023.firebaseio.com/"+ getUID() +"/recipeIngredient/");
+                var ingredientTable = new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/recipeIngredient/");
                 ingredientTable = $firebaseArray(ingredientTable);
 
                 var ingredientGuid = guid();
@@ -251,15 +256,15 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
                 ingredientTable.$add({
                             recipeGuid: recipeGuid,
                             ingredientGuid: ingredientGuid,
-                            ingName:  isUndefined(ing.ingName),
+                    ingName: isUndefined(ing.ingName),
                             fatContent: isUndefined(ing.fatContent),
-                            calories : isUndefined(ing.calories),
-                            protein : isUndefined(ing.protein),
-                            sugars : isUndefined(ing.sugars),
-                            sodium : isUndefined(ing.sodium),
-                            freshness:  isUndefined(ing.freshness),
-                            quantity:  isUndefined(ing.quantity),
-                            comments:  isUndefined(ing.comments)
+                    calories: isUndefined(ing.calories),
+                    protein: isUndefined(ing.protein),
+                    sugars: isUndefined(ing.sugars),
+                    sodium: isUndefined(ing.sodium),
+                    freshness: isUndefined(ing.freshness),
+                    quantity: isUndefined(ing.quantity),
+                    comments: isUndefined(ing.comments)
                         });
             });
       }
@@ -360,7 +365,22 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
         var x = [];
         var i = 1;
         var pageCalled = "";
-
+    var localSetIngredients = function (data) {
+        x.push({
+            id: i,
+            ingName: isUndefined(data.ingName),
+            fatContent: isBlank(isUndefined(data.fatContent)),
+            foodColor: isUndefined(data.foodColor),
+            calories: isBlank(isUndefined(data.calories)),
+            protein: isBlank(isUndefined(data.protein)),
+            sugars: isBlank(isUndefined(data.sugars)),
+            sodium: isBlank(isUndefined(data.sodium)),
+            freshness: isUndefined(data.freshness),
+            quantity: isUndefined(data.quantity),
+            comments: isUndefined(data.comments)
+        });
+        i = i + 1;
+    }
         //page information that is passed between ingredient screen and another screen
         var passedPage = {
             id: "",
@@ -423,29 +443,22 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
 
           //get items from ingredient page and save
           setIngredient: function (data, $http) {
-              x.push({
-                    id: i,
-                    ingName: isUndefined(data.ingName),
-                    fatContent: isBlank(isUndefined(data.fatContent)),
-                    foodColor: isUndefined(data.foodColor),
-                    calories : isBlank(isUndefined(data.calories)),
-                    protein : isBlank(isUndefined(data.protein)),
-                    sugars : isBlank(isUndefined(data.sugars)),
-                    sodium : isBlank(isUndefined(data.sodium)),
-                    freshness: isUndefined(data.freshness),
-                    quantity: isUndefined(data.quantity),
-                    comments: isUndefined(data.comments)
-                });
-              i = i + 1;
+            localSetIngredients(data);
             },
 
             //returns every saved ingredient for list
-            getAllIngredient: function () {
+          getAllIngredient: function () {
                 return (x);
             },
 
             getPageVals: function () {
                 return passedPage;
+            },
+             
+            setAllIngredient: function (val) {
+            angular.forEach(val, function (obj) {
+                localSetIngredients(obj);
+            })
             },
 
             setPageVals: function (item) {
@@ -503,9 +516,10 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
                 passedPage.fatContent = "";
                 passedPage.quantity = "";
                 passedPage.comments = "";
+                return passedPage;
             },
-            setTotalEmpty: function(){
-                totalContents.fatContent =0;
+        setTotalEmpty: function () {
+            totalContents.fatContent = 0;
                 totalContents.calories = 0;
                 totalContents.protein = 0;
                 totalContents.sugars = 0;
@@ -513,7 +527,7 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
             },
            //empties service array
             resetArray: function () {
-                x = [];
+                x.splice(0, x.length);
                 return x;
             },
 
@@ -577,7 +591,7 @@ app.service("medicineService", function ($q, $firebaseObject) {
     }
 
   function load() {
-        var fbMed = new Firebase("https://boiling-fire-9023.firebaseio.com"+ getUID() + "/medicine/");
+        var fbMed = new Firebase("https://boiling-fire-9023.firebaseio.com" + getUID() + "/medicine/");
         var medObj = $firebaseObject(fbMed);
 
         medObj.$loaded()
@@ -669,6 +683,13 @@ app.service("medicineService", function ($q, $firebaseObject) {
 app.service("NutritionService", function($firebaseArray){
   return{
     getNutrition: function(startDate, endDate, callBack){
+app.service("NutritionService", function(){
+    return {
+    viewingNutrition: null,
+    setViewingNutrition: function (nutrition) {
+        this.viewingNutrition = nutrition;
+    },
+    getNutrition: function(){
       var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutrition/";
       var fbObj = new Firebase(url);
       var allMeals = [];
@@ -737,11 +758,10 @@ app.service("NutritionService", function($firebaseArray){
   }
 })
 
-app.service("pullRecipeFirebaseService", function ($firebaseArray)
-{
+app.service("pullRecipeFirebaseService", function ($firebaseArray) {
     return {
         pullRecipe: function () {
-            return $firebaseArray(new Firebase("https://boiling-fire-9023.firebaseio.com/"+getUID() + "/recipe/")).$loaded();
+            return $firebaseArray(new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/recipe/")).$loaded();
         }
     };
 })
@@ -767,6 +787,14 @@ app.service("pullNutritionFirebaseService", function ($firebaseArray) {
     return {
         pullNutrition: function () {
             return $firebaseArray(new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutrition/")).$loaded();
+        }
+    };
+})
+
+app.service("pullNutritionIngredientFirebaseService", function ($firebaseArray) {
+    return {
+        pullNutritionIngredients: function () {
+            return $firebaseArray(new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutritionIngredient/")).$loaded();
         }
     };
 })

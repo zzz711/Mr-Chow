@@ -45,7 +45,7 @@
                 </ion-list>
                 <a class="button button-stable" ng-click="addPicture()">Add a Picture</a>
                 <ion-list class="item-icon-right" ng-controller="addNutritionCtrl" ng-init="mealInfo()">
-                    <ion-item ng-repeat="i in returnVals">
+                    <ion-item ng-repeat="i in retVals">
                         <p>Name: {{i.ingName}}</p>
                         <p>Calories : {{i.calories}} &nbsp;&nbsp;    Protein : {{i.protein}}</p>
                         <p>Sugars : {{i.sugars}}   &nbsp;&nbsp;  Sodium : {{i.sodium}}</p>
