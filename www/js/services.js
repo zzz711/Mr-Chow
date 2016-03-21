@@ -181,13 +181,20 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
 });
 
 
-app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject, RecipeService) {
+app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject, NutritionService, RecipeService) {
 
     return {
         saveNutrition: function (data, ingredients, pic, totals) {
+            // delete the nutrition if it already exists
+
+            if (NutritionService.viewingNutrition != null) {
+                NutritionService.deleteNutrition(NutritionService.viewingNutrition);
+            }
+
             var nutritionGuid = guid();
             nutritionTable = new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutrition/");
             nutritionTable = $firebaseArray(nutritionTable);
+
             nutritionTable.$add({
                 nutritionGuid: nutritionGuid,
                 mealName: isUndefined(data.mealName),
@@ -205,7 +212,6 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject, R
 
             var x = 1;
             angular.forEach(ingredients, function (ing, index) {
-
                 var ingredientGuid = guid();
                 var ingredientTable = new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutritionIngredient/");
                 ingredientTable = $firebaseArray(ingredientTable);
@@ -226,15 +232,14 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject, R
             });
         },
         saveRecipe: function (data, ingredients, totals, pic) {
-            console.log(totals);
-            console.log(ingredients);
+            // delete the recipe if it already exists
+            if (RecipeService.viewingRecipe != null) {
+                RecipeService.deleteRecipe(RecipeService.viewingRecipe);
+            }
+
             var recipeGuid = guid();
             recipeTable = new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/recipe/");
             recipeTable = $firebaseArray(recipeTable);
-            data.recipeGuid = recipeGuid;
-
-            // delete the recipe if it already exists
-            RecipeService.deleteRecipe(data);
 
             recipeTable.$add({
                  recipeGuid: recipeGuid,
@@ -254,6 +259,7 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject, R
             var x = 1;
 
             angular.forEach(ingredients, function (ing, index) {
+                console.log(ing);
                 var ingredientTable = new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/recipeIngredient/");
                 ingredientTable = $firebaseArray(ingredientTable);
 
@@ -377,23 +383,24 @@ app.service("RecipeService", function ($q, $ionicPopup, $firebaseObject, pullRec
 app.service('addIngredientService', function ($q, $firebaseObject) {
         var x = [];
         var i = 1;
+        var editRecipe = 0;
         var pageCalled = "";
-    var localSetIngredients = function (data) {
-        x.push({
-            id: i,
-            ingName: isUndefined(data.ingName),
-            fatContent: isBlank(isUndefined(data.fatContent)),
-            foodColor: isUndefined(data.foodColor),
-            calories: isBlank(isUndefined(data.calories)),
-            protein: isBlank(isUndefined(data.protein)),
-            sugars: isBlank(isUndefined(data.sugars)),
-            sodium: isBlank(isUndefined(data.sodium)),
-            freshness: isUndefined(data.freshness),
-            quantity: isUndefined(data.quantity),
-            comments: isUndefined(data.comments)
-        });
-        i = i + 1;
-    }
+        var localSetIngredients = function (data) {
+            x.push({
+                id: i,
+                ingName: isUndefined(data.ingName),
+                fatContent: isBlank(isUndefined(data.fatContent)),
+                foodColor: isUndefined(data.foodColor),
+                calories: isBlank(isUndefined(data.calories)),
+                protein: isBlank(isUndefined(data.protein)),
+                sugars: isBlank(isUndefined(data.sugars)),
+                sodium: isBlank(isUndefined(data.sodium)),
+                freshness: isUndefined(data.freshness),
+                quantity: isUndefined(data.quantity),
+                comments: isUndefined(data.comments)
+            });
+            i = i + 1;
+        }
         //page information that is passed between ingredient screen and another screen
         var passedPage = {
             id: "",
@@ -419,20 +426,27 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
 
       return {
           totalContentsAdd: function (data, $http) {
-              totalContents.fatContent = totalContents.fatContent + isBlank(isUndefined(data.fatContent));
-              totalContents.calories = totalContents.calories + isBlank(isUndefined(data.calories));
-              totalContents.protein = totalContents.protein + isBlank(isUndefined(data.protein));
-              totalContents.sugars = totalContents.sugars + isBlank(isUndefined(data.sugars));
-              totalContents.sodium = totalContents.sodium + isBlank(isUndefined(data.sodium));
+              totalContents.fatContent = totalContents.fatContent + Math.round(isBlank(isUndefined(data.fatContent)));
+              totalContents.calories = totalContents.calories + Math.round(isBlank(isUndefined(data.calories)));
+              totalContents.protein = totalContents.protein + Math.round(isBlank(isUndefined(data.protein)));
+              totalContents.sugars = totalContents.sugars + Math.round(isBlank(isUndefined(data.sugars)));
+              totalContents.sodium = totalContents.sodium + Math.round(isBlank(isUndefined(data.sodium)));
           },
 
           totalContentsSub: function (data, $http) {
-              totalContents.fatContent = totalContents.fatContent - isBlank(isUndefined(data.fatContent));
-              totalContents.calories = totalContents.calories - isBlank(isUndefined(data.calories));
-              totalContents.protein = totalContents.protein - isBlank(isUndefined(data.protein));
-              totalContents.sugars = totalContents.sugars - isBlank(isUndefined(data.sugars));
-              totalContents.sodium = totalContents.sodium - isBlank(isUndefined(data.sodium));
+              totalContents.fatContent = totalContents.fatContent - Math.round(isBlank(isUndefined(data.fatContent)));
+              totalContents.calories = totalContents.calories - Math.round(isBlank(isUndefined(data.calories)));
+              totalContents.protein = totalContents.protein - Math.round(isBlank(isUndefined(data.protein)));
+              totalContents.sugars = totalContents.sugars - Math.round(isBlank(isUndefined(data.sugars)));
+              totalContents.sodium = totalContents.sodium - Math.round(isBlank(isUndefined(data.sodium)));
               return totalContents;
+          },
+          totalUpdate: function (data, $http) {
+              totalContents.fatContent = isBlank(isUndefined(data.totalFat));
+              totalContents.calories = isBlank(isUndefined(data.totalCal));
+              totalContents.protein = isBlank(isUndefined(data.totalProtein));
+              totalContents.sugars = isBlank(isUndefined(data.totalSugars));
+              totalContents.sodium = isBlank(isUndefined(data.totalSodium));
           },
 
           getTotalContents: function ($http) {
@@ -448,6 +462,15 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
           setPageCalled: function (pageCallingData, $http) {
               pageCalled = pageCallingData;
           },
+         
+          getedit: function ($http) {
+              return editRecipe;
+          },
+          setedit: function (data, $http) {
+              editRecipe = data;
+          },
+
+
 
           //gets current page status
           getSpecificIngredient: function () {
@@ -461,7 +484,6 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
 
             //returns every saved ingredient for list
           getAllIngredient: function () {
-              console.log(x);
               return x;
             },
 
@@ -496,7 +518,6 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
             },
 
             deleteSpecificIngredient: function (val) {
-                console.log("delete specific");
                 var index = x.indexOf(val);
                 x.splice(index, 1);
                 return x;
@@ -542,11 +563,10 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
             },
            //empties service array
             resetArray: function () {
-                console.log("reset array");
                     x.splice(0, x.length);
                     return x;
             },
-
+/*
             getIng: function (recipeGUID, callBack) {
                 console.log("geting");
                   var url = "https://boiling-fire-9023.firebaseio.com/";
@@ -579,7 +599,6 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
             },
 
             deleteMeal: function (guid) {
-                console.log("delete meal");
                 var url = "https://boiling-fire-9023.firebaseio.com/";
                 var partURL = url.concat(getUID());
                 var fullURL = partURL.concat("/nutrition/" + guid.$id);
@@ -592,7 +611,7 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
                     console.log(error);
                 })
 
-            }
+            }*/
         };
     });
 
@@ -622,8 +641,14 @@ app.service("medicineService", function ($q, $firebaseObject) {
 
     }
 
-    return {
-        add: function (data) {
+  return {
+      viewingMed: null,
+      setViewingMed: function (nutrition) {
+          this.viewingNutrition = nutrition;
+      }    ,
+      add: function (data) {
+
+          
             var medGUID = guid();
             var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/medicine/";
             var fullUrl = url.concat(medGUID.toString());
@@ -698,7 +723,7 @@ app.service("medicineService", function ($q, $firebaseObject) {
     };
 })
 
-app.service("NutritionService", function ($firebaseArray) {
+app.service("NutritionService", function ($firebaseArray, $firebaseObject, pullNutritionIngredientFirebaseService) {
     return {
 
     viewingNutrition: null,
@@ -706,7 +731,7 @@ app.service("NutritionService", function ($firebaseArray) {
         this.viewingNutrition = nutrition;
     },
 
-        getNutrition: function (startDate, endDate, callBack) {
+      getNutrition: function (startDate, endDate, callBack) {
       var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutrition/";
       var fbObj = new Firebase(url);
       var allMeals = [];
@@ -730,7 +755,34 @@ app.service("NutritionService", function ($firebaseArray) {
         console.log(allMeals);
         callBack(allMeals);
       });
-    }
+      },
+      deleteNutrition: function (nutrition) {
+          var url = "https://boiling-fire-9023.firebaseio.com/";
+          var partURL = url.concat(getUID());
+          var fullURL = partURL.concat("/nutrition/" + nutrition.$id);
+          var fbMeal = new Firebase(fullURL);
+          var mealObj = $firebaseObject(fbMeal);
+          var nutritionGUID = nutrition.nutritionGuid;
+
+          // delete associated recipeIngredients
+          pullNutritionIngredientFirebaseService.pullNutritionIngredients().then(function (result) {
+              var toDelete = result.filter(function (nutritionIngredient) {
+                  return nutritionIngredient.nutritionGuid === nutrition.nutritionGuid;
+              });
+              for (var i = 0; i < toDelete.length; ++i) {
+                  var fbNutritionIngredient = $firebaseObject(new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutritionIngredient/" + toDelete[i].$id));
+                  fbNutritionIngredient.$remove();
+              }
+          });
+
+          // delete recipe
+          mealObj.$remove().then(function (ref) {
+              console.log("item deleted");
+          }, function (error) {
+              console.log(error);
+          });
+      },
+
   }
 })
 
