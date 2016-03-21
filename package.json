@@ -28,7 +28,8 @@
     "phonegap-plugin-push",
     "org.apache.cordova.camera",
     "cordova-plugin-camera@2.1.0",
-    "cordova-plugin-x-socialsharing"
+    "cordova-plugin-x-socialsharing",
+    "cordova-plugin-file"
   ],
   "cordovaPlatforms": [
     "android"

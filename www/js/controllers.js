@@ -160,7 +160,6 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
         var Medicine = {};
         var Recipe = {};
         var outPut = null;
-
         // var email = {
         //   to: recipient,
         //   cc: ccArr,
@@ -251,9 +250,9 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
                     //email.body =table;
                 }
                 //table.append(node);
-                console.log(outPut);
 
-                $scope.sendEmail(outPut)
+                console.log(outPut);
+                $scope.sendEmail(outPut);
             });
 
         }
@@ -267,14 +266,14 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
         var bccArr = null;
         var file = null;
 
-        //TODO: get data form a service
-        if ($scope.formData.NutritionInfo) {
-            data.nutrion = NutritionService.getNutrition();
-        }
+        // //TODO: get data form a service
+        // if ($scope.formData.NutritionInfo) {
+        //     data.nutrion = NutritionService.getNutrition();
+        // }
+        //
+        // console.log(data);
 
-        console.log(data);
-
-        $cordovaSocialSharing.shareViaEmail(data, subject, recipient, ccArr, bccArr, file)
+        $cordovaSocialSharing.shareViaEmail(message, subject, recipient, ccArr, bccArr, file)
           //.canShareViaEmail()
           .then(function (result) {
               console.log("Success!");
@@ -708,7 +707,7 @@ app.controller('addARecipeCtrl', function ($scope, pullRecipeIngredientFirebaseS
                 addIngredientService.setTotalEmpty();
                 addIngredientService.resetArray();
                 RecipeService.setViewingRecipe(null);
-            
+
                 $state.go('main.recipeBook', {}, { reload: true });
             }
     };
@@ -760,7 +759,7 @@ app.controller('viewRecipeCtrl', function ($scope, $http, $state, $window, $ioni
 
 
     $scope.editRecipe = function () {
-            $state.go("addARecipe");       
+            $state.go("addARecipe");
     }
 })
 
@@ -780,7 +779,7 @@ app.controller('addNutritionCtrl', function ($scope, $http, RecipeService, pullN
     $scope.picture = "";
     $scope.height = "0px";
     $scope.width = "0px";
-    $scope.pull = ""; 
+    $scope.pull = "";
     $scope.retVals = "";
     $scope.totalVal = addIngredientService.getTotalContents($http);
 
