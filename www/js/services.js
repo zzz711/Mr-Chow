@@ -181,7 +181,7 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
 });
 
 
-app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
+app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject, RecipeService) {
 
     return {
         saveNutrition: function (data, ingredients, pic, totals) {
@@ -229,6 +229,10 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
             var recipeGuid = guid();
             recipeTable = new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/recipe/");
             recipeTable = $firebaseArray(recipeTable);
+            data.recipeGuid = recipeGuid;
+
+            // delete the recipe if it already exists
+            RecipeService.deleteRecipe(data);
 
             recipeTable.$add({
                  recipeGuid: recipeGuid,
@@ -271,7 +275,7 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
     };
  })
 
-app.service("RecipeService", function ($q,$ionicPopup, $firebaseObject, addIngredientService) {
+app.service("RecipeService", function ($q, $ionicPopup, $firebaseObject, pullRecipeIngredientFirebaseService) {
     var self = {
         'page': 0,
         'page_size': '20',
@@ -303,23 +307,31 @@ app.service("RecipeService", function ($q,$ionicPopup, $firebaseObject, addIngre
         setViewingRecipe: function (recipe) {
             self.viewingRecipe = recipe;
         },
-        deleteRecipe: function (guid) {
+        deleteRecipe: function (recipe) {
             var url = "https://boiling-fire-9023.firebaseio.com/";
             var partURL = url.concat(getUID());
-            var fullURL = partURL.concat("/recipe/" + guid.$id);
+            var fullURL = partURL.concat("/recipe/" + recipe.$id);
             var fbMeal = new Firebase(fullURL);
             var mealObj = $firebaseObject(fbMeal);
-            var recipeGUID = guid.recipeGuid;
+            var recipeGUID = recipe.recipeGuid;
 
-            //TODO: fix
-            addIngredientService.getIng(recipeGUID);
+            // delete associated recipeIngredients
+            pullRecipeIngredientFirebaseService.pullRecipeIngredients().then(function (result) {
+                var toDelete = result.filter(function (recipeIngredient) {
+                    return recipeIngredient.recipeGuid === recipe.recipeGuid;
+                });
+                for (var i = 0; i < toDelete.length; ++i) {
+                    var fbRecipeIngredient = $firebaseObject(new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/recipeIngredient/" + toDelete[i].$id));
+                    fbRecipeIngredient.$remove();
+                }
+            });
 
+            // delete recipe
             mealObj.$remove().then(function(ref){
               console.log("item deleted");
             }, function(error){
               console.log(error);
             });
-
       },
 
       getRecipe: function(callBack){
