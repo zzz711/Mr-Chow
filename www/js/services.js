@@ -174,13 +174,12 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
             var nutritionGuid = guid();
             nutritionTable = new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutrition/");
             nutritionTable = $firebaseArray(nutritionTable);
-
             nutritionTable.$add({
                 nutritionGuid: nutritionGuid,
                 mealName: isUndefined(data.mealName),
                 meal: isUndefined(data.meal),
-                date: isUndefined(Date.parse(data.date)).toString(),
-                time: isUndefined(Date.parse(data.time)).toString(),
+                date: isUndefined(data.date).toString(),
+                time: isUndefined(data.time).toString(),
                 comments: isUndefined(data.comments),
                 picture: isUndefined(pic),
                 totalCal: isUndefined(totals.calories),
@@ -192,6 +191,7 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
 
             var x = 1;
             angular.forEach(ingredients, function (ing, index) {
+                
                 var ingredientGuid = guid();
                 var ingredientTable = new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutritionIngredient/");
                 ingredientTable = $firebaseArray(ingredientTable);
@@ -335,10 +335,10 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
             id: "",
             foodColor: "",
             fatContent: "",
-        calories: "",
-        protein: "",
-        sugars: "",
-        sodium: "",
+            calories: "",
+            protein: "",
+            sugars: "",
+            sodium: "",
             freshness: "",
             quantity: "",
             comments: ""
@@ -358,15 +358,15 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
               totalContents.fatContent = totalContents.fatContent + isBlank(isUndefined(data.fatContent));
               totalContents.calories = totalContents.calories + isBlank(isUndefined(data.calories));
               totalContents.protein = totalContents.protein + isBlank(isUndefined(data.protein));
-            totalContents.sugars = totalContents.sugars + isBlank(isUndefined(data.sugars));
+              totalContents.sugars = totalContents.sugars + isBlank(isUndefined(data.sugars));
               totalContents.sodium = totalContents.sodium + isBlank(isUndefined(data.sodium));
           },
 
           totalContentsSub: function (data, $http) {
               totalContents.fatContent = totalContents.fatContent - isBlank(isUndefined(data.fatContent));
-            totalContents.calories = totalContents.calories - isBlank(isUndefined(data.calories));
-            totalContents.protein = totalContents.protein - isBlank(isUndefined(data.protein));
-            totalContents.sugars = totalContents.sugars - isBlank(isUndefined(data.sugars));
+              totalContents.calories = totalContents.calories - isBlank(isUndefined(data.calories));
+              totalContents.protein = totalContents.protein - isBlank(isUndefined(data.protein));
+              totalContents.sugars = totalContents.sugars - isBlank(isUndefined(data.sugars));
               totalContents.sodium = totalContents.sodium - isBlank(isUndefined(data.sodium));
               return totalContents;
           },
@@ -405,9 +405,9 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
             },
              
             setAllIngredient: function (val) {
-            angular.forEach(val, function (obj) {
-                localSetIngredients(obj);
-            })
+                angular.forEach(val, function (obj) {
+                    localSetIngredients(obj);
+                })
             },
 
             setPageVals: function (item) {

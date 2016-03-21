@@ -29,18 +29,24 @@
                 <ion-list class="item-icon-right">
                     <ion-item ng-repeat="i in nutritionIngredients">
                         <p>Name: {{i.ingName}}</p>
-                        <p>Calories : {{i.calories}} &nbsp;&nbsp;    Protein : {{i.protein}}</p>
-                        <p>Sugars : {{i.sugars}}   &nbsp;&nbsp;  Sodium : {{i.sodium}}</p>
-                        <p>Fat Content:  {{i.fatContent}} &nbsp;&nbsp; Food Color:  {{i.foodColor}} </p>
-                        <p>Freshness:  {{i.freshness}}  &nbsp;&nbsp; Quantity:  {{i.quantity}}</p>
+                        <p>Calories : {{i.calories}} </p>
+                        <p>Protein : {{i.protein}} </p>
+                        <p>Sugars : {{i.sugars}} </p>
+                        <p>Sodium : {{i.sodium}} </p>
+                        <p>Fat Content:  {{i.fatContent}} </p>
+                        <p>Food Color:  {{i.foodColor}} </p>
+                        <p>Freshness:  {{i.freshness}} </p>
+                        <p>Quantity:  {{i.quantity}} </p>
                         <p>Comments:  {{i.comments}}</p>
                     </ion-item>
                     <p></p>
                     <p></p>
                     <ion-item>
                         <p>Totals for Meal</p>
-                        <p>Calories : {{nutrition.totalCal}} &nbsp;&nbsp;    Protein : {{nutrition.totalProtein}}</p>
-                        <p>Sugars : {{nutrition.totalSugars}}   &nbsp;&nbsp;  Sodium : {{nutrition.totalSodium}}</p>
+                        <p>Calories : {{nutrition.totalCal}}</p>
+                        <p>Protein : {{nutrition.totalProtein}}</p>
+                        <p>Sugars : {{nutrition.totalSugars}}</p>
+                        <p>Sodium : {{nutrition.totalSodium}}</p>
                         <p>Fat Content : {{nutrition.totalFat}}</p>
                     </ion-item>
                 </ion-list>
@@ -50,6 +56,6 @@
                 </label>
             </section>
         </form>
-        <button class="button button-balanced button-block" type="submit">Edit Nutrition</button>
+        <button class="button button-balanced button-block" ng-click="editNutrition()" type="submit">Edit Nutrition</button>
     </ion-content>
 </ion-view>
