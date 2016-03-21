@@ -629,7 +629,9 @@ app.controller('addARecipeCtrl', function ($scope, pullRecipeIngredientFirebaseS
 
     //logic to fill ingredient page when we navigate to it. Ensures no ingredient dups
     $scope.$on('$ionicView.enter', function () {
+        
         if (RecipeService.viewingRecipe != null) {
+            console.log("yolo");
             addIngredientService.setEmpty();
             addIngredientService.setTotalEmpty();
             addIngredientService.resetArray();
@@ -648,7 +650,6 @@ app.controller('addARecipeCtrl', function ($scope, pullRecipeIngredientFirebaseS
     $scope.ingredient = function () {
             $scope.retVals = addIngredientService.getAllIngredient();
             $scope.totalVal = addIngredientService.getTotalContents($http);
-        
     };
 
     //ng-repeat remove ing
@@ -682,8 +683,8 @@ app.controller('addARecipeCtrl', function ($scope, pullRecipeIngredientFirebaseS
             }
             else {
                 $scope.retVals = addIngredientService.getAllIngredient();
-
-            addToFirebaseService.saveRecipe($scope.addRecipeForm, $scope.retVals, $scope.totalVal, $scope.picture);
+                $scope.totalVal = addIngredientService.getTotalContents($http);
+                addToFirebaseService.saveRecipe($scope.addRecipeForm, $scope.retVals, $scope.totalVal, $scope.picture);
                 $scope.addRecipeForm.recipeName = "";
                 $scope.addRecipeForm.recipeDesc = "";
                 $scope.addRecipeForm.servesNMany = "";
