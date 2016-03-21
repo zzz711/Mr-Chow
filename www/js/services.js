@@ -205,7 +205,7 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
 
             var x = 1;
             angular.forEach(ingredients, function (ing, index) {
-                
+
                 var ingredientGuid = guid();
                 var ingredientTable = new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutritionIngredient/");
                 ingredientTable = $firebaseArray(ingredientTable);
@@ -450,11 +450,11 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
           getAllIngredient: function () {
                 return (x);
             },
-            
+
             getPageVals: function () {
                 return passedPage;
             },
-             
+
             setAllIngredient: function (val) {
             angular.forEach(val, function (obj) {
                 localSetIngredients(obj);
@@ -547,7 +547,7 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
                   if(recipeGUID === snapshot.val()[p].recipeGuid){
                     console.log("match");
                     var ingObj = new Firebase(fullURL + p + "/");
-                    var mealObj = $firebaseObject(fbjObj);
+                    var mealObj = $firebaseObject(ingObj);
 
                     mealObj.$remove().then(function () {
                       console.log("deletion successful");
