@@ -241,13 +241,13 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
                 //console.log(Data.Recipe);
                 var node = JsonHuman.format(Recipe);
                 //var node = prettyPrint(Recipe);
-                if (outPut === null) {
-                    outPut = node;
+                if (outPut != null) {
+                  outPut.appendChild(node);
                     // email.body =table;
                 }
                 else {
-                    outPut.appendChild(node);
-                    //email.body =table;
+                  outPut = node;
+                  //email.body =table;
                 }
                 //table.append(node);
 
@@ -259,21 +259,16 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
 
     };
 
-    $scope.sendEmail = function (message) {
+    $scope.sendEmail = function (outPut) {
         var subject = "Test";
         var recipient = $scope.formData.recipient;
         var ccArr = null;
         var bccArr = null;
         var file = null;
 
-        // //TODO: get data form a service
-        // if ($scope.formData.NutritionInfo) {
-        //     data.nutrion = NutritionService.getNutrition();
-        // }
-        //
-        // console.log(data);
 
-        $cordovaSocialSharing.shareViaEmail(message, subject, recipient, ccArr, bccArr, file)
+
+        $cordovaSocialSharing.shareViaEmail(outPut, subject, recipient, ccArr, bccArr, file)
           //.canShareViaEmail()
           .then(function (result) {
               console.log("Success!");
