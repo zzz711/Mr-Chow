@@ -140,55 +140,6 @@ app.controller('myAccountCtrl', function ($scope, $ionicPopup, AuthService, $sta
 
 })
 
-app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, NutritionService) {
-    $scope.formData = {
-        NutritionInfo: false,
-        MedInfo: false,
-        RecipeInfo: false,
-        StartDate: null,
-        EndDate: null,
-        recipient: ""
-
-    };
-
-    $scope.shareData = function () {
-        var data = {}; //do I want to put the retrieved information in the email body or as an attachment?
-        var subject = "Test";
-        var recipient = [$scope.formData.recipient];
-        var ccArr = null;
-        var bccArr = null;
-        var file = null;
-
-        //TODO: get data form a service
-        if ($scope.formData.NutritionInfo) {
-            data.nutrion = NutritionService.getNutrition();
-        }
-
-        console.log(data);
-
-        $cordovaSocialSharing.shareViaEmail(data, subject, recipient, ccArr, bccArr, file)
-          //.canShareViaEmail()
-          .then(function (result) {
-              console.log("Success!");
-          }, function (err) {
-              // An error occurred. Show a message to the user
-              console.log(err);
-
-          });
-
-        //cordova.plugins.email.open({
-        //  to:          recipient, // email addresses for TO field
-        //  cc:          ccArr, // email addresses for CC field
-        //  bcc:         bccArr, // email addresses for BCC field
-        //  attachments: file, // file paths or base64 data streams
-        //  subject:    subject, // subject of the email
-        //  body:       data // email body (for HTML, set isHtml to true)
-        //  //isHtml:    false, // indicats if the body is HTML or plain text
-        //});
-    }
-
-})
-
 app.controller('changePWCtrl', function ($scope, $ionicPopup, $state, AuthService) {
     $scope.formData = {
         password: "",
@@ -370,6 +321,7 @@ app.controller('recipeBookCtrl', function ($scope, $state, pullRecipeFirebaseSer
 
     $scope.editRecipe = function (obj) {
         RecipeService.setViewingRecipe(obj);
+        console.log(obj);
         $state.go("addARecipe");
     }
 
@@ -528,13 +480,6 @@ app.controller('viewRecipeCtrl', function ($scope, $http, $state, $window, $ioni
     }
 })
 
-app.controller('nutritionCtrl', function ($scope, pullNutritionFirebaseService, NutritionService) {
-        $scope.retVals2 = pullNutritionFirebaseService.pullNutrition().then(function (result) {
-            $scope.retVals = result;
-    });
-
-})
-
 app.controller('addNutritionCtrl', function ($scope, $http,RecipeService, pullNutritionIngredientFirebaseService, NutritionService, $state, $cordovaCamera, $ionicPopup, addIngredientService, addToFirebaseService, $filter) {
     $scope.formData = {
         mealName: "",
@@ -565,11 +510,7 @@ app.controller('addNutritionCtrl', function ($scope, $http,RecipeService, pullNu
             $scope.retVals = addIngredientService.resetArray();
             $scope.formData = NutritionService.viewingNutrition;
             $scope.totalVal = NutritionService.viewingNutrition;
-            var d = new Date($scope.formData.date);
-            var curr_date = d.getDate();
-            var curr_month = d.getMonth() + 1; //Months are zero based
-            var curr_year = d.getFullYear();
-            $scope.formData.date = curr_date + "/" + curr_month + "/" + curr_year;
+
             console.log($scope.modDate)
             console.log($scope.formData.time);
             console.log($scope.formData.date);
@@ -688,18 +629,6 @@ app.controller('viewNutritionCtrl', function ($scope, $state, NutritionService, 
     }
 })
 
-    app.controller('settingsCtrl', function ($scope, $state, AuthService) {
-        $scope.changePW = function () {
-            $state.go("changePW");
-        };
-
-        $scope.logOut = function () {
-            AuthService.logOut();
-            $state.go("recipeCardHolder");
-        };
-
-    })
-
 app.controller('addMedicineCtrl', function ($scope, $ionicPopup, medicineService, $state) {
         $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
             viewData.enableBack = true;
@@ -728,52 +657,6 @@ app.controller('addMedicineCtrl', function ($scope, $ionicPopup, medicineService
         }
         }
     })
-
-app.controller('myAccountCtrl', function ($scope, $ionicPopup, AuthService, $state) {
-    $scope.formData = {
-        email: ""
-    };
-
-    $scope.$on('$ionicView.enter', function () {
-        $scope.setEmail = function () {
-            console.log("current email");
-            //$document.getElementById("currentEmail").textContent = AuthService.getEmail();
-            $scope.currentEmail = AuthService.getEmail();
-
-        }
-    });
-
-    $scope.submit = function (form) {
-        $scope.data = {};
-        //TODO: use an ionic popup show to get password
-        var passwrd = $ionicPopup.show({
-            template: '<input type="password" ng-model="data.password">',
-            title: "Please Enter Your Password",
-            scope: $scope,
-            buttons: [
-              { text: 'Cancel' },
-              {
-                  text: '<b>Enter</b>',
-                  type: 'button-positive',
-                  onTap: function (e) {
-                      if (!$scope.data.password) {
-                          e.preventDefault();
-                      }
-                      else {
-                          //TODO clear form
-                          //            form.email = "";
-                          AuthService.changeEmail($scope.formData.email, $scope.data.password);
-
-                      }
-
-                  }
-              }
-            ]
-        });
-    }
-
-
-})
 
 app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, NutritionService, medicineService, RecipeService, $state, $cordovaEmailComposer) {
   $scope.formData = {
@@ -948,58 +831,7 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
 
 })
 
-app.controller('changePWCtrl', function ($scope, $ionicPopup, $state, AuthService) {
-    $scope.formData = {
-        password: "",
-        newPassword: "",
-        confirmNewPassword: ""
-    };
-
-
-
-    $scope.changePW = function (form) {
-        if ($scope.formData.newPassword === $scope.formData.confirmNewPassword) {
-            AuthService.changePW($scope.formData);
-            $state.go("login");
-        }
-        else if ($scope.formData.newPassword != $scope.formData.confirmNewPassword) {
-            $ionicPopup.alert({
-                title: "New Passwords Do Not Match"
-            });
-        }
-
-        else {
-            $ionicPopup.alert({
-                title: "An Error has Occurred",
-                template: "Please make sure all fields are filled out and are at least six characters in length"
-            });
-        }
-    };
-
-
-
-
-})
-
-app.controller('recipeBookCtrl', function ($scope, pullRecipeFirebaseService, RecipeService) {
-    $scope.retVals2 = pullRecipeFirebaseService.pullRecipe().then(function (result) {
-        $scope.retVals2 = $scope.retVals = result;
-    });
-    $scope.$watch('search', function (newValue) {
-        if (newValue) {
-            $scope.retVals2 = $scope.retVals.filter(function (recipe) { return recipe.recipeName.toLowerCase().indexOf(newValue.toLowerCase()) != -1; });
-        }
-        else {
-            $scope.retVals2 = $scope.retVals;
-        }
-    });
-
-    $scope.deleteRecipe = function (obj) {
-        RecipeService.deleteRecipe(obj);
-    }
-})
-
-    app.controller('medPullCtrl', function ($scope, $state, medicineService, pullMedsFirebaseService) {
+app.controller('medPullCtrl', function ($scope, $state, medicineService, pullMedsFirebaseService) {
         $scope.retVals2 = pullMedsFirebaseService.pullMeds().then(function (result) {
             $scope.retVals = result;
         });
@@ -1032,7 +864,7 @@ app.controller('dailyNutritionCtrl', function ($scope, $state, NutritionService,
     }
     })
 
-    app.controller('nutritionCtrl', function ($scope, $state, NutritionService, pullNutritionFirebaseService) {
+app.controller('nutritionCtrl', function ($scope, $state, NutritionService, pullNutritionFirebaseService) {
         $scope.retVals2 = pullNutritionFirebaseService.pullNutrition().then(function (result) {
             $scope.retVals = result;
         });
