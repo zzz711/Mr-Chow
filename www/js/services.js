@@ -181,7 +181,7 @@ app.service('AuthService', function ($q, $ionicPopup, $state) {
 });
 
 
-app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
+app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject, RecipeService) {
 
     return {
         saveNutrition: function (data, ingredients, pic, totals) {
@@ -192,8 +192,8 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
                 nutritionGuid: nutritionGuid,
                 mealName: isUndefined(data.mealName),
                 meal: isUndefined(data.meal),
-                date: isUndefined(data.date).toString(),
-                time: isUndefined(data.time).toString(),
+                date: data.date ? data.date.toUTCString() : isUndefined(data.date),
+                time: data.time ? data.time.toUTCString() : isUndefined(data.time),
                 comments: isUndefined(data.comments),
                 picture: isUndefined(pic),
                 totalCal: isUndefined(totals.calories),
@@ -205,7 +205,7 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
 
             var x = 1;
             angular.forEach(ingredients, function (ing, index) {
-                
+
                 var ingredientGuid = guid();
                 var ingredientTable = new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutritionIngredient/");
                 ingredientTable = $firebaseArray(ingredientTable);
@@ -229,6 +229,10 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
             var recipeGuid = guid();
             recipeTable = new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/recipe/");
             recipeTable = $firebaseArray(recipeTable);
+            data.recipeGuid = recipeGuid;
+
+            // delete the recipe if it already exists
+            RecipeService.deleteRecipe(data);
 
             recipeTable.$add({
                  recipeGuid: recipeGuid,
@@ -271,7 +275,7 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject) {
     };
  })
 
-app.service("RecipeService", function ($q, $ionicPopup, $firebaseObject, addIngredientService) {
+app.service("RecipeService", function ($q, $ionicPopup, $firebaseObject, pullRecipeIngredientFirebaseService) {
     var self = {
         'page': 0,
         'page_size': '20',
@@ -303,23 +307,31 @@ app.service("RecipeService", function ($q, $ionicPopup, $firebaseObject, addIngr
         setViewingRecipe: function (recipe) {
             self.viewingRecipe = recipe;
         },
-        deleteRecipe: function (guid) {
+        deleteRecipe: function (recipe) {
             var url = "https://boiling-fire-9023.firebaseio.com/";
             var partURL = url.concat(getUID());
-            var fullURL = partURL.concat("/recipe/" + guid.$id);
+            var fullURL = partURL.concat("/recipe/" + recipe.$id);
             var fbMeal = new Firebase(fullURL);
             var mealObj = $firebaseObject(fbMeal);
-            var recipeGUID = guid.recipeGuid;
+            var recipeGUID = recipe.recipeGuid;
 
-            //TODO: fix
-            addIngredientService.getIng(recipeGUID);
+            // delete associated recipeIngredients
+            pullRecipeIngredientFirebaseService.pullRecipeIngredients().then(function (result) {
+                var toDelete = result.filter(function (recipeIngredient) {
+                    return recipeIngredient.recipeGuid === recipe.recipeGuid;
+                });
+                for (var i = 0; i < toDelete.length; ++i) {
+                    var fbRecipeIngredient = $firebaseObject(new Firebase("https://boiling-fire-9023.firebaseio.com/" + getUID() + "/recipeIngredient/" + toDelete[i].$id));
+                    fbRecipeIngredient.$remove();
+                }
+            });
 
-            mealObj.$remove().then(function (ref) {
+            // delete recipe
+            mealObj.$remove().then(function(ref){
               console.log("item deleted");
             }, function (error) {
               console.log(error);
             });
-
       },
 
         getRecipe: function (callBack) {
@@ -449,11 +461,11 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
           getAllIngredient: function () {
                 return (x);
             },
-            
+
             getPageVals: function () {
                 return passedPage;
             },
-             
+
             setAllIngredient: function (val) {
             angular.forEach(val, function (obj) {
                 localSetIngredients(obj);
@@ -526,7 +538,7 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
                 totalContents.sodium = 0;
             },
            //empties service array
-        resetArray: function () {
+            resetArray: function () {
             console.log("reset array");
                 x.splice(0, x.length);
                 return x;

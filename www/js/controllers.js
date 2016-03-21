@@ -94,7 +94,7 @@ app.controller('myAccountCtrl', function ($scope, $ionicPopup, AuthService, $sta
             $scope.currentEmail = AuthService.getEmail();
 
         }
-    });
+            });
 
     $scope.submit = function (form) {
         $scope.data = {};
@@ -632,25 +632,25 @@ app.controller('addARecipeCtrl', function ($scope, pullRecipeIngredientFirebaseS
             $scope.addRecipeForm = RecipeService.viewingRecipe
             $scope.totalVal = RecipeService.viewingRecipe;
             pullRecipeIngredientFirebaseService.pullRecipeIngredients().then(function (result) {
-                addIngredientService.setAllIngredient(result.filter(function (recipeIngredient) {
-                    return recipeIngredient.recipeGuid === $scope.addRecipeForm.recipeGuid;
-                }));
-            });
+                    addIngredientService.setAllIngredient(result.filter(function (recipeIngredient) {
+                         return recipeIngredient.recipeGuid === $scope.addRecipeForm.recipeGuid;
+                    }));
+               });
         }
     });
 
     //ng-repeat ing func
     $scope.ingredient = function () {
-        $scope.retVals = addIngredientService.getAllIngredient();
-        $scope.totalVal = addIngredientService.getTotalContents($http);
-
+            $scope.retVals = addIngredientService.getAllIngredient();
+            $scope.totalVal = addIngredientService.getTotalContents($http);
+        
     };
 
     //ng-repeat remove ing
     $scope.setRemove = function (value) {
         $scope.retVals = addIngredientService.deleteSpecificIngredient(value);
         $scope.totalVal = addIngredientService.totalContentsSub(value);
-    };
+  };
 
     //full ing page with selected item
     $scope.setFill = function (value) {
@@ -671,31 +671,31 @@ app.controller('addARecipeCtrl', function ($scope, pullRecipeIngredientFirebaseS
     $scope.trackMeal = function () {
         console.log($scope);
         if ($scope.addRecipeForm.recipeName == "") {
-            $ionicPopup.alert({
-                title: 'Oh No! You missed something.',
-                template: 'Please add a recipe title.'
-            });
-        }
-        else {
-            $scope.retVals = addIngredientService.getAllIngredient();
+                $ionicPopup.alert({
+                    title: 'Oh No! You missed something.',
+                    template: 'Please add a recipe title.'
+                });
+            }
+            else {
+                $scope.retVals = addIngredientService.getAllIngredient();
 
             addToFirebaseService.saveRecipe($scope.addRecipeForm, $scope.retVals, $scope.totalVal, $scope.picture);
-            $scope.addRecipeForm.recipeName = "";
-            $scope.addRecipeForm.recipeDesc = "";
-            $scope.addRecipeForm.servesNMany = "";
-            $scope.addRecipeForm.prepTime = "";
-            $scope.addRecipeForm.cookingTime = "";
-            $scope.initialize = {};
-            $scope.picture = "";
-            $scope.height = "0px";
-            $scope.width = "0px";
-            addIngredientService.setEmpty();
-            addIngredientService.setTotalEmpty();
-            $scope.retVals = addIngredientService.resetArray();
-            RecipeService.setViewingRecipe("");
-            $state.go('main.recipeBook', {}, { reload: true });
-        }
-
+                $scope.addRecipeForm.recipeName = "";
+                $scope.addRecipeForm.recipeDesc = "";
+                $scope.addRecipeForm.servesNMany = "";
+                $scope.addRecipeForm.prepTime = "";
+                $scope.addRecipeForm.cookingTime = "";
+                $scope.initialize = {};
+                $scope.picture = "";
+                $scope.height = "0px";
+                $scope.width = "0px";
+                addIngredientService.setEmpty();
+                addIngredientService.setTotalEmpty();
+                $scope.retVals = addIngredientService.resetArray();
+                RecipeService.setViewingRecipe("");
+                $state.go('main.recipeBook', {}, { reload: true });
+            }
+        
     };
 
     $scope.addPicture = function () {
@@ -745,7 +745,7 @@ app.controller('viewRecipeCtrl', function ($scope, $http, $state, $window, $ioni
 
 
     $scope.editRecipe = function () {
-        $state.go("addARecipe");
+            $state.go("addARecipe");       
     }
 })
 
@@ -782,15 +782,10 @@ app.controller('addNutritionCtrl', function ($scope, $http, RecipeService, pullN
             addIngredientService.setTotalEmpty();
             $scope.retVals = addIngredientService.resetArray();
             $scope.formData = NutritionService.viewingNutrition;
+            $scope.formData.date = new Date($scope.formData.date);
+            $scope.formData.time = new Date($scope.formData.time);
             $scope.totalVal = NutritionService.viewingNutrition;
-            var d = new Date($scope.formData.date);
-            var curr_date = d.getDate();
-            var curr_month = d.getMonth() + 1; //Months are zero based
-            var curr_year = d.getFullYear();
-            $scope.formData.date = curr_date + "/" + curr_month + "/" + curr_year;
-            console.log($scope.modDate)
-            console.log($scope.formData.time);
-            console.log($scope.formData.date);
+
             pullNutritionIngredientFirebaseService.pullNutritionIngredients().then(function (result) {
                 addIngredientService.setAllIngredient(result.filter(function (nutritionIngredient) {
                     return nutritionIngredient.nutritionGuid === $scope.formData.nutritionGuid;
@@ -855,35 +850,35 @@ app.controller('addNutritionCtrl', function ($scope, $http, RecipeService, pullN
         }
     };
 
-    $scope.addIngredient = function (form) {
-        addIngredientService.setEmpty();
-        addIngredientService.setPageCalled("addNutrition");
-        $state.go('addAnIngredientRecipe', {}, { reload: true });
-    };
-
-
-    $scope.addPicture = function () {
-        var options = {
-            quality: 50,
-            destinationType: Camera.DestinationType.DATA_URL,
-            //IN PROD - sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-            sourceType: Camera.PictureSourceType.CAMERA,
-            allowEdit: true,
-            encodingType: Camera.EncodingType.JPEG,
-            targetWidth: 480,
-            popoverOptions: CameraPopoverOptions,
-            saveToPhotoAlbum: false
+        $scope.addIngredient = function (form) {
+            addIngredientService.setEmpty();
+            addIngredientService.setPageCalled("addNutrition");
+            $state.go('addAnIngredientRecipe', {}, { reload: true });
         };
-        $cordovaCamera.getPicture(options).then(function (imageData) {
-            $scope.picture = imageData;
-            $scope.height = "200px";
-            $scope.width = "200px";
-            //   $state.go('main.addARecipe');
-        }, function (err) {
-            console.error("yolo ", err);
-        });
-    };
-})
+
+
+        $scope.addPicture = function () {
+            var options = {
+                quality: 50,
+                destinationType: Camera.DestinationType.DATA_URL,
+                //IN PROD - sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+                sourceType: Camera.PictureSourceType.CAMERA,
+                allowEdit: true,
+                encodingType: Camera.EncodingType.JPEG,
+                targetWidth: 480,
+                popoverOptions: CameraPopoverOptions,
+                saveToPhotoAlbum: false
+            };
+            $cordovaCamera.getPicture(options).then(function (imageData) {
+                $scope.picture = imageData;
+                $scope.height = "200px";
+                $scope.width = "200px";
+                //   $state.go('main.addARecipe');
+            }, function (err) {
+                console.error("yolo ", err);
+            });
+        };
+    })
 
 app.controller('viewNutritionCtrl', function ($scope, $state, NutritionService, pullNutritionIngredientFirebaseService) {
     $scope.nutrition = null;
@@ -907,9 +902,9 @@ app.controller('viewNutritionCtrl', function ($scope, $state, NutritionService, 
 })
 
 app.controller('dailyNutritionCtrl', function ($scope, $state, NutritionService, addIngredientService) {
-    $scope.setRemove = function (guid) {
-        addIngredientService.deleteMeal(guid);
-    }
+        $scope.setRemove = function (guid) {
+            addIngredientService.deleteMeal(guid);
+        }
 
     $scope.viewNutrition = function (obj) {
         NutritionService.setViewingNutrition(obj);
@@ -920,15 +915,15 @@ app.controller('dailyNutritionCtrl', function ($scope, $state, NutritionService,
         NutritionService.setViewingNutrition(obj);
         $state.go("addNutrition");
     }
-})
+    })
 
 app.controller('nutritionCtrl', function ($scope, $state, NutritionService, pullNutritionFirebaseService) {
-    $scope.retVals2 = pullNutritionFirebaseService.pullNutrition().then(function (result) {
-        $scope.retVals = result;
-    });
+        $scope.retVals2 = pullNutritionFirebaseService.pullNutrition().then(function (result) {
+            $scope.retVals = result;
+        });
 
-    $scope.viewNutrition = function (nutrition) {
-        NutritionService.setViewingNutrition(nutrition);
-        $state.go('viewNutrition', {}, { reload: true });
-    }
-})
+        $scope.viewNutrition = function (nutrition) {
+            NutritionService.setViewingNutrition(nutrition);
+            $state.go('viewNutrition', {}, { reload: true });
+        }
+    })
