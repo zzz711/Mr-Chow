@@ -916,7 +916,7 @@ app.controller('dailyNutritionCtrl', function ($scope, $state, NutritionService,
         }
 
         $scope.addNewNutrition = function(){
-            NutritionService.setViewingNutrition(obj);
+            NutritionService.setViewingNutrition(null);
             $state.go("addNutrition");
         }
 
