@@ -462,7 +462,7 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
           setPageCalled: function (pageCallingData, $http) {
               pageCalled = pageCallingData;
           },
-         
+
           getedit: function ($http) {
               return editRecipe;
           },
@@ -648,7 +648,7 @@ app.service("medicineService", function ($q, $firebaseObject) {
       }    ,
       add: function (data) {
 
-          
+
             var medGUID = guid();
             var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/medicine/";
             var fullUrl = url.concat(medGUID.toString());
@@ -731,7 +731,7 @@ app.service("NutritionService", function ($firebaseArray, $firebaseObject, pullN
         this.viewingNutrition = nutrition;
     },
 
-      getNutrition: function (startDate, endDate, callBack) {
+    getNutrition: function (startDate, endDate, callBack) {
       var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutrition/";
       var fbObj = new Firebase(url);
       var allMeals = [];
@@ -739,15 +739,15 @@ app.service("NutritionService", function ($firebaseArray, $firebaseObject, pullN
       var key;
       var test;
 
-            fbObj.orderByChild("date").once("value", function (snapshot) {
+      fbObj.orderByChild("date").once("value", function (snapshot) {
 
         for (var p in snapshot.val()) {
           if (snapshot.val().hasOwnProperty(p)) {
-                        if (new Date(snapshot.val()[p].date) >= startDate && new Date(snapshot.val()[p].date) <= endDate) {
+            if (new Date(snapshot.val()[p].date) >= startDate && new Date(snapshot.val()[p].date) <= endDate) {
               var currMeal = snapshot.val()[p];
               currMeal.key = p;
-        allMeals[num] = currMeal;
-        num++;
+              allMeals[num] = currMeal;
+              num++;
             }
           }
         }
@@ -755,7 +755,8 @@ app.service("NutritionService", function ($firebaseArray, $firebaseObject, pullN
         console.log(allMeals);
         callBack(allMeals);
       });
-      },
+    },
+
       deleteNutrition: function (nutrition) {
           var url = "https://boiling-fire-9023.firebaseio.com/";
           var partURL = url.concat(getUID());
