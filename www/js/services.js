@@ -236,9 +236,9 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject, R
 
             recipeTable.$add({
                  recipeGuid: recipeGuid,
-                recipeName: isUndefined(data.recipeName),
-                prepTime: isUndefined(data.prepTime),
-                cookingTime: isUndefined(data.cookingTime),
+                 recipeName: isUndefined(data.recipeName),
+                 prepTime: isUndefined(data.prepTime),
+                 cookingTime: isUndefined(data.cookingTime),
                  servesNMany: isUndefined(data.servesNMany),
                  recipeDesc: isUndefined(data.recipeDesc),
                  totalCal: isUndefined(totals.calories),
@@ -246,7 +246,7 @@ app.service("addToFirebaseService", function ($firebaseArray, $firebaseObject, R
                  totalSugars: isUndefined(totals.sugars),
                  totalSodium: isUndefined(totals.sodium),
                  totalFat: isUndefined(totals.fatContent),
-                picture: isUndefined(pic)
+                 picture: isUndefined(pic)
 
              });
             var x = 1;
