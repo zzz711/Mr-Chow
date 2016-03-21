@@ -509,11 +509,10 @@ app.controller('addNutritionCtrl', function ($scope, $http,RecipeService, pullNu
             addIngredientService.setTotalEmpty();
             $scope.retVals = addIngredientService.resetArray();
             $scope.formData = NutritionService.viewingNutrition;
+            $scope.formData.date = new Date($scope.formData.date);
+            $scope.formData.time = new Date($scope.formData.time);
             $scope.totalVal = NutritionService.viewingNutrition;
 
-            console.log($scope.modDate)
-            console.log($scope.formData.time);
-            console.log($scope.formData.date);
             pullNutritionIngredientFirebaseService.pullNutritionIngredients().then(function (result) {
                 addIngredientService.setAllIngredient(result.filter(function (nutritionIngredient) {
                     return nutritionIngredient.nutritionGuid === $scope.formData.nutritionGuid;
