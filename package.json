@@ -9,7 +9,8 @@
     "gulp-rename": "^1.2.0",
     "gulp-sass": "^2.0.4",
     "json2csv": "^3.2.0",
-    "requirejs": "^2.1.22"
+    "requirejs": "^2.1.22",
+    "social-share-js": "^1.0.4"
   },
   "devDependencies": {
     "bower": "^1.3.3",

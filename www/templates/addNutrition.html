@@ -29,6 +29,7 @@
                     </div>
                     <input type="date"
                            ng-model="formData.date"
+                           ng-bind="formData.date | date:'mm/dd/yyyy'"
                            placeholder="mm/dd/yyyy">
                 </label>
 
@@ -38,6 +39,7 @@
                     </div>
                     <input type="time"
                            ng-model="formData.time"
+                           ng-bind="formData.date | date:'hh:mm'"
                            placeholder="hh:mm">
                 </label>
                 <ion-list>
