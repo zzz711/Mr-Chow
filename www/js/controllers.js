@@ -106,7 +106,7 @@ app.controller('myAccountCtrl', function ($scope, $ionicPopup, AuthService, $sta
             $scope.currentEmail = AuthService.getEmail();
 
         }
-    });
+            });
 
     $scope.submit = function (form) {
         $scope.data = {};
@@ -411,25 +411,25 @@ app.controller('addARecipeCtrl', function ($scope, pullRecipeIngredientFirebaseS
             $scope.addRecipeForm = RecipeService.viewingRecipe
             $scope.totalVal = RecipeService.viewingRecipe;
             pullRecipeIngredientFirebaseService.pullRecipeIngredients().then(function (result) {
-                addIngredientService.setAllIngredient(result.filter(function (recipeIngredient) {
-                    return recipeIngredient.recipeGuid === $scope.addRecipeForm.recipeGuid;
-                }));
-            });
+                    addIngredientService.setAllIngredient(result.filter(function (recipeIngredient) {
+                         return recipeIngredient.recipeGuid === $scope.addRecipeForm.recipeGuid;
+                    }));
+               });
         }
     });
 
     //ng-repeat ing func
     $scope.ingredient = function () {
-        $scope.retVals = addIngredientService.getAllIngredient();
-        $scope.totalVal = addIngredientService.getTotalContents($http);
-
+            $scope.retVals = addIngredientService.getAllIngredient();
+            $scope.totalVal = addIngredientService.getTotalContents($http);
+        
     };
 
     //ng-repeat remove ing
     $scope.setRemove = function (value) {
         $scope.retVals = addIngredientService.deleteSpecificIngredient(value);
         $scope.totalVal = addIngredientService.totalContentsSub(value);
-    };
+  };
 
     //full ing page with selected item
     $scope.setFill = function (value) {
@@ -450,31 +450,31 @@ app.controller('addARecipeCtrl', function ($scope, pullRecipeIngredientFirebaseS
     $scope.trackMeal = function () {
         console.log($scope);
         if ($scope.addRecipeForm.recipeName == "") {
-            $ionicPopup.alert({
-                title: 'Oh No! You missed something.',
-                template: 'Please add a recipe title.'
-            });
-        }
-        else {
-            $scope.retVals = addIngredientService.getAllIngredient();
+                $ionicPopup.alert({
+                    title: 'Oh No! You missed something.',
+                    template: 'Please add a recipe title.'
+                });
+            }
+            else {
+                $scope.retVals = addIngredientService.getAllIngredient();
 
             addToFirebaseService.saveRecipe($scope.addRecipeForm, $scope.retVals, $scope.totalVal, $scope.picture);
-            $scope.addRecipeForm.recipeName = "";
-            $scope.addRecipeForm.recipeDesc = "";
-            $scope.addRecipeForm.servesNMany = "";
-            $scope.addRecipeForm.prepTime = "";
-            $scope.addRecipeForm.cookingTime = "";
-            $scope.initialize = {};
-            $scope.picture = "";
-            $scope.height = "0px";
-            $scope.width = "0px";
-            addIngredientService.setEmpty();
-            addIngredientService.setTotalEmpty();
-            $scope.retVals = addIngredientService.resetArray();
-            RecipeService.setViewingRecipe("");
-            $state.go('main.recipeBook', {}, { reload: true });
-        }
-
+                $scope.addRecipeForm.recipeName = "";
+                $scope.addRecipeForm.recipeDesc = "";
+                $scope.addRecipeForm.servesNMany = "";
+                $scope.addRecipeForm.prepTime = "";
+                $scope.addRecipeForm.cookingTime = "";
+                $scope.initialize = {};
+                $scope.picture = "";
+                $scope.height = "0px";
+                $scope.width = "0px";
+                addIngredientService.setEmpty();
+                addIngredientService.setTotalEmpty();
+                $scope.retVals = addIngredientService.resetArray();
+                RecipeService.setViewingRecipe("");
+                $state.go('main.recipeBook', {}, { reload: true });
+            }
+        
     };
 
     $scope.addPicture = function () {
@@ -524,13 +524,13 @@ app.controller('viewRecipeCtrl', function ($scope, $http, $state, $window, $ioni
 
 
     $scope.editRecipe = function () {
-        $state.go("addARecipe");
+            $state.go("addARecipe");       
     }
 })
 
 app.controller('nutritionCtrl', function ($scope, pullNutritionFirebaseService, NutritionService) {
-    $scope.retVals2 = pullNutritionFirebaseService.pullNutrition().then(function (result) {
-        $scope.retVals = result;
+        $scope.retVals2 = pullNutritionFirebaseService.pullNutrition().then(function (result) {
+            $scope.retVals = result;
     });
 
 })
@@ -637,35 +637,35 @@ app.controller('addNutritionCtrl', function ($scope, $http,RecipeService, pullNu
         }
     };
 
-    $scope.addIngredient = function (form) {
-        addIngredientService.setEmpty();
-        addIngredientService.setPageCalled("addNutrition");
-        $state.go('addAnIngredientRecipe', {}, { reload: true });
-    };
-
-
-    $scope.addPicture = function () {
-        var options = {
-            quality: 50,
-            destinationType: Camera.DestinationType.DATA_URL,
-            //IN PROD - sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-            sourceType: Camera.PictureSourceType.CAMERA,
-            allowEdit: true,
-            encodingType: Camera.EncodingType.JPEG,
-            targetWidth: 480,
-            popoverOptions: CameraPopoverOptions,
-            saveToPhotoAlbum: false
+        $scope.addIngredient = function (form) {
+            addIngredientService.setEmpty();
+            addIngredientService.setPageCalled("addNutrition");
+            $state.go('addAnIngredientRecipe', {}, { reload: true });
         };
-        $cordovaCamera.getPicture(options).then(function (imageData) {
-            $scope.picture = imageData;
-            $scope.height = "200px";
-            $scope.width = "200px";
-            //   $state.go('main.addARecipe');
-        }, function (err) {
-            console.error("yolo ", err);
-        });
-    };
-})
+
+
+        $scope.addPicture = function () {
+            var options = {
+                quality: 50,
+                destinationType: Camera.DestinationType.DATA_URL,
+                //IN PROD - sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+                sourceType: Camera.PictureSourceType.CAMERA,
+                allowEdit: true,
+                encodingType: Camera.EncodingType.JPEG,
+                targetWidth: 480,
+                popoverOptions: CameraPopoverOptions,
+                saveToPhotoAlbum: false
+            };
+            $cordovaCamera.getPicture(options).then(function (imageData) {
+                $scope.picture = imageData;
+                $scope.height = "200px";
+                $scope.width = "200px";
+                //   $state.go('main.addARecipe');
+            }, function (err) {
+                console.error("yolo ", err);
+            });
+        };
+    })
 
 app.controller('viewNutritionCtrl', function ($scope, $state, NutritionService, pullNutritionIngredientFirebaseService) {
     $scope.nutrition = null;
@@ -688,37 +688,37 @@ app.controller('viewNutritionCtrl', function ($scope, $state, NutritionService, 
     }
 })
 
-app.controller('settingsCtrl', function ($scope, $state, AuthService) {
-    $scope.changePW = function () {
-        $state.go("changePW");
-    };
+    app.controller('settingsCtrl', function ($scope, $state, AuthService) {
+        $scope.changePW = function () {
+            $state.go("changePW");
+        };
 
-    $scope.logOut = function () {
-        AuthService.logOut();
-        $state.go("recipeCardHolder");
-    };
+        $scope.logOut = function () {
+            AuthService.logOut();
+            $state.go("recipeCardHolder");
+        };
 
-})
+    })
 
 app.controller('addMedicineCtrl', function ($scope, $ionicPopup, medicineService, $state) {
-    $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
-        viewData.enableBack = true;
-    });
+        $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
+            viewData.enableBack = true;
+        });
 
     $scope.addMed = {
         medicineName: "",
         amount: "",
         taken: "",
         extra: ""
-    };
+        };
     $scope.addMedication = function () {
         if ($scope.addMed.medicineName == "") {
-            $ionicPopup.alert({
+                $ionicPopup.alert({
                 title: 'Oh No! You missed something.',
                 template: 'Please add a medicine name.'
-            });
-        }
-        else {
+        });
+            }
+            else {
             $scope.medicineName = "";
             $scope.amount = "";
             $scope.taken = "";
@@ -726,30 +726,300 @@ app.controller('addMedicineCtrl', function ($scope, $ionicPopup, medicineService
             medicineService.add($scope.addMed);
             $state.go("main.myMeds");
         }
-    }
-})
+        }
+    })
 
-app.controller('medPullCtrl', function ($scope, $state, medicineService, pullMedsFirebaseService) {
-    $scope.retVals2 = pullMedsFirebaseService.pullMeds().then(function (result) {
-        $scope.retVals = result;
-    });
-    $scope.medPage = function () {
-        $state.go("addMedicine");
-    }
-
-    $scope.addMeds = function () {
-        $state.go("addMedicine");
+app.controller('myAccountCtrl', function ($scope, $ionicPopup, AuthService, $state) {
+    $scope.formData = {
+        email: ""
     };
 
-    $scope.deleteMeds = function (obj) {
-        medicineService.deleteMeds(obj);
+    $scope.$on('$ionicView.enter', function () {
+        $scope.setEmail = function () {
+            console.log("current email");
+            //$document.getElementById("currentEmail").textContent = AuthService.getEmail();
+            $scope.currentEmail = AuthService.getEmail();
+
+        }
+    });
+
+    $scope.submit = function (form) {
+        $scope.data = {};
+        //TODO: use an ionic popup show to get password
+        var passwrd = $ionicPopup.show({
+            template: '<input type="password" ng-model="data.password">',
+            title: "Please Enter Your Password",
+            scope: $scope,
+            buttons: [
+              { text: 'Cancel' },
+              {
+                  text: '<b>Enter</b>',
+                  type: 'button-positive',
+                  onTap: function (e) {
+                      if (!$scope.data.password) {
+                          e.preventDefault();
+                      }
+                      else {
+                          //TODO clear form
+                          //            form.email = "";
+                          AuthService.changeEmail($scope.formData.email, $scope.data.password);
+
+                      }
+
+                  }
+              }
+            ]
+        });
+    }
+
+
+})
+
+app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, NutritionService, medicineService, RecipeService, $state, $cordovaEmailComposer) {
+  $scope.formData = {
+    NutritionInfo: false,
+    MedInfo: false,
+    RecipeInfo: false,
+    StartDate: null,
+    EndDate: null,
+    recipient: ""
+
+    };
+
+  $scope.data = {};
+
+  $scope.shareData = function(){
+    var Data = {}; //do I want to put the retrieved information in the email body or as an attachment?
+
+    var Nutrition = {};
+    var Medicine = {};
+    var Recipe = {};
+    var outPut = null;
+
+    // var email = {
+    //   to: recipient,
+    //   cc: ccArr,
+    //   bcc: bccArr,
+    //   attachments: null,
+    //   subject: subject,
+    //   body: '',
+    //   isHtml: true
+    // };
+
+
+
+    if($scope.formData.NutritionInfo){
+      NutritionService.getNutrition($scope.formData.StartDate, $scope.formData.EndDate, function (data) {
+        var nutArr = data;
+        for(var i = 0; i < nutArr.length; i++){
+          var nutKey = nutArr[i].key;
+
+          Nutrition[nutKey] = nutArr[i];
+        }
+        Data.Nutrition = Nutrition;
+
+        console.log(Data);
+        outPut= JsonHuman.format(Nutrition);
+        //outPut = prettyPrint(Nutrition);
+
+       // email.body =table;
+      });
+
+    }
+
+    if($scope.formData.MedInfo){
+      medicineService.getMeds(function (data) {
+        var medArr = data;
+        console.log(data);
+
+        for(var c = 0; c < medArr.length; c++){
+          var medKey = medArr[c].key;
+
+          Medicine[medKey] = medArr[c];
+        }
+
+        Data.Medicine = Medicine;
+        console.log(Data);
+        var node = JsonHuman.format(Medicine);
+       // var node = prettyPrint(Medicine);
+        console.log(node);
+
+        if(outPut != null){
+          outPut.appendChild(node);
+         // email.body =table;
+        }
+        else{
+          outPut = node;
+          //email.body =table;
+        }
+        //table.append(node);
+      });
+
+
+
+    }
+
+    if($scope.formData.RecipeInfo){
+      RecipeService.getRecipe(function(data){
+        var recipeArray = data;
+
+        console.log(recipeArray);
+
+        for(var a = 0; a < recipeArray.length; a++){
+
+          var recipeKey = recipeArray[a].key;
+
+          Recipe[recipeKey] = recipeArray[a];
+
+        }
+
+        Data.Recipe = Recipe;
+        //console.log(Data.Recipe);
+        var node = JsonHuman.format(Recipe);
+        //var node = prettyPrint(Recipe);
+        if(outPut === null){
+          outPut = node;
+         // email.body =table;
+        }
+        else{
+          outPut.appendChild(node);
+          //email.body =table;
+        }
+        //table.append(node);
+        console.log(outPut);
+
+        $scope.sendEmail(outPut)
+      });
+
+    }
+
+  };
+
+  $scope.sendEmail = function(message){
+    var subject = "Test";
+    var recipient = $scope.formData.recipient;
+    var ccArr = null;
+    var bccArr = null;
+    var file = null;
+
+        //TODO: get data form a service
+        if ($scope.formData.NutritionInfo) {
+            data.nutrion = NutritionService.getNutrition();
+        }
+
+        console.log(data);
+
+        $cordovaSocialSharing.shareViaEmail(data, subject, recipient, ccArr, bccArr, file)
+          //.canShareViaEmail()
+          .then(function (result) {
+              console.log("Success!");
+          }, function (err) {
+              // An error occurred. Show a message to the user
+              console.log(err);
+
+      });
+    //
+    // window.plugins.email.open({
+    //  to:          recipient, // email addresses for TO field
+    //  cc:          ccArr, // email addresses for CC field
+    //  bcc:         bccArr, // email addresses for BCC field
+    //  attachments: file, // file paths or base64 data streams
+    //  subject:    subject, // subject of the email
+    //  body:       message, // email body (for HTML, set isHtml to true)
+    //  isHtml:    true // indicates if the body is HTML or plain text
+    // });
+
+    // window.plugins.emailComposer.showEmailComposerWithCallback(function(result) {
+    //     console.log("Response -> " + result);
+    //   },
+    //   subject, // Subject
+    //   message,                      // Body
+    //   [recipient],    // To
+    //   null,                    // CC
+    //   null,                    // BCC
+    //   false,                   // isHTML
+    //   null,                    // Attachments
+    //  null);                   // Attachment Data
+  }
+
+
+
+
+
+})
+
+app.controller('changePWCtrl', function ($scope, $ionicPopup, $state, AuthService) {
+    $scope.formData = {
+        password: "",
+        newPassword: "",
+        confirmNewPassword: ""
+    };
+
+
+
+    $scope.changePW = function (form) {
+        if ($scope.formData.newPassword === $scope.formData.confirmNewPassword) {
+            AuthService.changePW($scope.formData);
+            $state.go("login");
+        }
+        else if ($scope.formData.newPassword != $scope.formData.confirmNewPassword) {
+            $ionicPopup.alert({
+                title: "New Passwords Do Not Match"
+            });
+        }
+
+        else {
+            $ionicPopup.alert({
+                title: "An Error has Occurred",
+                template: "Please make sure all fields are filled out and are at least six characters in length"
+            });
+        }
+    };
+
+
+
+
+})
+
+app.controller('recipeBookCtrl', function ($scope, pullRecipeFirebaseService, RecipeService) {
+    $scope.retVals2 = pullRecipeFirebaseService.pullRecipe().then(function (result) {
+        $scope.retVals2 = $scope.retVals = result;
+    });
+    $scope.$watch('search', function (newValue) {
+        if (newValue) {
+            $scope.retVals2 = $scope.retVals.filter(function (recipe) { return recipe.recipeName.toLowerCase().indexOf(newValue.toLowerCase()) != -1; });
+        }
+        else {
+            $scope.retVals2 = $scope.retVals;
+        }
+    });
+
+    $scope.deleteRecipe = function (obj) {
+        RecipeService.deleteRecipe(obj);
     }
 })
 
+    app.controller('medPullCtrl', function ($scope, $state, medicineService, pullMedsFirebaseService) {
+        $scope.retVals2 = pullMedsFirebaseService.pullMeds().then(function (result) {
+            $scope.retVals = result;
+        });
+        $scope.medPage = function () {
+            $state.go("addMedicine");
+        }
+
+        $scope.addMeds = function () {
+            $state.go("addMedicine");
+        };
+
+        $scope.deleteMeds = function (obj) {
+            medicineService.deleteMeds(obj);
+        }
+    })
+
 app.controller('dailyNutritionCtrl', function ($scope, $state, NutritionService, addIngredientService) {
-    $scope.setRemove = function (guid) {
-        addIngredientService.deleteMeal(guid);
-    }
+        $scope.setRemove = function (guid) {
+            addIngredientService.deleteMeal(guid);
+        }
 
     $scope.viewNutrition = function (obj) {
         NutritionService.setViewingNutrition(obj);
@@ -760,15 +1030,15 @@ app.controller('dailyNutritionCtrl', function ($scope, $state, NutritionService,
         NutritionService.setViewingNutrition(obj);
         $state.go("addNutrition");
     }
-})
+    })
 
-app.controller('nutritionCtrl', function ($scope, $state, NutritionService, pullNutritionFirebaseService) {
-    $scope.retVals2 = pullNutritionFirebaseService.pullNutrition().then(function (result) {
-        $scope.retVals = result;
-    });
+    app.controller('nutritionCtrl', function ($scope, $state, NutritionService, pullNutritionFirebaseService) {
+        $scope.retVals2 = pullNutritionFirebaseService.pullNutrition().then(function (result) {
+            $scope.retVals = result;
+        });
 
-    $scope.viewNutrition = function (nutrition) {
-        NutritionService.setViewingNutrition(nutrition);
-        $state.go('viewNutrition', {}, { reload: true });
-    }
-})
+        $scope.viewNutrition = function (nutrition) {
+            NutritionService.setViewingNutrition(nutrition);
+            $state.go('viewNutrition', {}, { reload: true });
+        }
+    })
