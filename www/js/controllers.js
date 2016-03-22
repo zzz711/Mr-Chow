@@ -151,7 +151,6 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
 
     };
 
-    $scope.data = {};
 
     $scope.shareData = function () {
         var Data = {}; //do I want to put the retrieved information in the email body or as an attachment?
@@ -251,8 +250,14 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
                 }
                 //table.append(node);
 
-                console.log(outPut);
-                $scope.sendEmail(outPut);
+                var strs = JSON.stringify(Data).split(",");
+                for( var s in strs){
+                  console.log(strs[s]);
+                  strs[s] = strs[s].concat("\n");
+                }
+                var text = $(outPut).text();
+                console.log(strs);
+                $scope.sendEmail(strs);
             });
 
         }
