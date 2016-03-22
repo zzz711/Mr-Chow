@@ -160,6 +160,7 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
         var Medicine = {};
         var Recipe = {};
         var outPut = null;
+
         // var email = {
         //   to: recipient,
         //   cc: ccArr,
@@ -241,34 +242,39 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
                 //console.log(Data.Recipe);
                 var node = JsonHuman.format(Recipe);
                 //var node = prettyPrint(Recipe);
-                if (outPut != null) {
-                  outPut.appendChild(node);
+                if (outPut === null) {
+                    outPut = node;
                     // email.body =table;
                 }
                 else {
-                  outPut = node;
-                  //email.body =table;
+                    outPut.appendChild(node);
+                    //email.body =table;
                 }
                 //table.append(node);
-
                 console.log(outPut);
-                $scope.sendEmail(outPut);
+
+                $scope.sendEmail(outPut)
             });
 
         }
 
     };
 
-    $scope.sendEmail = function (outPut) {
+    $scope.sendEmail = function (message) {
         var subject = "Test";
         var recipient = $scope.formData.recipient;
         var ccArr = null;
         var bccArr = null;
         var file = null;
 
+        //TODO: get data form a service
+        if ($scope.formData.NutritionInfo) {
+            data.nutrion = NutritionService.getNutrition();
+        }
 
+        console.log(data);
 
-        $cordovaSocialSharing.shareViaEmail(outPut, subject, recipient, ccArr, bccArr, file)
+        $cordovaSocialSharing.shareViaEmail(data, subject, recipient, ccArr, bccArr, file)
           //.canShareViaEmail()
           .then(function (result) {
               console.log("Success!");
@@ -506,9 +512,10 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $ionicPopup, $cordov
 
     $scope.scan = function () {
         $scope.scanResults = $cordovaBarcodeScanner.scan().then(function (result) {
-            $http.get("https://api.nutritionix.com/v1_1/item?upc=" + result.text + "&appId=b62a1056&appKey=0096e00788eb1a17cfe1c4c6d2008612").then(function (response) {
+            return ($http.get("https://api.nutritionix.com/v1_1/item?upc=" + result.text + "&appId=b62a1056&appKey=0096e00788eb1a17cfe1c4c6d2008612").then(function (response) {
                 $scope.initialize = addIngredientService.setPageVals(response.data);
-            });
+                return (addIngredientService.getPageVals());
+            }));
         }, function (error) {
             $scope.scanResults = 'Error: ' + error;
         });
@@ -702,7 +709,7 @@ app.controller('addARecipeCtrl', function ($scope, pullRecipeIngredientFirebaseS
                 addIngredientService.setTotalEmpty();
                 addIngredientService.resetArray();
                 RecipeService.setViewingRecipe(null);
-
+            
                 $state.go('main.recipeBook', {}, { reload: true });
             }
     };
@@ -711,8 +718,8 @@ app.controller('addARecipeCtrl', function ($scope, pullRecipeIngredientFirebaseS
         var options = {
             quality: 50,
             destinationType: Camera.DestinationType.DATA_URL,
-            sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
-            //IN PROD -sourceType: Camera.PictureSourceType.CAMERA
+            //IN PROD -sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+            sourceType: Camera.PictureSourceType.CAMERA,
             allowEdit: true,
             encodingType: Camera.EncodingType.JPEG,
             targetWidth: 480,
@@ -754,7 +761,7 @@ app.controller('viewRecipeCtrl', function ($scope, $http, $state, $window, $ioni
 
 
     $scope.editRecipe = function () {
-            $state.go("addARecipe");
+            $state.go("addARecipe");       
     }
 })
 
@@ -774,7 +781,7 @@ app.controller('addNutritionCtrl', function ($scope, $http, RecipeService, pullN
     $scope.picture = "";
     $scope.height = "0px";
     $scope.width = "0px";
-    $scope.pull = "";
+    $scope.pull = ""; 
     $scope.retVals = "";
     $scope.totalVal = addIngredientService.getTotalContents($http);
 

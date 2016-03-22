@@ -75,12 +75,6 @@ angular.module('app.routes', [])
           }
       })
 
-     /* .state('addAnIngredient', {
-          url: '/page23',
-          templateUrl: 'templates/addIngredient.html',
-          controller: 'addIngredientCtrl'
-      })*/
-
       .state('addAnIngredientRecipe', {
           url: '/page24',
           templateUrl: 'templates/addIngredientRecipe.html',

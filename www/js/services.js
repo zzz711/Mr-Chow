@@ -384,6 +384,7 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
         var x = [];
         var i = 1;
         var editRecipe = 0;
+        var barcode = null;
         var pageCalled = "";
         var localSetIngredients = function (data) {
             x.push({
@@ -462,7 +463,7 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
           setPageCalled: function (pageCallingData, $http) {
               pageCalled = pageCallingData;
           },
-
+         
           getedit: function ($http) {
               return editRecipe;
           },
@@ -470,6 +471,12 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
               editRecipe = data;
           },
 
+          getBarcode: function ($http) {
+              return barcode;
+          },
+          setBarcode: function (data, $http) {
+              barcode = data;
+          },
 
 
           //gets current page status
@@ -565,53 +572,7 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
             resetArray: function () {
                     x.splice(0, x.length);
                     return x;
-            },
-/*
-            getIng: function (recipeGUID, callBack) {
-                console.log("geting");
-                  var url = "https://boiling-fire-9023.firebaseio.com/";
-                  var partURL = url.concat(getUID());
-                  var fullURL = partURL.concat("/recipeIngredient/");
-                  var fbjObj = new Firebase(fullURL);
-
-
-
-                fbjObj.orderByChild("ingName").on("value", function (snapshot) {
-                    //TODO add the rest of the query code
-                    for (var p in snapshot.val()) {
-                      console.log(recipeGUID);
-                      console.log(snapshot.val()[p].recipeGuid);
-                        if (recipeGUID === snapshot.val()[p].recipeGuid) {
-                        console.log("match");
-                        var ingObj = new Firebase(fullURL + p + "/");
-                        var mealObj = $firebaseObject(ingObj);
-
-                        mealObj.$remove().then(function () {
-                          console.log("deletion successful");
-                        }, function (err) {
-                          console.log(err);
-                        });
-                      }
-
-                    }
-                  });
-
-            },
-
-            deleteMeal: function (guid) {
-                var url = "https://boiling-fire-9023.firebaseio.com/";
-                var partURL = url.concat(getUID());
-                var fullURL = partURL.concat("/nutrition/" + guid.$id);
-                var fbMeal = new Firebase(fullURL);
-                var mealObj = $firebaseObject(fbMeal);
-
-                mealObj.$remove().then(function (ref) {
-                    console.log("item deleted");
-                }, function (error) {
-                    console.log(error);
-                })
-
-            }*/
+            }
         };
     });
 
@@ -648,7 +609,7 @@ app.service("medicineService", function ($q, $firebaseObject) {
       }    ,
       add: function (data) {
 
-
+          
             var medGUID = guid();
             var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/medicine/";
             var fullUrl = url.concat(medGUID.toString());
@@ -731,7 +692,7 @@ app.service("NutritionService", function ($firebaseArray, $firebaseObject, pullN
         this.viewingNutrition = nutrition;
     },
 
-    getNutrition: function (startDate, endDate, callBack) {
+      getNutrition: function (startDate, endDate, callBack) {
       var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/nutrition/";
       var fbObj = new Firebase(url);
       var allMeals = [];
@@ -739,15 +700,15 @@ app.service("NutritionService", function ($firebaseArray, $firebaseObject, pullN
       var key;
       var test;
 
-      fbObj.orderByChild("date").once("value", function (snapshot) {
+            fbObj.orderByChild("date").once("value", function (snapshot) {
 
         for (var p in snapshot.val()) {
           if (snapshot.val().hasOwnProperty(p)) {
-            if (new Date(snapshot.val()[p].date) >= startDate && new Date(snapshot.val()[p].date) <= endDate) {
+                        if (new Date(snapshot.val()[p].date) >= startDate && new Date(snapshot.val()[p].date) <= endDate) {
               var currMeal = snapshot.val()[p];
               currMeal.key = p;
-              allMeals[num] = currMeal;
-              num++;
+        allMeals[num] = currMeal;
+        num++;
             }
           }
         }
@@ -755,8 +716,7 @@ app.service("NutritionService", function ($firebaseArray, $firebaseObject, pullN
         console.log(allMeals);
         callBack(allMeals);
       });
-    },
-
+      },
       deleteNutrition: function (nutrition) {
           var url = "https://boiling-fire-9023.firebaseio.com/";
           var partURL = url.concat(getUID());
