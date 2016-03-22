@@ -151,7 +151,6 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
 
     };
 
-    $scope.data = {};
 
     $scope.shareData = function () {
         var Data = {}; //do I want to put the retrieved information in the email body or as an attachment?
@@ -183,10 +182,24 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
                 Data.Nutrition = Nutrition;
 
                 console.log(Data);
-                outPut = JsonHuman.format(Nutrition);
+              //  outPut = JsonHuman.format(Nutrition);
                 //outPut = prettyPrint(Nutrition);
 
                 // email.body =table;
+
+              if(!$scope.formData.MedInfo && !$scope.formData.RecipeInfo){
+                //this should really be its own method, but  ¯\_(ツ)_/¯
+                var strs = JSON.stringify(Data).split(",");
+                for( var s in strs){
+                  console.log(strs[s]);
+                  strs[s] = strs[s].concat("\n");
+                }
+
+                console.log(strs);
+                $scope.sendEmail(strs);
+              }
+
+
             });
 
         }
@@ -216,6 +229,18 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
                     outPut = node;
                     //email.body =table;
                 }
+
+              if(!$scope.formData.RecipeInfo){
+                //this should really be its own method, but  ¯\_(ツ)_/¯
+                var strs = JSON.stringify(Data).split(",");
+                for( var s in strs){
+                  console.log(strs[s]);
+                  strs[s] = strs[s].concat("\n");
+                }
+
+                console.log(strs);
+                $scope.sendEmail(strs);
+              }
                 //table.append(node);
             });
 
@@ -251,8 +276,14 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
                 }
                 //table.append(node);
 
-                console.log(outPut);
-                $scope.sendEmail(outPut);
+                var strs = JSON.stringify(Data).split(",");
+                for( var s in strs){
+                  console.log(strs[s]);
+                  strs[s] = strs[s].concat("\n");
+                }
+
+                console.log(strs);
+                $scope.sendEmail(strs);
             });
 
         }
@@ -268,7 +299,7 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
 
 
 
-        $cordovaSocialSharing.shareViaEmail(outPut, subject, recipient, ccArr, bccArr, file)
+        $cordovaSocialSharing.shareViaEmail(JSON.stringify(outPut), subject, recipient, ccArr, bccArr, file)
           //.canShareViaEmail()
           .then(function (result) {
               console.log("Success!");
