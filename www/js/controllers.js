@@ -268,7 +268,7 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
 
 
 
-        $cordovaSocialSharing.shareViaEmail(outPut, subject, recipient, ccArr, bccArr, file)
+        $cordovaSocialSharing.shareViaEmail(JSON.stringify(outPut), subject, recipient, ccArr, bccArr, file)
           //.canShareViaEmail()
           .then(function (result) {
               console.log("Success!");
