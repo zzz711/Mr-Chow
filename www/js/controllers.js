@@ -153,116 +153,67 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
 
 
     $scope.shareData = function () {
-        var Data = {}; //do I want to put the retrieved information in the email body or as an attachment?
-
+        var Data = {};
         var Nutrition = {};
         var Medicine = {};
         var Recipe = {};
         var outPut = null;
-
-        // var email = {
-        //   to: recipient,
-        //   cc: ccArr,
-        //   bcc: bccArr,
-        //   attachments: null,
-        //   subject: subject,
-        //   body: '',
-        //   isHtml: true
-        // };
-
-
 
         if ($scope.formData.NutritionInfo) {
             NutritionService.getNutrition($scope.formData.StartDate, $scope.formData.EndDate, function (data) {
                 var nutArr = data;
                 for (var i = 0; i < nutArr.length; i++) {
                     var nutKey = nutArr[i].key;
-
                     Nutrition[nutKey] = nutArr[i];
                 }
                 Data.Nutrition = Nutrition;
-
-                console.log(Data);
                 outPut = JsonHuman.format(Nutrition);
-                //outPut = prettyPrint(Nutrition);
-
-                // email.body =table;
             });
-
         }
 
         if ($scope.formData.MedInfo) {
             medicineService.getMeds(function (data) {
                 var medArr = data;
-                console.log(data);
-
                 for (var c = 0; c < medArr.length; c++) {
                     var medKey = medArr[c].key;
-
                     Medicine[medKey] = medArr[c];
                 }
 
                 Data.Medicine = Medicine;
-                console.log(Data);
                 var node = JsonHuman.format(Medicine);
-                // var node = prettyPrint(Medicine);
-                console.log(node);
-
                 if (outPut != null) {
                     outPut.appendChild(node);
-                    // email.body =table;
                 }
                 else {
                     outPut = node;
-                    //email.body =table;
                 }
-                //table.append(node);
             });
-
-
-
         }
 
         if ($scope.formData.RecipeInfo) {
             RecipeService.getRecipe(function (data) {
                 var recipeArray = data;
-
-                console.log(recipeArray);
-
                 for (var a = 0; a < recipeArray.length; a++) {
-
                     var recipeKey = recipeArray[a].key;
-
                     Recipe[recipeKey] = recipeArray[a];
-
                 }
-
                 Data.Recipe = Recipe;
-                //console.log(Data.Recipe);
                 var node = JsonHuman.format(Recipe);
-                //var node = prettyPrint(Recipe);
                 if (outPut === null) {
                     outPut = node;
-                    // email.body =table;
                 }
                 else {
                     outPut.appendChild(node);
-                  //email.body =table;
                 }
-                //table.append(node);
 
                 var strs = JSON.stringify(Data).split(",");
                 for( var s in strs){
-                  console.log(strs[s]);
                   strs[s] = strs[s].concat("\n");
                 }
-               // var text = $(outPut).text();
-                console.log(strs);
                 $scope.sendEmail(strs);
             });
 
         }
-
     };
 
     $scope.sendEmail = function (message) {
@@ -272,51 +223,15 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
         var bccArr = null;
         var file = null;
 
-        //TODO: get data form a service
-        if ($scope.formData.NutritionInfo) {
-            data.nutrion = NutritionService.getNutrition();
-        }
-
-        console.log(data);
-
-        $cordovaSocialSharing.shareViaEmail(JSON.stringify(outPut), subject, recipient, ccArr, bccArr, file)
-          //.canShareViaEmail()
+        $cordovaSocialSharing.shareViaEmail(JSON.stringify(message), subject, recipient, ccArr, bccArr, file)
           .then(function (result) {
               console.log("Success!");
           }, function (err) {
-              // An error occurred. Show a message to the user
               console.log(err);
 
           });
-        //
-        // window.plugins.email.open({
-        //  to:          recipient, // email addresses for TO field
-        //  cc:          ccArr, // email addresses for CC field
-        //  bcc:         bccArr, // email addresses for BCC field
-        //  attachments: file, // file paths or base64 data streams
-        //  subject:    subject, // subject of the email
-        //  body:       message, // email body (for HTML, set isHtml to true)
-        //  isHtml:    true // indicates if the body is HTML or plain text
-        // });
-
-        // window.plugins.emailComposer.showEmailComposerWithCallback(function(result) {
-        //     console.log("Response -> " + result);
-        //   },
-        //   subject, // Subject
-        //   message,                      // Body
-        //   [recipient],    // To
-        //   null,                    // CC
-        //   null,                    // BCC
-        //   false,                   // isHTML
-        //   null,                    // Attachments
-        //  null);                   // Attachment Data
     }
-
-
-
-
-
-})
+ })
 
 app.controller('changePWCtrl', function ($scope, $ionicPopup, $state, AuthService) {
     $scope.formData = {
@@ -501,7 +416,7 @@ app.controller('addIngredientRecipeCtrl', function ($timeout, $scope, $ionicPopu
 
     $scope.vm = "";
     $scope.scanResults = '';
-    
+
     $scope.initialize = {
         calories: "",
         comments: "",
@@ -532,7 +447,7 @@ app.controller('addIngredientRecipeCtrl', function ($timeout, $scope, $ionicPopu
    /* $scope.scan = function () {
         $scope.scanResults = $cordovaBarcodeScanner.scan().then(function (result) {
             console.log(result.text);
-           
+
         }, function (error) {
             $scope.scanResults = 'Error: ' + error;
         });
