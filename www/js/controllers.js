@@ -183,24 +183,10 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
                 Data.Nutrition = Nutrition;
 
                 console.log(Data);
-              //  outPut = JsonHuman.format(Nutrition);
+                outPut = JsonHuman.format(Nutrition);
                 //outPut = prettyPrint(Nutrition);
 
                 // email.body =table;
-
-              if(!$scope.formData.MedInfo && !$scope.formData.RecipeInfo){
-                //this should really be its own method, but  ¯\_(ツ)_/¯
-                var strs = JSON.stringify(Data).split(",");
-                for( var s in strs){
-                  console.log(strs[s]);
-                  strs[s] = strs[s].concat("\n");
-                }
-
-                console.log(strs);
-                $scope.sendEmail(strs);
-              }
-
-
             });
 
         }
@@ -230,18 +216,6 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
                     outPut = node;
                     //email.body =table;
                 }
-
-              if(!$scope.formData.RecipeInfo){
-                //this should really be its own method, but  ¯\_(ツ)_/¯
-                var strs = JSON.stringify(Data).split(",");
-                for( var s in strs){
-                  console.log(strs[s]);
-                  strs[s] = strs[s].concat("\n");
-                }
-
-                console.log(strs);
-                $scope.sendEmail(strs);
-              }
                 //table.append(node);
             });
 
@@ -282,7 +256,7 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
                   console.log(strs[s]);
                   strs[s] = strs[s].concat("\n");
                 }
-
+                var text = $(outPut).text();
                 console.log(strs);
                 $scope.sendEmail(strs);
             });
