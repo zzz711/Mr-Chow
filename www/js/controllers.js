@@ -256,7 +256,7 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
                   console.log(strs[s]);
                   strs[s] = strs[s].concat("\n");
                 }
-                var text = $(outPut).text();
+              
                 console.log(strs);
                 $scope.sendEmail(strs);
             });
