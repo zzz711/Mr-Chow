@@ -272,13 +272,6 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
         var bccArr = null;
         var file = null;
 
-        //TODO: get data form a service
-        if ($scope.formData.NutritionInfo) {
-            data.nutrion = NutritionService.getNutrition();
-        }
-
-        console.log(data);
-
         $cordovaSocialSharing.shareViaEmail(JSON.stringify(outPut), subject, recipient, ccArr, bccArr, file)
           //.canShareViaEmail()
           .then(function (result) {
@@ -501,7 +494,7 @@ app.controller('addIngredientRecipeCtrl', function ($timeout, $scope, $ionicPopu
 
     $scope.vm = "";
     $scope.scanResults = '';
-    
+
     $scope.initialize = {
         calories: "",
         comments: "",
@@ -532,7 +525,7 @@ app.controller('addIngredientRecipeCtrl', function ($timeout, $scope, $ionicPopu
    /* $scope.scan = function () {
         $scope.scanResults = $cordovaBarcodeScanner.scan().then(function (result) {
             console.log(result.text);
-           
+
         }, function (error) {
             $scope.scanResults = 'Error: ' + error;
         });
