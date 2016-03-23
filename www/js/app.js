@@ -1,5 +1,5 @@
 
-angular.module('app', ['ionic','firebase',  'app.controllers', 'app.routes', 'app.services', 'app.directives'])
+angular.module('app', ['ionic','firebase',  'app.controllers', 'app.routes', 'app.services', 'app.directives', 'ngCordova'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {

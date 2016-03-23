@@ -151,7 +151,6 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
 
     };
 
-    $scope.data = {};
 
     $scope.shareData = function () {
         var Data = {}; //do I want to put the retrieved information in the email body or as an attachment?
@@ -248,12 +247,18 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
                 }
                 else {
                     outPut.appendChild(node);
-                    //email.body =table;
+                  //email.body =table;
                 }
                 //table.append(node);
-                console.log(outPut);
 
-                $scope.sendEmail(outPut)
+                var strs = JSON.stringify(Data).split(",");
+                for( var s in strs){
+                  console.log(strs[s]);
+                  strs[s] = strs[s].concat("\n");
+                }
+                var text = $(outPut).text();
+                console.log(strs);
+                $scope.sendEmail(strs);
             });
 
         }
@@ -274,7 +279,7 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
 
         console.log(data);
 
-        $cordovaSocialSharing.shareViaEmail(data, subject, recipient, ccArr, bccArr, file)
+        $cordovaSocialSharing.shareViaEmail(JSON.stringify(outPut), subject, recipient, ccArr, bccArr, file)
           //.canShareViaEmail()
           .then(function (result) {
               console.log("Success!");
@@ -489,13 +494,14 @@ app.controller('recipeBookCtrl', function ($scope, $state, pullRecipeFirebaseSer
     }
 })
 
-app.controller('addIngredientRecipeCtrl', function ($scope, $ionicPopup, $cordovaBarcodeScanner, $rootScope, $state, $http, nixApi, addIngredientService, pullRecipeIngredientFirebaseService, pullRecipeFirebaseService) {
+app.controller('addIngredientRecipeCtrl', function ($timeout, $scope, $ionicPopup, $cordovaBarcodeScanner, $rootScope, $state, $http, nixApi, addIngredientService, pullRecipeIngredientFirebaseService, pullRecipeFirebaseService) {
     $scope.$on('$ionicView.beforeEnter', function (event, viewData) {
         viewData.enableBack = true;
     });
 
     $scope.vm = "";
     $scope.scanResults = '';
+    
     $scope.initialize = {
         calories: "",
         comments: "",
@@ -510,16 +516,27 @@ app.controller('addIngredientRecipeCtrl', function ($scope, $ionicPopup, $cordov
         sugars: ""
     };
 
-    $scope.scan = function () {
+    $scope.scan = function(){
+        $timeout(function() {
+            $cordovaBarcodeScanner.scan().then(function(result) {
+                $http.get("https://api.nutritionix.com/v1_1/item?upc=" + result.text + "&appId=b62a1056&appKey=0096e00788eb1a17cfe1c4c6d2008612").then(function (response) {
+                    $scope.initialize = addIngredientService.setPageVals(response.data);
+                    return (addIngredientService.getPageVals());
+                });
+            }, function(error) {
+                alert(JSON.stringify(error));
+            });
+        }, 700);
+    }
+
+   /* $scope.scan = function () {
         $scope.scanResults = $cordovaBarcodeScanner.scan().then(function (result) {
-            return ($http.get("https://api.nutritionix.com/v1_1/item?upc=" + result.text + "&appId=b62a1056&appKey=0096e00788eb1a17cfe1c4c6d2008612").then(function (response) {
-                $scope.initialize = addIngredientService.setPageVals(response.data);
-                return (addIngredientService.getPageVals());
-            }));
+            console.log(result.text);
+           
         }, function (error) {
             $scope.scanResults = 'Error: ' + error;
         });
-    };
+    };*/
 
     $scope.retValue = "";
     $scope.model = "";
@@ -709,7 +726,7 @@ app.controller('addARecipeCtrl', function ($scope, pullRecipeIngredientFirebaseS
                 addIngredientService.setTotalEmpty();
                 addIngredientService.resetArray();
                 RecipeService.setViewingRecipe(null);
-            
+
                 $state.go('main.recipeBook', {}, { reload: true });
             }
     };
@@ -761,7 +778,7 @@ app.controller('viewRecipeCtrl', function ($scope, $http, $state, $window, $ioni
 
 
     $scope.editRecipe = function () {
-            $state.go("addARecipe");       
+            $state.go("addARecipe");
     }
 })
 
@@ -781,7 +798,7 @@ app.controller('addNutritionCtrl', function ($scope, $http, RecipeService, pullN
     $scope.picture = "";
     $scope.height = "0px";
     $scope.width = "0px";
-    $scope.pull = ""; 
+    $scope.pull = "";
     $scope.retVals = "";
     $scope.totalVal = addIngredientService.getTotalContents($http);
 
