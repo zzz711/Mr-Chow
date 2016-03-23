@@ -348,7 +348,7 @@ app.service("RecipeService", function ($q, $ionicPopup, $firebaseObject, pullRec
         var allRecipes = [];
         var num = 0;
 
-            fbObj.orderByChild("recipeName").on("value", function (snapshot) {
+        fbObj.orderByChild("recipeName").on("value", function (snapshot) {
           for (var p in snapshot.val()) {
             var currentRecipe = snapshot.val()[p];
             currentRecipe.key = p;
