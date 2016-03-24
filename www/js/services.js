@@ -353,19 +353,6 @@ app.service("RecipeService", function ($q, $ionicPopup, $firebaseObject, pullRec
             var currentRecipe = snapshot.val()[p];
             currentRecipe.key = p;
 
-
-            //currentRecipe.recipeName = snapshot.val().recipeName;
-            //currentRecipe.picture = snapshot.val().picture;
-            //currentRecipe.cookingTime = snapshot.val().cookingTime;
-            //currentRecipe.prepTime = snapshot.val().prepTime;
-            //currentRecipe.servesNMany = snapshot.val().servesNMany;
-            //currentRecipe.totalCal = snapshot.val().totalCal;
-            //currentRecipe.totalFat = snapshot.val().totalFat;
-            //currentRecipe.totalProtein = snapshot.val().totalProtein;
-            //currentRecipe.totalSodium = snapshot.val().totalSodium;
-            //currentRecipe.totalSugars = snapshot.val().totalSugars;
-
-
             allRecipes[num] = currentRecipe;
             num++;
           }

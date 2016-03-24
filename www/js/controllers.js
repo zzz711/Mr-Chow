@@ -153,71 +153,68 @@ app.controller('shareMyDataCtrl', function ($scope, $cordovaSocialSharing, Nutri
 
 
     $scope.shareData = function () {
-        var Data = {};
-        var Nutrition = {};
-        var Medicine = {};
-        var Recipe = {};
-        var outPut = null;
+        var message = "";
 
         if ($scope.formData.NutritionInfo) {
             NutritionService.getNutrition($scope.formData.StartDate, $scope.formData.EndDate, function (data) {
-                var nutArr = data;
-                for (var i = 0; i < nutArr.length; i++) {
-                    var nutKey = nutArr[i].key;
-                    Nutrition[nutKey] = nutArr[i];
+                if (data.length > 0) {
+                    message += "Meals:<br>"
                 }
-                Data.Nutrition = Nutrition;
-                outPut = JsonHuman.format(Nutrition);
+                for (var i = 0; i < data.length; ++i) {
+                    message += "Meal Name: " + data[i].mealName + "<br>";
+                    message += "Meal Type: " + data[i].meal + "<br>";
+                    message += "Date: " + data[i].date + "<br>";
+                    message += "Time: " + data[i].time + "<br>";
+                    message += "Totals for meal:<br>";
+                    message += "Calories: " + data[i].totalCal + "<br>";
+                    message += "Protein: " + data[i].totalProtein + "<br>";
+                    message += "Sugars: " + data[i].totalSugars + "<br>";
+                    message += "Sodium: " + data[i].totalSodium + "<br>";
+                    message += "Fat Content: " + data[i].totalFat + "<br><br>";
+                }
             });
         }
 
         if ($scope.formData.MedInfo) {
             medicineService.getMeds(function (data) {
-                var medArr = data;
-                for (var c = 0; c < medArr.length; c++) {
-                    var medKey = medArr[c].key;
-                    Medicine[medKey] = medArr[c];
+                if (data.length > 0) {
+                    message += "Medicine:<br>"
                 }
-
-                Data.Medicine = Medicine;
-                var node = JsonHuman.format(Medicine);
-                if (outPut != null) {
-                    outPut.appendChild(node);
-                }
-                else {
-                    outPut = node;
+                for (var i = 0; i < data.length; i++) {
+                    message += "Medicine Name: " + data[i].name + "<br>";
+                    message += "Amount Per Serving: " + data[i].amount + "<br>";
+                    message += "Taken: " + data[i].taken + "<br>";
+                    message += "Extra Info: " + data[i].extra + "<br>< br >";
                 }
             });
         }
 
         if ($scope.formData.RecipeInfo) {
             RecipeService.getRecipe(function (data) {
-                var recipeArray = data;
-                for (var a = 0; a < recipeArray.length; a++) {
-                    var recipeKey = recipeArray[a].key;
-                    Recipe[recipeKey] = recipeArray[a];
+                if (data.length > 0) {
+                    message += "Recipes:<br>"
                 }
-                Data.Recipe = Recipe;
-                var node = JsonHuman.format(Recipe);
-                if (outPut === null) {
-                    outPut = node;
+                for (var i = 0; i < data.length; i++) {
+                    message += "Recipe Title: " + data[i].recipeName + "<br>";
+                    message += "Prep Time: " + data[i].prepTime + "<br>";
+                    message += "Cooking Time: " + data[i].cookingTime + "<br>";
+                    message += "Serves: " + data[i].servesNMany + "<br>";
+                    message += "Picture: <img src='" + Base64.decode(data[i].picture) + "' height=200px width=200px /> <br>";
+                    message += "Totals for meal:<br>";
+                    message += "Calories: " + data[i].totalCal + "<br>";
+                    message += "Protein: " + data[i].totalProtein + "<br>";
+                    message += "Sugars: " + data[i].totalSugars + "<br>";
+                    message += "Sodium: " + data[i].totalSodium + "<br>";
+                    message += "Fat Content: " + data[i].totalFat + "<br>";
+                    message += "<br>";
                 }
-                else {
-                    outPut.appendChild(node);
-                }
-
-                var strs = JSON.stringify(Data).split(",");
-                for( var s in strs){
-                  strs[s] = strs[s].concat("\n");
-                }
-                $scope.sendEmail(strs);
             });
-
         }
-    };
 
+        $scope.sendEmail(message);
+    };
     $scope.sendEmail = function (message) {
-        var subject = "Test";
+        var subject = "";
         var recipient = $scope.formData.recipient;
         var ccArr = null;
         var bccArr = null;
