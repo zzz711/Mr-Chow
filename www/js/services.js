@@ -463,7 +463,7 @@ app.service('addIngredientService', function ($q, $firebaseObject) {
           setPageCalled: function (pageCallingData, $http) {
               pageCalled = pageCallingData;
           },
-         
+
           getedit: function ($http) {
               return editRecipe;
           },
@@ -609,7 +609,7 @@ app.service("medicineService", function ($q, $firebaseObject) {
       }    ,
       add: function (data) {
 
-          
+
             var medGUID = guid();
             var url = "https://boiling-fire-9023.firebaseio.com/" + getUID() + "/medicine/";
             var fullUrl = url.concat(medGUID.toString());

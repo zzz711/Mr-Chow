@@ -17,12 +17,12 @@
                           placeholder=""
                           ng-model="formData.password" >
                 </label>
-              <button class="button button-clear button-positive" ng-click="reset()"> Reset Password </button>
             </ion-list>
 
             <div class="spacer" style="height: 40px;"></div>
-            <!--<a href="#/page5/page10" class="button button-stable button-block ">Log in</a>-->
+
           <button class="button  button-block" type="submit"  ng-click="login(loginForm)"> Log in</button >
+          <button class="button button-clear button-positive button-block"  ng-click="reset()"> Reset Password </button>
           <a href="#/page4" class="button button-positive button-clear button-block ">Or create an account</a>
         </form>
     </ion-content>
