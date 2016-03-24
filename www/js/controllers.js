@@ -12,9 +12,7 @@ app.controller('recipeCardHolderCtrl', function ($scope, AuthService, $state) {
 
 })
 
-app.controller('loginCtrl', function ($scope, AuthService, $state) {
-    console.log("loginCtrl::log");
-
+app.controller('loginCtrl', function ($scope, AuthService) {
     $scope.formData = {
         "email": "",
         "password": ""
