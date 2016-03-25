@@ -29,23 +29,23 @@ function isUndefined(val) {
 
 function getUID() {
     var fbUser = new Firebase("https://boiling-fire-9023.firebaseio.com/");
-    var user = fbUser.getAuth();
 
-    if (user.uid === null) {
-    $ionicPopup.show({
-      title: "Your login cookie has expired. You will now be logged out"
-    });
-    user.unauth();
-    $state.go("login");
-  }
+    //I occasionally get an error about not being able to ready property uid of null. I'm hoping this try catch will fix that
+    try{
+      var user = fbUser.getAuth();
+      //var userGUID = user.uid;
+      return user.uid;
+    }
+    catch (err){
+      if(e instanceof NullReferenceException){
+        $ionicPopup.show({
+          title: "Your login cookie has expired. You will now be logged out"
+        });
+        user.unauth();
+        $state.go("login");
+      }
+    }
 
-  else {
-    var userGUID = user.uid;
-    return userGUID
-}
-
-    //console.log(userGUID);
-   // else{return userGUID}
   //return userGUID;
 }
 
